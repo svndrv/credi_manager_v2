@@ -1,0 +1,406 @@
+:root {
+    --c-brand-rgb: 0,60,94;
+    --c-body: #727272;
+}
+
+#body-login{
+    background: linear-gradient(rgba(var(--c-brand-rgb), 0.700), rgba(var(--c-brand-rgb), 1)), url(../img/cover-login.jpg);
+    background-position: center;
+    background-size: cover;
+}
+
+body{
+    background-color: #fbfbfb;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.swal2-container {
+    z-index: 2000 !important;
+}
+
+header {
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 99;
+}
+
+
+
+/*           NAVEGADOR            */
+
+#navigation a {
+    position: relative;
+    font-size: 1em;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 40px;
+}
+
+#navigation a::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 2px;
+    background: #fff;
+    border-radius: 5px;
+    transform-origin: right;
+    transform: scaleX(0);
+    transition: transform .5s;
+}
+
+#navigation a:hover::after{
+    transform: scaleX(1);
+}
+
+.btn-style, .inforelleno{
+    color:white;
+    
+}
+
+.login-button{
+    background-color: rgb(255, 202, 44);
+    color: #fff;
+    font-size: 14px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: 0.3s background-color;
+    font-weight: bold;
+}
+
+.login-button:hover{
+    background-color: rgb(190, 154, 46);
+}
+
+.navbar-toggler{
+    border: none;
+    padding-left: 20px;
+}
+
+/*           INICIO            */
+
+#cover-home{
+    background: rgba(0, 26, 112, 0.7);
+    height: 40rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#arti-home{
+    background: url('../img/inicio/cover-principal.jpg') no-repeat;
+    color: white;
+    background-size: cover;
+    background-position: center;   
+
+}
+
+#cover-home p{
+    width: 50%;
+}
+
+#credi{
+    color: rgb(255, 202, 44);
+    font-weight: bold;
+}
+#scotia{
+    color: red;
+    font-weight: bold;
+}
+
+/*           CONSULTA            */
+
+
+.flex-column {
+    background-color: #0000008d;
+}
+
+
+.form-login-control {
+    left: .5rem;
+    padding-left: 3rem;
+}
+
+.icon{
+    position: relative;
+    top: calc(50%);
+    left: 1rem;
+}
+
+
+
+
+
+/*           ACERCA            */
+
+#arti-bolsa{
+    background: url('../img/acerca-cover.jpg') no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    color: white;
+    
+}
+
+#cover-bolsa{
+    background: rgba(0, 26, 112, 0.7);
+    height: 20rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/*           FOOTER            */
+
+#textfooter h5{
+    position: relative;
+    color: rgb(0, 26, 112);
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+#textfooter h5::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 20%;
+    height: 3px;
+    background: rgb(255, 202, 44);
+    border-radius: 5px;
+}
+
+footer{
+    background-color: #f9f9f9;
+}
+
+
+/* ------------------- LOGIN ------------------- */
+
+/* LOGIN CONTAINER */
+
+.box-area{
+    width: 930px;
+}
+
+/* CAJA IZQUIERDA */
+
+.right-box{
+    padding: 40px 30px 40px 40px;
+}
+
+/* CUSTOM PLACEHOLDER */
+
+::placeholder{
+    font-size: 16px;
+}
+
+/* PARA PANTALLAS PEQUEÑAS */
+
+@media only screen and (max-width: 768px){
+    .box-area{
+        margin: 0 10px;
+    }
+
+    .left-box{
+        height: 25em;
+        overflow: hidden;
+    }
+    .right-box{
+        padding: 20px;
+    }
+}
+
+/* -------------- ICONOS FLOTANTES -------------- */
+
+.floating-container {
+    position: fixed;
+    width: 100px;
+    height: 100px;
+    bottom: 0;
+    right: 0;
+    margin: 35px 5px;
+    z-index: 2000 !important;
+}
+
+.floating-container:hover{
+    height: 300px;
+}
+
+.floating-container:hover .floating-button{
+    box-shadow: 0 10px 25px #212529;
+    transform: translateY(5px);
+    transform: all 0.3s;
+}
+
+.floating-button{
+    position: absolute;
+    width: 65px;
+    height: 65px;
+    background: #212529;
+    bottom: 0;
+    border-radius: 50%;
+    left: 0;
+    right: 0;
+    color: white;
+    line-height: 65px;
+    text-align: center;
+    font-size: 23px;
+    z-index: 100;
+    box-shadow: 0 10px 25px -5px #212529a4;
+    cursor: pointer;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.float-element{
+    position: relative;
+    display: block;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin: 15px 5px;
+    color:white;
+    display: grid;
+    place-items: center;
+    z-index: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.float-element:nth-child(1){
+    background: #00d757;
+    box-shadow: 0 20px 20px -10px #00d756a8;
+}
+
+.float-element:nth-child(2){
+    background: #dc3545;
+    box-shadow: 0 20px 20px -10px #dc3546b2;
+}
+
+.float-element:nth-child(3){
+    background: #1a71ff;
+    box-shadow: 0 20px 20px -10px #1a72ffaa;
+
+}
+
+@-webkit-keyframes come-in{
+    0%{
+        opacity: 0;
+    }
+    30%{
+        transform: translate(-50px) scale(0.4);
+    }70%{
+        transform: translate(0px) scale(1.2);
+    }100%{
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.floating-container:hover .element-container .float-element:nth-child(1){
+    animation: come-in 0.4s forwards 0.2s;
+    
+}
+.floating-container:hover .element-container .float-element:nth-child(2){
+    animation: come-in 0.4s forwards 0.4s;
+}
+.floating-container:hover .element-container .float-element:nth-child(3){
+    animation: come-in 0.4s forwards 0.6s;
+}
+
+/* -------------- CARRUSEL -------------- */
+
+  
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-150px * 10)); }
+  }
+  
+  .slider {
+    height: auto;
+    margin: auto;
+    overflow: hidden;
+    position: relative;
+    width: 95%;  
+  }
+  
+  .slider::before,
+  .slider::after {
+    content: "";
+    height: 100px;
+    position: absolute;   
+    width: 200px;
+    z-index: 2;
+  }
+  
+  .slider::after {
+    right: 0;
+    top: 0;
+    transform: rotateZ(180deg);
+  }
+  
+  .slider::before {
+    left: 0;
+    top: 0;
+  }
+  
+  .slide-track {
+    animation: scroll 100s linear infinite;
+    display: flex;
+    width: calc(250px * 14);
+  }
+  
+  .slide, .slide2 {
+    height: 8.5rem;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    filter: grayscale(100%); /* Convierte las imágenes en escala de grises */
+    transition: filter 0.60s; /* Agrega una transición para suavizar el cambio */
+  }
+  .slide:hover {
+    filter: grayscale(0%); 
+  }
+
+  .slide2:hover{
+    filter: grayscale(0%);
+  }
+
+  .slide img {
+    width: 5rem; /* Ajusta el ancho de la imagen para que ocupe todo el espacio disponible */ /* Altura automática para mantener la relación de aspecto */
+    opacity: 50%;
+    padding: auto;
+}
+
+.slide2 img{
+    width: 12rem; 
+    opacity: 50%;
+    padding: auto;
+}
+
+.form-select-item:hover {
+    background-color: green;
+    color: white; /* Para mejorar la visibilidad del texto */
+}
+
+    

@@ -1,0 +1,422 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+*,
+::after,
+::before {
+    box-sizing: border-box;
+}
+
+
+.img-usuario{
+    width: 50px; 
+    height: 50px; 
+    border-radius: 50%; 
+    object-fit: cover;
+}
+
+.icon-rol{
+    width: 18px; 
+    height: 18px; 
+    object-fit: cover;
+}
+
+.icon-estado-activo{
+    color:#75de3d;
+    background-color: #e8fadf;
+    padding: 0.3rem;
+    border-radius: 3px;
+}
+
+.icon-estado-inactivo{
+    color:#9ea9b5;
+    background-color: #ebeef0;
+    padding: 0.3rem;
+    border-radius: 3px;
+}
+
+:root {
+    --font-base: "Poppins", Arial, sans-serif;
+}
+
+.content-pages{
+    background-color: #F0F1F2;
+}
+
+.table-hover{
+    background-color: red;
+}
+
+.card-style-custom{
+    background-color: #010e17;
+    color: white;
+}
+
+body {
+    font-family: var(--font-base);
+    font-size: 0.875rem;
+    opacity: 1;
+    overflow-y: scroll;
+    margin: 0;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+li {
+    list-style: none;
+}
+
+h4 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.275rem;
+    color: var(--bs-emphasis-color);
+}
+
+/* Layout for admin dashboard skeleton */
+
+.wrapper {
+    align-items: stretch;
+    display: flex;
+    width: 100%;
+}
+
+
+#sidebar {
+    max-width: 264px;
+    min-width: 264px;
+    background: var(--bs-dark);
+    transition: all 0.35s ease-in-out;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-width: 0;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+    width: 100%;
+    background: var(--bs-dark-bg-subtle);
+}
+
+/* Sidebar Elements Style */
+
+.sidebar-logo {
+    padding: 1.15rem;
+}
+
+.sidebar-logo a {
+    color: #e9ecef;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.sidebar-nav {
+    list-style: none;
+    margin-bottom: 0;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.sidebar-header {
+    color: #e9ecef;
+    font-size: .75rem;
+    padding: 1.5rem 1.5rem .375rem;
+}
+
+.sidebar-active-link{
+    background-color: rgba(214, 34, 39,0.1);
+    border-left: 0.5em solid rgb(214, 34, 39);
+}
+
+a.sidebar-link {
+    padding: .625rem 1.625rem;
+    color: #e9ecef;
+    position: relative;
+    display: block;
+    font-size: 0.875rem;
+    transition: background-color 0.2s ease;
+}
+
+.sidebar-link:hover{
+    background-color: rgba(214, 34, 39,0.2);
+    color: rgb(255, 225, 73);  
+   
+}
+
+.sidebar-link[data-bs-toggle="collapse"]::after {
+    border: solid;
+    border-width: 0 .075rem .075rem 0;
+    content: "";
+    display: inline-block;
+    padding: 2px;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.4rem;
+    transform: rotate(-135deg);
+    transition: all .2s ease-out;
+}
+
+.sidebar-link[data-bs-toggle="collapse"].collapsed::after {
+    transform: rotate(45deg);
+    transition: all .2s ease-out;
+}
+
+.avatar {
+    height: 40px;
+    width: 40px;
+}
+
+.navbar-expand .navbar-nav {
+    margin-left: auto;
+}
+
+.content {
+    flex: 1;
+    max-width: 100vw;
+    width: 100vw;
+}
+
+@media (min-width:768px) {
+    .content {
+        max-width: auto;
+        width: auto;
+    }
+}
+
+.card {
+    box-shadow: 0 0 .875rem 0 rgba(34, 46, 60, .05);
+    margin-bottom: 24px;
+}
+
+.illustration {
+    background-color: var(--bs-primary-bg-subtle);
+    color: var(--bs-emphasis-color);
+}
+
+.illustration-img {
+    max-width: 150px;
+    width: 100%;
+}
+
+/* Sidebar Toggle */
+
+#sidebar.collapsed {
+    margin-left: -264px;
+}
+
+/* Footer and Nav */
+
+@media (max-width:767.98px) {
+
+    .js-sidebar {
+        margin-left: -264px;
+    }
+
+    #sidebar.collapsed {
+        margin-left: 0;
+    }
+
+    .navbar,
+    footer {
+        width: 100vw;
+    }
+}
+
+/* Theme Toggler */
+
+.theme-toggle {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-65%);
+    text-align: center;
+    z-index: 10;
+    right: 0;
+    left: auto;
+    border: none;
+    background-color: var(--bs-body-color);
+}
+
+html[data-bs-theme="dark"] .theme-toggle .fa-sun,
+html[data-bs-theme="light"] .theme-toggle .fa-moon {
+    cursor: pointer;
+    padding: 10px;
+    display: block;
+    font-size: 1.25rem;
+    color: #FFF;
+}
+
+html[data-bs-theme="dark"] .theme-toggle .fa-moon {
+    display: none;
+}
+
+html[data-bs-theme="light"] .theme-toggle .fa-sun {
+    display: none;
+}
+
+/* VENTAS Y METAS */
+
+#card-ld{
+    background-color: red;
+}
+#card-tc{
+    background-color: red;
+}
+#card-ldm{
+    background-color: red;
+}
+
+.card-title {
+    font-weight: bold;
+}
+
+#ldc-card-tittle{
+    color: #39c988;
+}
+#tcc-card-tittle{
+    color: #912ec9;
+}
+#ldm-card-tittle{
+    color: #fbc442;
+}
+
+#bg-card-ld{
+    border: 0;
+    background-color: #39c98847;
+}
+#bg-card-tc{
+    border: 0;
+    background-color: #902ec942;
+}
+
+#bg-card-ldm{
+    border: 0;
+    background-color: #fbc34246;
+}
+
+
+
+#credi{
+    color: rgb(255, 202, 44);
+}
+#scotia{
+    color: red;
+}
+
+
+
+
+
+
+
+  .card_pp {
+    width: 400px;
+    height: auto;
+    background: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    padding: 0 10px;
+  }
+  
+  .card_pp-wrapper {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .card_pp-icon {
+    width: 20%;
+  }
+  
+  .card_pp-icon .icon-cart-box {
+    background-color: #e0f2f1;
+    width: 3em;
+    height: 3em;
+    border-radius: 50%;
+    text-align: center;
+    padding: 15px 0px;
+    margin: 0 auto;
+  }
+  
+  .card_pp-content {
+    width: 80%;
+  }
+  
+  .card_pp-title-wrapper {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    width: 100%;
+  }
+  
+  .card_pp-title {
+    width: 95%;
+    font-size: 1em;
+    font-weight: 600;
+    color: #333;
+    padding: 20px 0 0 10px;
+  }
+  
+  .card_pp-action {
+    width: 5%;
+    text-align: right;
+    padding: 0 30px;
+  }
+  
+  .card_pp-action svg {
+    cursor: pointer;
+    fill: rgba(0, 0, 0, 0.2);
+    transition: 0.3s ease-in-out;
+  }
+  
+  .card_pp-action svg:hover {
+    fill: rgba(0, 0, 0, 0.6);
+  }
+  
+  .product-name {
+    font-size: 0.8em;
+    color: #757575;
+    padding: 10px 0 0 10px;
+  }
+  
+  .product-name:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .product-price {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #333;
+    padding: 0 0 10px 10px;
+  }
+  
+  .btn-view-cart {
+    font-size: 0.7em;
+    font-weight: 600;
+    padding: 5px 10px;
+    margin: 5px 10px 20px;
+    border-radius: 15px;
+    color: #009688;
+    border: 1px solid #009688;
+    background-color: #e0f2f1;
+    box-shadow: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.4s ease-in-out;
+  }
+  
+  .btn-view-cart:hover,
+  .btn-view-cart:active,
+  .btn-view-cart:focus {
+    color: white;
+    background-color: #009688;
+    border: 1px solid #009688;
+  }
+
+  
