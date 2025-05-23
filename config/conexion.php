@@ -7,7 +7,7 @@ class Conectar
        
         try {    
 
-            $conectar = $this->dbh = new PDO("mysql:local=localhost;dbname=credi_manager","root","");   
+            $conectar = $this->dbh = new PDO("mysql:local=localhost;dbname=credi_manager_v2","root","");   
             $conectar->query("SET NAMES 'utf8'");
           
             return $conectar;

@@ -12,6 +12,7 @@ $(function () {
     importar();
     crear_ventas();
     agregar_base_cartera();
+    exportar();
   }
 
   if (params.get("view") === "consultas") {
@@ -2799,6 +2800,16 @@ const importar = function () {
       },
     });
   });
+};
+
+
+const exportar = () => {
+    const boton = document.getElementById("btn-descargar-excel")
+    if (boton) {
+        boton.addEventListener("click", () => {
+            window.location.href = "controller/exp_excel.php";
+        });
+    }
 };
 
 /* ----------------------------------------------------- */

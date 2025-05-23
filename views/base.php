@@ -77,10 +77,12 @@
                     <?php if ($_SESSION['rol'] === '2' || $_SESSION['rol'] === '1') { ?>
 
                         <div class="col-lg-12 mb-3 d-flex justify-content-start mt-4">
-                            <button type="button" id="btn-borrar-base" class="btn btn-danger"><i class="fa-solid fa-trash me-2"></i>Borrar base</button>
+                            <button type="button" id="btn-borrar-base" class="btn btn-danger me-3"><i class="fa-solid fa-trash me-2"></i>Borrar base</button>
+                            <button type="button" id="btn-descargar-excel" class="btn btn-success"><i class="fa-solid fa-file-excel me-2"></i></i>Descargar Plantilla</button>
                         </div>
 
                     <?php } ?>
+
                 </div>
             </div>
         </article>
@@ -199,3 +201,4 @@
         </div>
     </div>
 </div>
+

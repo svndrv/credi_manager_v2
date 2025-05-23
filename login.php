@@ -28,13 +28,13 @@ if (isset($_SESSION['id'])) {
         <div class="featured-image mb-3">
           <img src="img/logi-login2.png" class="img-fluid" style="width: 250px;">
         </div>
-        <p class="text-white fs-2" style="font-weight: bold;">CREDIMANAGER</p>
+        <p class="text-white fs-2" style="font-weight: bold;">SERVIMANAGER</p>
         <small class="text-white text-wrap text-center" style="width: 17rem;">El ingreso a la plataforma es solo a <br>personal autorizado</small>
       </div>
       <div class="col md-6 right-box">
         <div class="row aligh-items-center">
           <div class="header-text mb-3">
-            <h1 class="fw-bold">BURÓ GROUP<i class="fa-solid fa-circle-check fa-xs p-3"></i></h1>
+            <h1 class="fw-bold">SERVICORE GROUP<i class="fa-solid fa-circle-check fa-xs p-3"></i></h1>
           </div>
           <form id="formLogin">
             <input type="hidden" value="login" name="opcion">
