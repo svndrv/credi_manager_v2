@@ -62,7 +62,7 @@
                                 </thead>
                                 <tbody id="listar_base">
                                     <tr>
-                                        <td colspan="14" class="text-center">No hay datos...</td>
+                                        <td colspan="15" class="text-center">No hay datos...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -78,11 +78,15 @@
 
                         <div class="col-lg-12 mb-3 d-flex justify-content-start mt-4">
                             <button type="button" id="btn-borrar-base" class="btn btn-danger me-3"><i class="fa-solid fa-trash me-2"></i>Borrar base</button>
-                            <button type="button" id="btn-descargar-excel" class="btn btn-success"><i class="fa-solid fa-file-excel me-2"></i></i>Descargar Plantilla</button>
+                            <button type="button" id="btn-descargar-excel" class="btn btn-success me-3"><i class="fa-solid fa-file-excel me-2"></i>Plantilla Excel</button>
+                            <button type="button" id="btn-descargar-word" class="btn btn-primary"><i class="fa-solid fa-file-word me-2"></i>Solicitud de Crédito</button>
                         </div>
 
+                    <?php }else{ ?>
+                        <div class="col-lg-12 mb-3 d-flex justify-content-start mt-4">
+                            <button type="button" id="btn-descargar-word" class="btn btn-success"><i class="fa-solid fa-file-word me-2"></i>Solicitud de Crédito</button>
+                        </div>
                     <?php } ?>
-
                 </div>
             </div>
         </article>
@@ -196,6 +200,99 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 <button type="submit" class="btn btn-primary">Trasladar</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<!--------------            TRASLADAR A MIS VENTAS            -------------->                    
+
+<div class="modal fade" id="obtener-misventas" tabindex="-1" aria-labelledby="obtener-MisVentasModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="obtener-misventasLabel">Transladar a Mis Ventas</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formObtenerMisVentas">
+
+                    <input type="hidden" name="opcion" value="base_x_id">
+                    <input type="hidden" name="option" value="agregar_ventas">
+                    <input type="hidden" name="misventas_id" id="misventas_id">
+                    <input type="hidden" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['id'] ?>">
+                    <input type="hidden" id="estado" name="estado" value="Pendiente">
+
+                    <div class="row p-2">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label for="nombres_misventas" class="form-label">Nombre completo</label>
+                                <input type="text" class="form-control" id="nombres_misventas" name="nombres_misventas">
+                            </div>
+                            <div class="mb-3">
+                                <label for="dni_miventas" class="form-label">Dni</label>
+                                <input type="text" class="form-control" id="dni_miventas" name="dni_miventas">
+                            </div>
+                            <div class="mb-3">
+                                <label for="celular1_misventas" class="form-label">Celular</label>
+                                <input type="text" class="form-control" id="celular1_misventas" name="celular1_misventas">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="tem_misventas" class="form-label">TEM</label>
+                                <input type="text" class="form-control" id="tem_misventas" name="tem_misventas">
+                            </div>
+                            <div class="mb-3">
+                                <label for="fecha_misventas" class="form-label">Fecha</label>
+                                <input type="date" class="form-control" id="fecha_misventas" name="fecha_misventas" value="<?= date('Y-m-d') ?>">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label for="credito_max_misventas" class="form-label">Crédito</label>
+                                <input type="text" class="form-control" id="credito_max_misventas" name="credito_max_misventas">
+                            </div>
+                            <div class="mb-3">
+                                <label for="linea_misventas" class="form-label">Linea</label>
+                                <input type="text" class="form-control" id="linea_misventas" name="linea_misventas">
+                            </div>                           
+                            <div class="mb-3">
+                                <label for="plazo_max_misventas" class="form-label">Plazo</label>
+                                <select class="form-select" name="plazo_max_misventas" id="plazo_max_misventas">
+                                    <option selected>Plazo</option>
+                                    <option value="0">0</option>
+                                    <option value="12">12</option>
+                                    <option value="24">24</option>
+                                    <option value="36">36</option>
+                                    <option value="48">48</option>
+                                    <option value="72">72</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tipo_producto_misventas" class="form-label">Producto</label>
+                                <select class="form-select" name="tipo_producto_misventas" id="tipo_producto_misventas">
+                                    <option value="0">Producto</option>
+                                    <option value="LD">LD</option>
+                                    <option value="TC">TC</option>
+                                    <option value="LD/TC">LD/TC</option>
+                                </select>
+                            </div>     
+                            <div class="mb-3">
+                                <label for="archivo" class="form-label">Solicitud de Crédito</label>
+                                <div class="input-group">
+                                    <label class="input-group-text" for="archivo"><i class="fa-solid fa-file-pdf"></i></label>
+                                    <input type="file" class="form-control" id="archivo">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-success">Transladar</button>
             </div>
             </form>
         </div>

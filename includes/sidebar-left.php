@@ -2,7 +2,7 @@
     <!-- Content For Sidebar -->
     <div class="h-200">
         <div class="sidebar-logo mt-3">
-            <img src="img/icon-logo.png" class="w-25">
+            <img src="img/logotipo/logotipo-mini.png" class="w-25">
         </div>
         <ul class="sidebar-nav">
 

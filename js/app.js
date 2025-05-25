@@ -13,6 +13,7 @@ $(function () {
     crear_ventas();
     agregar_base_cartera();
     exportar();
+    exportar_word();
   }
 
   if (params.get("view") === "consultas") {
@@ -438,6 +439,7 @@ const cartera_x_dni = function () {
 };
 
 /* -------------------   VENTASMETAS   ---------------------- */
+
 const listar_metas_ventas = function () {
   $.ajax({
     url: "controller/metaventa.php",
@@ -776,7 +778,6 @@ const eliminar_meta = function (id) {
     }
   });
 };
-
 const obtener_metas = function (id) {
   $("#editar-metas").modal("show");
   $.ajax({
@@ -850,7 +851,6 @@ const actualizar_meta = function () {
     });
   });
 };
-
 const crear_metas = function () {
   $("#formAgregarMeta").submit(function (e) {
     e.preventDefault();
@@ -1159,7 +1159,6 @@ const actualizar_metasfv = function (id) {
     });
   });
 };
-
 const eliminar_metafv = function (id) {
   Swal.fire({
     title: "¿Estás seguro?",
@@ -1295,7 +1294,6 @@ const filtro_metasfv = function () {
     });
   });
 };
-
 const rellenar_ultima_meta = function () {
   $.ajax({
     url: "controller/metafv.php",
@@ -1426,8 +1424,9 @@ const listarRegistros = function (pagina) {
             html =
               html +
               `<tr><td>${nombres}</td><td>${dni}</td><td>${tipo_cliente}</td><td>${direccion}</td><td>${distrito}</td><td>S/.${credito_max}</td><td>S/.${linea_max}</td><td>${plazo_max}</td><td>${tem}%</td><td>${celular_1}</td><td>${celular_2}</td><td>${celular_3}</td><td>${tipo_producto}</td><td>${combo}</td><td>
-                <a onclick="obtener_base(${id})"><i class="fa-solid fa-plus me-4"></i></a>
-                <a onclick="trasladar_base(${id})"><i class="fa-solid fa-wallet me-4"></i>
+                <a onclick="obtener_base(${id})"><i class="fa-solid fa-user-plus me-2"></i></a>
+                <a onclick="trasladar_base(${id})"><i class="fa-solid fa-wallet"></i></a>
+                <a onclick="obtener_misventas(${id})"><i class="fa-solid fa-plus"></i></a>
               </td></tr>`;
           } else {
             html =
@@ -1557,7 +1556,6 @@ const borrar_base = function () {
     });
   });
 };
-
 const trasladar_base = function (id) {
   $("#obtener-cartera_base").modal("show");
   $.ajax({
@@ -1582,7 +1580,6 @@ const trasladar_base = function (id) {
     },
   });
 };
-
 const agregar_base_cartera = function () {
   $("#formAgregarCartera").submit(function (e) {
     e.preventDefault();
@@ -1626,6 +1623,36 @@ const agregar_base_cartera = function () {
         }
       },
     });
+  });
+};
+
+const obtener_misventas = function (id) {
+  $("#obtener-misventas").modal("show");
+  $.ajax({
+    url: "controller/base.php",
+    method: "POST",
+    data: {
+      id: id,
+      option: "base_x_id",
+    },
+    success: function (response) {
+      data = JSON.parse(response);
+      $.each(data, function (i, e) {
+        $("#misventas_id").val(data[i]["id"]);
+        $("#nombres_misventas").val(data[i]["nombres"]);
+        $("#dni_miventas").val(data[i]["dni"]);
+        $("#celular1_misventas").val(data[i]["celular_1"]);
+        $("#credito_max_misventas").val(data[i]["credito_max"]);
+        $("#linea_misventas").val(data[i]["linea_max"]);
+        $("#plazo_max_misventas").val(data[i]["plazo_max"]);
+        $("#tipo_producto_misventas").val(data[i]["tipo_producto"]);
+        $("#tem_misventas").val(data[i]["tem"]);
+      });
+    },
+    error: function (xhr, status, error) {
+      console.error("Error al obtener la meta: ", error);
+      alert("Hubo un error al obtener la meta.");
+    },
   });
 };
 
@@ -2099,22 +2126,6 @@ const select_usuarios = function () {
     },
   });
 };
-// const select_usuarios = function () {
-//   $.ajax({
-//     url: "controller/ventas.php",
-//     type: "GET",
-//     success: function (response) {
-//       const usuarios = JSON.parse(response);
-//       var select = $("#id_usuario");
-//       usuarios.forEach(function (usu) {
-//         var option = $("<option></option>")
-//           .attr("value", usu.id)
-//           .text(usu.nombres + " " + usu.apellidos);
-//         select.append(option);
-//       });
-//     },
-//   });
-// };
 const filtro_empleados = function () {
   $("#form_filtro_empleados").submit(function (e) {
     e.preventDefault();
@@ -2317,7 +2328,6 @@ const eliminar_usuario = function (id) {
     }
   });
 };
-
 const actualizar_usuarios = function (id) {
   $("#formActualizarEmpleado").submit(function (e) {
     e.preventDefault();
@@ -2801,13 +2811,22 @@ const importar = function () {
     });
   });
 };
-
-
 const exportar = () => {
     const boton = document.getElementById("btn-descargar-excel")
     if (boton) {
         boton.addEventListener("click", () => {
             window.location.href = "controller/exp_excel.php";
+        });
+    }
+};
+
+/* ---------------------- WORD ------------------------- */
+
+const exportar_word = () => {
+    const boton = document.getElementById("btn-descargar-word")
+    if (boton) {
+        boton.addEventListener("click", () => {
+            window.location.href = "controller/exp_word.php";
         });
     }
 };
