@@ -16,7 +16,7 @@ if (!isset($_SESSION['id'])) {
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <title>CREDIMANAGER | Buró Group</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="icon" href="img/icon-logo-2.ico">
+    <link rel="icon" href="img/logotipo-mini.ico">
 </head>
 
 <body>
@@ -52,6 +52,9 @@ if (!isset($_SESSION['id'])) {
                     break;
                 case "metasfv":
                     require './views/metasfv.php';
+                    break;
+                case "proceso_ventas":
+                    require './views/proceso_ventas.php';
                     break;
                 default:
                     require './views/inicio.php';

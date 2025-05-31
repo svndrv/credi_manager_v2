@@ -1,5 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
+
+:root{
+    --green-custom:#75de3d;
+    --red-custom:#fe4343;
+    --blue-custom: #3ea1f7ef;
+    --yellow-custom: #fff200;
+
+    --green-custom-hover: #528e32;
+    --red-custom-hover: #a72626;
+    --blue-custom-hover: #2c6faaef;
+    --yellow-custom-hover: #a9a220;
+
+}
+
 *,
 ::after,
 ::before {
@@ -33,6 +47,52 @@
     padding: 0.3rem;
     border-radius: 3px;
 }
+
+
+
+.icon-to-ventas{
+    color: var(--green-custom);
+}
+
+.icon-no-ventas{
+    color: var(--red-custom);
+}
+
+.icon-apela-ventas{
+    color: var(--yellow-custom);
+}
+
+.icon-estado-pendiente{
+    background-color: var(--blue-custom);
+}
+
+.icon-estado-aprobado{
+    background-color: var(--green-custom);
+}
+
+.icon-estado-desaprobado{
+    background-color: var(--red-custom);
+}
+
+.icon-estado-apelando{
+    background-color: var(--yellow-custom);
+}
+
+
+.icon-estado-pendiente,
+.icon-estado-aprobado,
+.icon-estado-desaprobado,
+.icon-estado-apelando {
+    display: inline-block;     
+    width: 10rem;               
+    line-height: 28px;             
+    color: #ffffff;
+    border-radius: 3px;
+    padding: 0.3rem;
+    font-weight: bold;  
+}
+
+
 
 :root {
     --font-base: "Poppins", Arial, sans-serif;

@@ -56,8 +56,8 @@
                                         <th scope="col">Celular 3</th>
                                         <th scope="col">Producto</th>
                                         <th scope="col">Combo</th>
-                                        <?php if ($_SESSION['rol'] != 2) { ?><th scope="col">Acción</th><?php }?>
-                                        
+                                        <?php if ($_SESSION['rol'] != 2) { ?><th scope="col">Acción</th><?php } ?>
+
                                     </tr>
                                 </thead>
                                 <tbody id="listar_base">
@@ -82,7 +82,7 @@
                             <button type="button" id="btn-descargar-word" class="btn btn-primary"><i class="fa-solid fa-file-word me-2"></i>Solicitud de Crédito</button>
                         </div>
 
-                    <?php }else{ ?>
+                    <?php } else { ?>
                         <div class="col-lg-12 mb-3 d-flex justify-content-start mt-4">
                             <button type="button" id="btn-descargar-word" class="btn btn-success"><i class="fa-solid fa-file-word me-2"></i>Solicitud de Crédito</button>
                         </div>
@@ -193,7 +193,7 @@
                             <div class="mb-3">
                                 <label for="celular" class="form-label">Celular:</label>
                                 <input type="text" class="form-control" id="tras_celular" name="celular">
-                            </div>                          
+                            </div>
                         </div>
                     </div>
             </div>
@@ -208,60 +208,60 @@
 
 
 
-<!--------------            TRASLADAR A MIS VENTAS            -------------->                    
+<!--------------            TRASLADAR A VENTAS EN PROCESO            -------------->
 
-<div class="modal fade" id="obtener-misventas" tabindex="-1" aria-labelledby="obtener-MisVentasModalLabel" aria-hidden="true">
+<div class="modal fade" id="obtener-procesoventas" tabindex="-1" aria-labelledby="obtener-ProcesoVentasModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="obtener-misventasLabel">Transladar a Mis Ventas</h1>
+                <h1 class="modal-title fs-5" id="obtener-procesoventasLabel">Transladar a Ventas en Proceso</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="formObtenerMisVentas">
+                <form id="formObtenerProcesoVentas" enctype="multipart/form-data">
 
-                    <input type="hidden" name="opcion" value="base_x_id">
-                    <input type="hidden" name="option" value="agregar_ventas">
-                    <input type="hidden" name="misventas_id" id="misventas_id">
-                    <input type="hidden" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['id'] ?>">
-                    <input type="hidden" id="estado" name="estado" value="Pendiente">
+                    <input type="text" name="opcion" value="base_x_id">
+                    <input type="text" name="option" value="agregar_procesoventas">
+                    <input type="text" name="procesoventas_id" id="procesoventas_id">
+                    <input type="text" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['id'] ?>">
+                    <input type="text" id="estado" name="estado" value="Pendiente">
 
                     <div class="row p-2">
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label for="nombres_misventas" class="form-label">Nombre completo</label>
-                                <input type="text" class="form-control" id="nombres_misventas" name="nombres_misventas">
+                                <label for="nombres_to_procesoventas" class="form-label">Nombre completo</label>
+                                <input type="text" class="form-control" id="nombres_to_procesoventas" name="nombres">
                             </div>
                             <div class="mb-3">
-                                <label for="dni_miventas" class="form-label">Dni</label>
-                                <input type="text" class="form-control" id="dni_miventas" name="dni_miventas">
+                                <label for="dni_to_procesoventas" class="form-label">Dni</label>
+                                <input type="text" class="form-control" id="dni_to_procesoventas" name="dni">
                             </div>
                             <div class="mb-3">
-                                <label for="celular1_misventas" class="form-label">Celular</label>
-                                <input type="text" class="form-control" id="celular1_misventas" name="celular1_misventas">
+                                <label for="celular_to_procesoventas" class="form-label">Celular</label>
+                                <input type="text" class="form-control" id="celular_to_procesoventas" name="celular">
                             </div>
 
                             <div class="mb-3">
-                                <label for="tem_misventas" class="form-label">TEM</label>
-                                <input type="text" class="form-control" id="tem_misventas" name="tem_misventas">
+                                <label for="tem_to_procesoventas" class="form-label">TEM</label>
+                                <input type="text" class="form-control" id="tem_to_procesoventas" name="tem">
                             </div>
-                            <div class="mb-3">
-                                <label for="fecha_misventas" class="form-label">Fecha</label>
-                                <input type="date" class="form-control" id="fecha_misventas" name="fecha_misventas" value="<?= date('Y-m-d') ?>">
-                            </div>
+                            <!-- <div class="mb-3">
+                                <label for="fecha_procesoventas" class="form-label">Fecha</label>
+                                <input type="date" class="form-control" id="fecha_procesoventas" name="fecha_procesoventas" value="<?= date('Y-m-d') ?>">
+                            </div> -->
                         </div>
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label for="credito_max_misventas" class="form-label">Crédito</label>
-                                <input type="text" class="form-control" id="credito_max_misventas" name="credito_max_misventas">
+                                <label for="credito_to_procesoventas" class="form-label">Crédito</label>
+                                <input type="text" class="form-control" id="credito_to_procesoventas" name="credito">
                             </div>
                             <div class="mb-3">
-                                <label for="linea_misventas" class="form-label">Linea</label>
-                                <input type="text" class="form-control" id="linea_misventas" name="linea_misventas">
-                            </div>                           
+                                <label for="linea_to_procesoventas" class="form-label">Linea</label>
+                                <input type="text" class="form-control" id="linea_to_procesoventas" name="linea">
+                            </div>
                             <div class="mb-3">
-                                <label for="plazo_max_misventas" class="form-label">Plazo</label>
-                                <select class="form-select" name="plazo_max_misventas" id="plazo_max_misventas">
+                                <label for="plazo_to_procesoventas" class="form-label">Plazo</label>
+                                <select class="form-select" id="plazo_to_procesoventas" name="plazo">
                                     <option selected>Plazo</option>
                                     <option value="0">0</option>
                                     <option value="12">12</option>
@@ -272,19 +272,28 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="tipo_producto_misventas" class="form-label">Producto</label>
-                                <select class="form-select" name="tipo_producto_misventas" id="tipo_producto_misventas">
+                                <label for="tipoproducto_to_procesoventas" class="form-label">Producto</label>
+                                <select class="form-select" id="tipoproducto_to_procesoventas" name="tipo_producto">
                                     <option value="0">Producto</option>
                                     <option value="LD">LD</option>
                                     <option value="TC">TC</option>
                                     <option value="LD/TC">LD/TC</option>
                                 </select>
-                            </div>     
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
                             <div class="mb-3">
-                                <label for="archivo" class="form-label">Solicitud de Crédito</label>
+                                <label for="documento" class="form-label">Cargar Documento</label>
                                 <div class="input-group">
-                                    <label class="input-group-text" for="archivo"><i class="fa-solid fa-file-pdf"></i></label>
-                                    <input type="file" class="form-control" id="archivo">
+                                    <input class="form-control" type="file" name="documento" id="documento" accept="application/pdf">
+                                    <input type="hidden" name="archivoDocumento" id="archivoDocumento" value="">
+                                    <button class="btn btn-secondary" type="button" onclick="
+                                            document.getElementById('documento').value = '';
+                                            document.getElementById('archivoDocumento').value = '';
+                                            document.getElementById('documento-preview').innerText = 'No se ha seleccionado ningún archivo.';
+                                        ">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -298,4 +307,3 @@
         </div>
     </div>
 </div>
-

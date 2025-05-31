@@ -4,14 +4,14 @@
             <div class="col-6 text-start">
                 <p class="mb-0">
                     <a href="#" class="text-muted">
-                        <strong>CREDIMANAGER</strong>
+                        <strong>SERVIMANAGER.V2</strong>
                     </a>
                 </p>
             </div>
             <div class="col-6 text-end">
                 <ul class="list-inline">
                     <li class="list-inline-item">
-                        <a href="index.php" class="text-muted">Pagia Principal</a>
+                        <a href="index.php" class="text-muted">SERVICORE GROUP</a>
                     </li>
                 </ul>
             </div>

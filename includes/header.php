@@ -11,7 +11,10 @@
 			echo "<spans class='fw-bold' style='color: #d72324;'>>> Consultas</spans>";
 			break;
 		case "ventas":
-			echo "<spans class='fw-bold' style='color: #d72324;'>>> Ventas</spans>";
+			echo "<spans class='fw-bold' style='color: #d72324;'>>> Ventas Desembolsadas</spans>";
+			break;
+		case "proceso_ventas":
+			echo "<spans class='fw-bold' style='color: #d72324;'>>> Ventas en Proceso</spans>";
 			break;
 		case "usuarios":
 			echo "<spans class='fw-bold' style='color: #d72324;'>>> Usuarios</spans>";

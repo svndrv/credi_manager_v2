@@ -14,8 +14,14 @@ $(function () {
     agregar_base_cartera();
     exportar();
     exportar_word();
+    trasladar_base_procesoventas();
   }
-
+  if (params.get("view") === "proceso_ventas") {
+    listarRegistros_ProcesoVentas(1);
+    construirPaginacion_ProcesoVentas();
+    agregar_procesoventas();
+    no_tras_ventas();
+  }
   if (params.get("view") === "consultas") {
     listar_consultas();
     filtro_consultas();
@@ -26,7 +32,6 @@ $(function () {
     crear_consultas();
     rellenar_consulta();
   }
-
   if (params.get("view") === "ventas") {
     contar_ld();
     contar_tc();
@@ -36,7 +41,6 @@ $(function () {
     filtro_ventas();
     actualizar_ventas();
   }
-
   if (params.get("view") === "usuarios") {
     listar_empleados();
     ventas_x_usuario();
@@ -45,7 +49,6 @@ $(function () {
     actualizar_usuarios();
     crear_usuarios();
   }
-
   if (params.get("view") === "metas") {
     listar_metas();
     crear_metas();
@@ -53,14 +56,12 @@ $(function () {
     select_usuarios();
     filtro_metas();
   }
-
   if (params.get("view") === "metasfv") {
     listar_metasfv();
     crear_metasfv();
     actualizar_metasfv();
     filtro_metasfv();
   }
-
   if (params.get("view") === "cartera") {
     listar_cartera();
     crear_cartera();
@@ -68,7 +69,6 @@ $(function () {
     crear_ventas();
     cartera_x_dni();
   }
-
   if (params.get("view") === "inicio") {
     listar_bonos();
     listar_metas_inicio();
@@ -188,6 +188,392 @@ const listar_metas_inicio = function () {
         html = `<tr><td class='text-center' colspan='8'>No se encontraron resultados</td></tr>`;
       }
       $("#listar_metas").html(html);
+    },
+  });
+};
+
+/* -------------------   VENTAS EN PROCESO   ---------------------- */
+
+const habilitar_text_edit = function () {
+  document.getElementById("boton_read").classList.remove("d-none");
+  document.getElementById("boton_submit_edit").classList.remove("d-none");
+  document.getElementById("boton_edit").classList.add("d-none");
+  document.getElementById("nombres_procesoventas").disabled = false;
+  document.getElementById("dni_procesoventas").disabled = false;
+  document.getElementById("celular1_procesoventas").disabled = false;
+  document.getElementById("tem_procesoventas").disabled = false;
+  document.getElementById("estado").disabled = false;
+  document.getElementById("credito_max_procesoventas").disabled = false;
+  document.getElementById("linea_procesoventas").disabled = false;
+  document.getElementById("plazo_max_procesoventas").disabled = false;
+  document.getElementById("tipo_producto_procesoventas").disabled = false;
+  document.getElementById("documento").disabled = false;
+};
+const deshabilitar_text_edit = function () {
+  document.getElementById("boton_read").classList.add("d-none");
+  document.getElementById("boton_submit_edit").classList.add("d-none");
+  document.getElementById("boton_edit").classList.remove("d-none");
+  document.getElementById("nombres_procesoventas").disabled = true;
+  document.getElementById("dni_procesoventas").disabled = true;
+  document.getElementById("celular1_procesoventas").disabled = true;
+  document.getElementById("tem_procesoventas").disabled = true;
+  document.getElementById("estado").disabled = true;
+  document.getElementById("credito_max_procesoventas").disabled = true;
+  document.getElementById("linea_procesoventas").disabled = true;
+  document.getElementById("plazo_max_procesoventas").disabled = true;
+  document.getElementById("tipo_producto_procesoventas").disabled = true;
+  document.getElementById("documento").disabled = true;
+};
+
+const no_tras_ventas = function () {
+  $(document).on("click", "#pen_venta", function (e) {
+    e.preventDefault();
+    Swal.fire({
+      title: "La venta se encuentra pendiente.",
+      confirmButtonColor: "#3ea1f7ef",
+      backdrop: `
+              rgba(33, 107, 219, 0.2)
+              left top
+              no-repeat
+              `,
+    });
+  });
+  $(document).on("click", "#apela_venta", function (e) {
+    e.preventDefault();
+    Swal.fire({
+      title: "La venta se encuentra en apelación.",
+      confirmButtonColor: "#fff200",
+      backdrop: `
+              rgba(202, 204, 58, 0.2)
+              left top
+              no-repeat
+              `,
+    });
+  });
+  $(document).on("click", "#desa_venta", function (e) {
+    e.preventDefault();
+    Swal.fire({
+      title: "La venta fue desaprobada.",
+      confirmButtonColor: "#fe4343",
+      backdrop: `
+              rgba(204, 58, 58, 0.2)
+              left top
+              no-repeat
+              `,
+    });
+  });
+};
+
+// const listar_procesoventas = function () {
+//   $.ajax({
+//     url: "controller/proceso_ventas.php",
+//     success: function (response) {
+//       const data = JSON.parse(response);
+//       let html = ``;
+//       if (data.length > 0) {
+//         data.map((x) => {
+//           const { id, nombres, dni, celular, created_at, estado} = x;
+
+//           if (estado === "Pendiente") {
+//               iconestado = "<i class='fa-solid fa-clock-rotate-left me-2'></i>";
+//               bgestado = "pendiente";
+
+//           } else if (estado === "Aprobado") {
+//               iconestado = "<i class='fa-solid fa-check me-2'></i>";
+//               bgestado = "aprobado";
+
+//           } else if (estado === "Desaprobado") {
+//               iconestado = "<i class='fa-solid fa-xmark me-2'></i>";
+//               bgestado = "desaprobado";
+
+//           } else if (estado === "Apelando") {
+//               iconestado = "<i class='fa-solid fa-exclamation me-2'></i>";
+//               bgestado = "apelando";
+//           }
+
+//           html =
+//             html +
+//             `<tr>
+//               <td>${nombres}</td>
+//               <td>${dni}</td>
+//               <td>${celular}</td>
+//               <td>${created_at}</td>
+//               <td class="text-center"><span class="icon-estado-${bgestado}">${iconestado}${estado}</span></td>
+
+//               <td class="text-center">
+//                 <a onclick="trasladar_venta(${id})"><i class="fa-solid fa-clipboard me-2"></i></a>
+//                 <a onclick="obtener_cartera(${id})"><i class="fa-solid fa-pen-to-square me-2"></i></a>
+//                 <a onclick="obtener_cartera(${id})"></a><i class="fa-solid fa-box-archive me-2"></i></a>
+//                 <a onclick="obtener_cartera(${id})"><i class="fa-solid fa-trash"></i></a>
+//               </td>
+//             </tr>`;
+//         });
+//       } else {
+//         html =
+//           html +
+//           `<tr><td class='text-center' colspan='6'>No se encontraron resultados.</td>`;
+//       }
+//       $("#listar_procesoventas").html(html);
+//     },
+//   });
+// };
+
+const obtener_procesoventas_x_id = function (id) {
+  $("#obtener-proceso-ventas").modal("show");
+  $.ajax({
+    url: "controller/proceso_ventas.php",
+    method: "POST",
+    data: {
+      id: id,
+      option: "procesoventas_x_id",
+    },
+    success: function (response) {
+      data = JSON.parse(response);
+      $.each(data, function (i, e) {
+        $("#procesoventas_id").val(data[i]["id"]);
+        $("#nombres_procesoventas").val(data[i]["nombres"]);
+        $("#dni_procesoventas").val(data[i]["dni"]);
+        $("#celular1_procesoventas").val(data[i]["celular"]);
+        $("#credito_max_procesoventas").val(data[i]["credito"]);
+        $("#linea_procesoventas").val(data[i]["linea"]);
+        $("#plazo_max_procesoventas").val(data[i]["plazo"]);
+        $("#tipo_producto_procesoventas").val(data[i]["tipo_producto"]);
+        $("#tem_procesoventas").val(data[i]["tem"]);
+        $("#archivoDocumento").val(data[i]["documento"]);
+      });
+    },
+    error: function (xhr, status, error) {
+      console.error("Error al obtener la meta: ", error);
+      alert("Hubo un error al obtener la meta.");
+    },
+  });
+};
+const trasladar_base_procesoventas = function () {
+  $("#formObtenerProcesoVentas").submit(function (e) {
+    e.preventDefault();
+    const data = new FormData($("#formObtenerProcesoVentas")[0]);
+    var data2 = $(this).serialize();
+    console.log(data2);
+    $.ajax({
+      url: "controller/proceso_ventas.php",
+      method: "POST",
+      data: data,
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function (data) {
+        const response = JSON.parse(data);
+
+        if (response.status == "error") {
+          Swal.fire({
+            icon: "error",
+            title: "Lo sentimos",
+            text: response.message,
+          });
+        } else {
+          Swal.fire({
+            title: "Felicidades",
+            text: response.message,
+            icon: "success",
+            confirmButtonColor: "rgb(33,219,130)",
+            backdrop: `
+          rgba(33,219,130,0.2)
+          left top
+          no-repeat
+          `,
+          });
+          limpiarFormularioProcesoVentas();         
+        }
+      },
+    });
+  });
+};
+const limpiarFormularioProcesoVentas = function () {
+  $("#obtener-procesoventas").modal("hide");
+  $("#formObtenerProcesoVentas")[0].reset();
+  $("#formObtenerProcesoVentas")[0].reset();
+  $("#documento").val("");
+  $("#documento-preview").text("No se ha seleccionado ningún archivo.");
+};
+const listarRegistros_ProcesoVentas = function (pagina) {
+  $.ajax({
+    url: "controller/proceso_ventas.php",
+    type: "POST",
+    data: { option: "listar_pventas", pagina: pagina },
+    dataType: "json",
+    success: function (response) {
+      let html = "";
+      if (response.length > 0) {
+        response.map((x) => {
+          const { id, nombres, dni, celular, created_at, estado } = x;
+          if (estado === "Pendiente") {
+            iconestado = "<i class='fa-solid fa-clock-rotate-left me-2'></i>";
+            bgestado = "pendiente";
+          } else if (estado === "Aprobado") {
+            iconestado = "<i class='fa-solid fa-check me-2'></i>";
+            bgestado = "aprobado";
+          } else if (estado === "Desaprobado") {
+            iconestado = "<i class='fa-solid fa-xmark me-2'></i>";
+            bgestado = "desaprobado";
+          } else if (estado === "Apelando") {
+            iconestado = "<i class='fa-solid fa-exclamation me-2'></i>";
+            bgestado = "apelando";
+          }
+
+          if (estado == "Aprobado") {
+            icontoventas =
+              "<a onclick='to_ventas_desembolsadas(${id})'></a><i class='icon-to-ventas fa-solid fa-circle-check '></i></a>";
+          } else if (estado == "Pendiente") {
+            icontoventas =
+              "<a href='#' id='pen_venta'><i class='icon-pen-ventas fa-solid fa-clock'></i></a>";
+          } else if (estado == "Apelando") {
+            icontoventas =
+              "<a href='#' id='apela_venta'><i class='icon-apela-ventas fa-solid fa-circle-exclamation'></i></a>";
+          } else if (estado == "Desaprobado"){
+            icontoventas =
+              "<a href='#' id='desa_venta'><i class='icon-no-ventas fa-solid fa-circle-xmark'></i></a>";
+          }
+
+          html =
+            html +
+            `<tr>
+              <td>${nombres}</td>
+              <td>${dni}</td>
+              <td>${celular}</td>
+              <td>${created_at}</td>
+              <td class="text-center"><span class="icon-estado-${bgestado}">${iconestado}${estado}</span></td>             
+              <td class="text-center">
+                <a onclick="obtener_procesoventas_x_id(${id})"><i class="fa-solid fa-clipboard me-2"></i></a>
+                <a onclick="obtener_cartera(${id})"></a><i class="fa-solid fa-box-archive me-2"></i></a>          
+                ${icontoventas}     
+              </td>
+            </tr>`;
+        });
+      } else {
+        html =
+          html +
+          `<tr><td class='text-center' colspan='6'>No se encontraron resultados.</td>`;
+      }
+      $("#listar_procesoventas").html(html);
+
+      construirPaginacion_ProcesoVentas(pagina);
+    },
+  });
+};
+function construirPaginacion_ProcesoVentas(pagina_actual_pventas) {
+  $.ajax({
+    url: "controller/proceso_ventas.php",
+    type: "POST",
+    data: { option: "contar_pventas" },
+    dataType: "json",
+    success: function (response) {
+      let total_pventas = response.total;
+      let por_pagina = 7; // Cantidad de registros por página
+      let total_paginas = Math.ceil(total_pventas / por_pagina);
+      let html = "";
+
+      if (total_paginas > 1) {
+        // Botón anterior
+        html += `<li class="page-item ${
+          pagina_actual_pventas == 1 ? "disabled" : ""
+        }">
+                          <a class="page-link" href="javascript:void(0);" onclick="listarRegistros_ProcesoVentas(${
+                            pagina_actual_pventas - 1
+                          });">Anterior</a>
+                      </li>`;
+
+        // Botones de páginas
+        for (let i = 1; i <= total_paginas; i++) {
+          html += `<li class="page-item ${
+            pagina_actual_pventas == i ? "active" : ""
+          }">
+                              <a class="page-link" href="javascript:void(0);" onclick="listarRegistros_ProcesoVentas(${i});">${i}</a>
+                          </li>`;
+        }
+
+        // Botón siguiente
+        html += `<li class="page-item ${
+          pagina_actual_pventas == total_paginas ? "disabled" : ""
+        }">
+                          <a class="page-link" href="javascript:void(0);" onclick="listarRegistros_ProcesoVentas(${
+                            pagina_actual_pventas + 1
+                          });">Siguiente</a>
+                      </li>`;
+      }
+
+      $("#paginacion_pventas").html(html);
+    },
+  });
+}
+const agregar_procesoventas = function () {
+  $("#formAgregarProcesoVentas").submit(function (e) {
+    e.preventDefault();
+    const data = new FormData($("#formAgregarProcesoVentas")[0]);
+    var data2 = $(this).serialize();
+    console.log(data2);
+    $.ajax({
+      url: "controller/proceso_ventas.php",
+      method: "POST",
+      data: data,
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function (data) {
+        const response = JSON.parse(data);
+
+        if (response.status == "error") {
+          Swal.fire({
+            icon: "error",
+            title: "Lo sentimos",
+            text: response.message,
+          });
+        } else {
+          Swal.fire({
+            title: "Felicidades",
+            text: response.message,
+            icon: "success",
+            confirmButtonColor: "rgb(33,219,130)",
+            backdrop: `
+          rgba(33,219,130,0.2)
+          left top
+          no-repeat
+          `,
+          });
+          $("#formAgregarProcesoVentas").trigger("reset");
+          $("#agregar-procesoventa").modal("hide");
+        }
+      },
+    });
+  });
+};
+
+
+const obtener_procesoventas = function (id) {
+  $("#obtener-procesoventas").modal("show");
+  $.ajax({
+    url: "controller/base.php",
+    method: "POST",
+    data: {
+      id: id,
+      option: "base_x_id",
+    },
+    success: function (response) {
+      data = JSON.parse(response);
+      $.each(data, function (i, e) {
+        $("#procesoventas_id").val(data[i]["id"]);
+        $("#nombres_to_procesoventas").val(data[i]["nombres"]);
+        $("#dni_to_procesoventas").val(data[i]["dni"]);
+        $("#celular_to_procesoventas").val(data[i]["celular_1"]);
+        $("#credito_to_procesoventas").val(data[i]["credito_max"]);
+        $("#linea_to_procesoventas").val(data[i]["linea_max"]);
+        $("#plazo_to_procesoventas").val(data[i]["plazo_max"]);
+        $("#tipoproducto_to_procesoventas").val(data[i]["tipo_producto"]);
+        $("#tem_to_procesoventas").val(data[i]["tem"]);
+      });
+    },
+    error: function (xhr, status, error) {
+      console.error("Error al obtener la meta: ", error);
+      alert("Hubo un error al obtener la meta.");
     },
   });
 };
@@ -314,12 +700,12 @@ const crear_cartera = function () {
 const eliminar_cartera = function (id) {
   Swal.fire({
     title: "¿Estás seguro?",
-      text: "El cliente será eliminada.",
-      showCancelButton: true,
-      confirmButtonColor: "rgb(33,219,130)",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si",
-      cancelButtonText: "Cancelar",
+    text: "El cliente será eliminada.",
+    showCancelButton: true,
+    confirmButtonColor: "rgb(33,219,130)",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si",
+    cancelButtonText: "Cancelar",
   }).then((result) => {
     if (result.isConfirmed) {
       $.ajax({
@@ -1323,7 +1709,7 @@ const rellenar_ultima_meta = function () {
       $("#monto_meta").html(html_monto);
     },
   });
-}
+};
 
 /* ----------------------------------------------------- */
 
@@ -1426,7 +1812,7 @@ const listarRegistros = function (pagina) {
               `<tr><td>${nombres}</td><td>${dni}</td><td>${tipo_cliente}</td><td>${direccion}</td><td>${distrito}</td><td>S/.${credito_max}</td><td>S/.${linea_max}</td><td>${plazo_max}</td><td>${tem}%</td><td>${celular_1}</td><td>${celular_2}</td><td>${celular_3}</td><td>${tipo_producto}</td><td>${combo}</td><td>
                 <a onclick="obtener_base(${id})"><i class="fa-solid fa-user-plus me-2"></i></a>
                 <a onclick="trasladar_base(${id})"><i class="fa-solid fa-wallet"></i></a>
-                <a onclick="obtener_misventas(${id})"><i class="fa-solid fa-plus"></i></a>
+                <a onclick="obtener_procesoventas(${id})"><i class="fa-solid fa-plus"></i></a>
               </td></tr>`;
           } else {
             html =
@@ -1626,36 +2012,6 @@ const agregar_base_cartera = function () {
   });
 };
 
-const obtener_misventas = function (id) {
-  $("#obtener-misventas").modal("show");
-  $.ajax({
-    url: "controller/base.php",
-    method: "POST",
-    data: {
-      id: id,
-      option: "base_x_id",
-    },
-    success: function (response) {
-      data = JSON.parse(response);
-      $.each(data, function (i, e) {
-        $("#misventas_id").val(data[i]["id"]);
-        $("#nombres_misventas").val(data[i]["nombres"]);
-        $("#dni_miventas").val(data[i]["dni"]);
-        $("#celular1_misventas").val(data[i]["celular_1"]);
-        $("#credito_max_misventas").val(data[i]["credito_max"]);
-        $("#linea_misventas").val(data[i]["linea_max"]);
-        $("#plazo_max_misventas").val(data[i]["plazo_max"]);
-        $("#tipo_producto_misventas").val(data[i]["tipo_producto"]);
-        $("#tem_misventas").val(data[i]["tem"]);
-      });
-    },
-    error: function (xhr, status, error) {
-      console.error("Error al obtener la meta: ", error);
-      alert("Hubo un error al obtener la meta.");
-    },
-  });
-};
-
 /* ----------------------------------------------------- */
 
 /* -------------------   VENTAS   ---------------------- */
@@ -1747,7 +2103,6 @@ const crear_ventas = function () {
           $("#editar-consulta").modal("hide");
           $("#obtener_cartera").modal("hide");
           $("#formObtenerBase").trigger("reset");
-
         }
       },
     });
@@ -2035,12 +2390,12 @@ const actualizar_ventas = function (id) {
 const eliminar_venta = function (id) {
   Swal.fire({
     title: "¿Estás seguro?",
-      text: "La venta será eliminada.",
-      showCancelButton: true,
-      confirmButtonColor: "rgb(33,219,130)",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si",
-      cancelButtonText: "Cancelar",
+    text: "La venta será eliminada.",
+    showCancelButton: true,
+    confirmButtonColor: "rgb(33,219,130)",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si",
+    cancelButtonText: "Cancelar",
   }).then((result) => {
     if (result.isConfirmed) {
       $.ajax({
@@ -2153,7 +2508,7 @@ const filtro_empleados = function () {
               estado = "Inactivo";
               iconestado = "inactivo";
             }
-  
+
             if (usuario.rol === "1") {
               rol = "Administrador";
               iconrol = "admin";
@@ -2164,7 +2519,7 @@ const filtro_empleados = function () {
               rol = "Asesor";
               iconrol = "asesor";
             }
-  
+
             html =
               html +
               `<tr class="align-middle">
@@ -2649,12 +3004,12 @@ const limpiar_form_consulta = function () {
 const eliminar_consulta = function (id) {
   Swal.fire({
     title: "¿Estás seguro?",
-      text: "La consulta será eliminada.",
-      showCancelButton: true,
-      confirmButtonColor: "rgb(33,219,130)",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si",
-      cancelButtonText: "Cancelar",
+    text: "La consulta será eliminada.",
+    showCancelButton: true,
+    confirmButtonColor: "rgb(33,219,130)",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si",
+    cancelButtonText: "Cancelar",
   }).then((result) => {
     if (result.isConfirmed) {
       $.ajax({
@@ -2812,23 +3167,23 @@ const importar = function () {
   });
 };
 const exportar = () => {
-    const boton = document.getElementById("btn-descargar-excel")
-    if (boton) {
-        boton.addEventListener("click", () => {
-            window.location.href = "controller/exp_excel.php";
-        });
-    }
+  const boton = document.getElementById("btn-descargar-excel");
+  if (boton) {
+    boton.addEventListener("click", () => {
+      window.location.href = "controller/exp_excel.php";
+    });
+  }
 };
 
 /* ---------------------- WORD ------------------------- */
 
 const exportar_word = () => {
-    const boton = document.getElementById("btn-descargar-word")
-    if (boton) {
-        boton.addEventListener("click", () => {
-            window.location.href = "controller/exp_word.php";
-        });
-    }
+  const boton = document.getElementById("btn-descargar-word");
+  if (boton) {
+    boton.addEventListener("click", () => {
+      window.location.href = "controller/exp_word.php";
+    });
+  }
 };
 
 /* ----------------------------------------------------- */

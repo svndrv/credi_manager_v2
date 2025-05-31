@@ -2,7 +2,7 @@
     <!-- Content For Sidebar -->
     <div class="h-200">
         <div class="sidebar-logo mt-3">
-            <img src="img/logotipo/logotipo-mini.png" class="w-25">
+            <img src="img/logotipo/logotipo-mid.png" class="w-25">
         </div>
         <ul class="sidebar-nav">
 
@@ -37,12 +37,21 @@
                         Consultas
                     </a>
                 </li>
-                <li <?php echo ($view === 'ventas') ? 'class="sidebar-active-link"' : ''; ?>>
-                    <a href="dashboard.php?view=ventas" class="sidebar-link">
-                        <i class="fa-solid fa-cash-register pe-2"></i>
+
+                <li class="sidebar-item-ventas">
+                    <a href="#" class="sidebar-link collapsed" data-bs-target="#posts_ventas" data-bs-toggle="collapse" aria-expanded="false"><i class="fa-solid fa-cash-register pe-2"></i>
                         Ventas
                     </a>
+                    <ul id="posts_ventas" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar-item-ventas">
+                        <li <?php echo ($view === 'proceso_ventas') ? 'class="sidebar-active-link"' : ''; ?>>
+                                <a href="dashboard.php?view=proceso_ventas" class="sidebar-link">En proceso</a>
+                        </li>
+                        <li <?php echo ($view === 'ventas') ? 'class="sidebar-active-link"' : ''; ?>>
+                                <a href="dashboard.php?view=ventas" class="sidebar-link">Desembolsado</a>
+                        </li>
+                    </ul>
                 </li>
+
                 <li <?php echo ($view === 'cartera') ? 'class="sidebar-active-link"' : ''; ?>>
                     <a href="dashboard.php?view=cartera" class="sidebar-link">
                         <i class="fa-solid fa-wallet pe-2"></i>
