@@ -81,40 +81,49 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
                 <h1 class="modal-title fs-5" id="obtener-procesoventasLabel">Transladar a Ventas Desembolsadas</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="formObtenerProcesoVentas" enctype="multipart/form-data">
 
-                    <input type="hidden" name="option" value="agregar_procesoventas">
-                    <input type="hidden" name="procesoventas_id" id="procesoventas_id">
+                    <input type="hidden" name="option" value="actualizar_procesoventas">
+                    <input type="hidden" name="id" id="id_ob_pventas">
                     <input type="hidden" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['id'] ?>">
 
 
-                    <div class="row p-2">               
+                    <div class="row p-2">
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label for="nombres_procesoventas" class="form-label">Nombre completo</label>
-                                <input type="text" class="form-control" id="nombres_procesoventas" name="nombres" disabled>
+                                <label for="nombres_ob_pventas" class="form-label">Nombre completo</label>
+                                <input type="text" class="form-control" id="nombres_ob_pventas" name="nombres" disabled>
                             </div>
                             <div class="mb-3">
-                                <label for="dni_procesoventas" class="form-label">Dni</label>
-                                <input type="text" class="form-control" id="dni_procesoventas" name="dni" disabled>
+                                <label for="dni_ob_pventas" class="form-label">Dni</label>
+                                <input type="text" class="form-control" id="dni_ob_pventas" name="dni" disabled>
                             </div>
                             <div class="mb-3">
-                                <label for="celular1_procesoventas" class="form-label">Celular</label>
-                                <input type="text" class="form-control" id="celular1_procesoventas" name="celular" disabled>
+                                <label for="celular_ob_pventas" class="form-label">Celular</label>
+                                <input type="text" class="form-control" id="celular_ob_pventas" name="celular" disabled>
                             </div>
 
                             <div class="mb-3">
-                                <label for="tem_procesoventas" class="form-label">TEM</label>
-                                <input type="text" class="form-control" id="tem_procesoventas" name="tem" disabled>
+                                <label for="tem_ob_pventas" class="form-label">TEM</label>
+                                <input type="text" class="form-control" id="tem_ob_pventas" name="tem" disabled>
                             </div>
-                            <div class="mb-3">
-                                <label for="estado" class="form-label">Estado</label>
-                                <input type="text" class="form-control" id="estado" name="estado" value="Pendiente" disabled>
-                            </div>
+                            <?php if ($_SESSION['rol'] === '1' || $_SESSION['rol'] === '2') { ?>
+                                <div class="mb-3">
+                                    <label for="estado_ob_pventas" class="form-label">Estado:</label>
+                                    <select class="form-select" name="estado" id="estado_ob_pventas" disabled>
+                                        <option value="0">Estado</option>
+                                        <option value="Pendiente">Pendiente</option>
+                                        <option value="Apelando">Apelando</option>
+                                        <option value="Desaprobado">Desaprobado</option>
+                                        <option value="Aprobado">Aprobado</option>
+                                    </select>
+                                </div>
+                            <?php } ?>
 
                             <!-- <div class="mb-3">
                                 <label for="fecha_procesoventas" class="form-label">Fecha</label>
@@ -123,16 +132,16 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label for="credito_max_procesoventas" class="form-label">Crédito</label>
-                                <input type="text" class="form-control" id="credito_max_procesoventas" name="credito" disabled>
+                                <label for="credito_ob_pventas" class="form-label">Crédito</label>
+                                <input type="text" class="form-control" id="credito_ob_pventas" name="credito" disabled>
                             </div>
                             <div class="mb-3">
-                                <label for="linea_procesoventas" class="form-label">Linea</label>
-                                <input type="text" class="form-control" id="linea_procesoventas" name="linea" disabled>
+                                <label for="linea_ob_pventas" class="form-label">Linea</label>
+                                <input type="text" class="form-control" id="linea_ob_pventas" name="linea" disabled>
                             </div>
                             <div class="mb-3">
-                                <label for="plazo_max_procesoventas" class="form-label">Plazo</label>
-                                <select class="form-select" id="plazo_max_procesoventas" name="plazo" disabled>
+                                <label for="plazo_ob_pventas" class="form-label">Plazo</label>
+                                <select class="form-select" id="plazo_ob_pventas" name="plazo" disabled>
                                     <option selected>Plazo</option>
                                     <option value="0">0</option>
                                     <option value="12">12</option>
@@ -143,8 +152,8 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="tipo_producto_procesoventas" class="form-label">Producto</label>
-                                <select class="form-select" id="tipo_producto_procesoventas" name="tipo_producto" disabled>
+                                <label for="tipoproducto_ob_pventas" class="form-label">Producto</label>
+                                <select class="form-select" id="tipoproducto_ob_pventas" name="tipo_producto" disabled>
                                     <option value="0">Producto</option>
                                     <option value="LD">LD</option>
                                     <option value="TC">TC</option>
@@ -154,28 +163,33 @@
                         </div>
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <label for="documento" class="form-label">Cargar Documento</label>
-                                <div class="input-group">
-                                    <input class="form-control" type="file" name="documento" id="documento" accept="application/pdf" disabled>
-                                    <input type="hidden" name="archivoDocumento" id="archivoDocumento" value="">
-                                    <button class="btn btn-secondary" type="button" onclick="
-                                            document.getElementById('documento').value = '';
-                                            document.getElementById('archivoDocumento').value = '';
-                                            document.getElementById('documento-preview').innerText = 'No se ha seleccionado ningún archivo.';
+                                <label for="documento" class="form-label">Documento</label>
+                                <div class="input-group mb-3">
+                                    <input class="form-control d-none" type="file" name="documento" id="documento" accept="application/pdf">
+                                    <button id="bton-trash-edit-pv" class="btn btn-secondary d-none" type="button" onclick="
+                                        document.getElementById('documento').value = '';
+                                        document.getElementById('archivoDocumento').value = '';
+                                        document.getElementById('documento-preview').innerText = 'No se ha seleccionado ningún archivo.';
+                                        document.getElementById('linkDocumento').style.display = 'none';
                                         ">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </div>
+                                <button id="btnVerDocumento" type="button" class="btn btn-primary">
+                                    <i class="fa-solid fa-eye me-2"></i>Ver solicitud
+                                </button>
+                                <p id="documento-preview" class="form-text text-muted">No se ha seleccionado ningún archivo.</p>
+
                             </div>
                         </div>
                     </div>
-                
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="deshabilitar_text_edit()">Cerrar</button>
-                <button id="boton_submit_edit" type="submit" class="btn btn-danger d-none">Editar datos</button>
-                <button id="boton_edit" type="button" class="btn btn-primary" onclick="habilitar_text_edit()"><i class="fa-solid fa-pen"></i></button>
-                <button id="boton_read" type="button" class="btn btn-danger d-none" onclick="deshabilitar_text_edit()"><i class="fa-brands fa-readme"></i></button>
+                <button id="boton_submit_edit" type="submit" class="btn btn-primary d-none">Editar datos</button>
+                <button id="boton_edit" type="button" class="btn btn-success" onclick="habilitar_text_edit()"><i class="fa-solid fa-pen"></i></button>
+                <button id="boton_read" type="button" class="btn btn-primary d-none" onclick="deshabilitar_text_edit()"><i class="fa-brands fa-readme"></i></button>
             </div>
             </form>
         </div>
@@ -196,28 +210,28 @@
             <div class="modal-body">
                 <form id="formAgregarProcesoVentas" enctype="multipart/form-data">
 
-                    <input type="text" name="option" value="agregar_procesoventas">
-                    <input type="text" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['id'] ?>">
-                    <input type="text" id="estado" name="estado" value="Pendiente">
+                    <input type="hidden" name="option" value="agregar_procesoventas">
+                    <input type="hidden" id="id_add_pventas" name="id_usuario" value="<?php echo $_SESSION['id'] ?>">
+                    <input type="hidden" id="estado_add_pventas" name="estado" value="Pendiente">
 
                     <div class="row p-2">
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label for="nombres_procesoventas" class="form-label">Nombre completo</label>
-                                <input type="text" class="form-control" id="nombres_procesoventas" name="nombres">
+                                <label for="nombres_add_pventas" class="form-label">Nombre completo</label>
+                                <input type="text" class="form-control" id="nombres_add_pventas" name="nombres">
                             </div>
                             <div class="mb-3">
-                                <label for="dni_procesoventas" class="form-label">Dni</label>
-                                <input type="text" class="form-control" id="dni_procesoventas" name="dni">
+                                <label for="dni_add_pventas" class="form-label">Dni</label>
+                                <input type="text" class="form-control" id="dni_add_pventas" name="dni">
                             </div>
                             <div class="mb-3">
-                                <label for="celular1_procesoventas" class="form-label">Celular</label>
-                                <input type="text" class="form-control" id="celular1_procesoventas" name="celular">
+                                <label for="celular_add_pventas" class="form-label">Celular</label>
+                                <input type="text" class="form-control" id="celular_add_pventas" name="celular">
                             </div>
 
                             <div class="mb-3">
-                                <label for="tem_procesoventas" class="form-label">TEM</label>
-                                <input type="text" class="form-control" id="tem_procesoventas" name="tem">
+                                <label for="tem_add_pventas" class="form-label">TEM</label>
+                                <input type="text" class="form-control" id="tem_add_pventas" name="tem">
                             </div>
                             <!-- <div class="mb-3">
                                 <label for="fecha_procesoventas" class="form-label">Fecha</label>
@@ -226,16 +240,16 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label for="credito_max_procesoventas" class="form-label">Crédito</label>
-                                <input type="text" class="form-control" id="credito_max_procesoventas" name="credito">
+                                <label for="credito_add_pventas" class="form-label">Crédito</label>
+                                <input type="text" class="form-control" id="credito_add_pventas" name="credito">
                             </div>
                             <div class="mb-3">
-                                <label for="linea_procesoventas" class="form-label">Linea</label>
-                                <input type="text" class="form-control" id="linea_procesoventas" name="linea">
+                                <label for="linea_add_pventas" class="form-label">Linea</label>
+                                <input type="text" class="form-control" id="linea_add_pventas" name="linea">
                             </div>
                             <div class="mb-3">
-                                <label for="plazo_max_procesoventas" class="form-label">Plazo</label>
-                                <select class="form-select" id="plazo_max_procesoventas" name="plazo">
+                                <label for="plazo_add_pventas" class="form-label">Plazo</label>
+                                <select class="form-select" id="plazo_add_pventas" name="plazo">
                                     <option selected>Plazo</option>
                                     <option value="0">0</option>
                                     <option value="12">12</option>
@@ -246,8 +260,8 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="tipo_producto_procesoventas" class="form-label">Producto</label>
-                                <select class="form-select" id="tipo_producto_procesoventas" name="tipo_producto">
+                                <label for="tipoproducto_add_pventas" class="form-label">Producto</label>
+                                <select class="form-select" id="tipoproducto_add_pventas" name="tipo_producto">
                                     <option value="0">Producto</option>
                                     <option value="LD">LD</option>
                                     <option value="TC">TC</option>
@@ -260,7 +274,6 @@
                                 <label for="documento" class="form-label">Cargar Documento</label>
                                 <div class="input-group">
                                     <input class="form-control" type="file" name="documento" id="documento" accept="application/pdf">
-                                    <input type="hidden" name="archivoDocumento" id="archivoDocumento" value="">
                                     <button class="btn btn-secondary" type="button" onclick="
                                             document.getElementById('documento').value = '';
                                             document.getElementById('archivoDocumento').value = '';
@@ -268,14 +281,16 @@
                                         ">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
+
                                 </div>
+
                             </div>
                         </div>
                     </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-success">Transladar</button>
+                <button type="submit" class="btn btn-success">Agregar</button>
             </div>
             </form>
         </div>

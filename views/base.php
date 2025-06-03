@@ -220,11 +220,11 @@
             <div class="modal-body">
                 <form id="formObtenerProcesoVentas" enctype="multipart/form-data">
 
-                    <input type="text" name="opcion" value="base_x_id">
-                    <input type="text" name="option" value="agregar_procesoventas">
-                    <input type="text" name="procesoventas_id" id="procesoventas_id">
-                    <input type="text" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['id'] ?>">
-                    <input type="text" id="estado" name="estado" value="Pendiente">
+                    <input type="hidden" name="opcion" value="base_x_id">
+                    <input type="hidden" name="option" value="agregar_procesoventas">
+                    <input type="hidden" name="procesoventas_id" id="procesoventas_id">
+                    <input type="hidden" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['id'] ?>">
+                    <input type="hidden" id="estado" name="estado" value="Pendiente">
 
                     <div class="row p-2">
                         <div class="col-lg-6">
