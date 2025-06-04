@@ -8,7 +8,6 @@
             </div>
             <div class="card-body p-4">
                 <div class="row">
-
                     <div class="col-lg-3 mb-4">
                         <form id="form_filtro_cartera">
                             <input type="text" class="form-control" id="c-dni" name="dni" placeholder="Ingrese un DNI">
@@ -18,13 +17,12 @@
                         </form>
                     </div>
                     <div class="col-lg-7 mb-3 text-end">
-                        <button type="button" class="btn btn-warning btn-md px-5 text-white" data-bs-toggle="modal" data-bs-target="#agregar-cartera">
-                            <i class="fa-solid fa-user-plus me-2"></i>Agregar</button>
-
+                        <button type="button" class="btn btn-warning btn-md px-4 text-white" data-bs-toggle="modal" data-bs-target="#agregar-cartera">
+                            <i class="fa-solid fa-user-plus"></i></button>
                     </div>
                     <div class="col-lg-12">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover table-striped">
+                        <div class="table-responsive border-4">
+                            <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th scope="col">Nombres</th>
@@ -36,7 +34,7 @@
                                 </thead>
                                 <tbody id="listar_cartera">
                                     <tr>
-                                        <td colspan="6" class="text-center">No hay datos...</td>
+                                        <td colspan="5" class="text-center">No hay datos...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -49,10 +47,13 @@
 </main>
 
 
+<!--======================== MODALS ========================-->
+
 <div class="modal fade" id="editar-cartera" tabindex="-1" aria-labelledby="editar-carteraModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header">
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
                 <h1 class="modal-title fs-5" id="editar-carteraModalLabel">Editar Cliente</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -81,18 +82,18 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" class="btn btn-success">Guardar</button>
             </div>
             </form>
         </div>
     </div>
 </div>
 
-
 <div class="modal fade" id="agregar-cartera" tabindex="-1" aria-labelledby="agregar-carteraModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header">
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
                 <h1 class="modal-title fs-5" id="agregar-carteraModalLabel">Agregar Cartera</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -119,7 +120,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" class="btn btn-success">Guardar</button>
             </div>
             </form>
         </div>
@@ -130,6 +131,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
                 <h1 class="modal-title fs-5" id="obtener_carteraModalLabel">Transladar a Ventas</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -194,7 +196,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Trasladar</button>
+                <button type="submit" class="btn btn-success">Trasladar</button>
             </div>
             </form>
         </div>

@@ -24,11 +24,14 @@ $(function () {
     actualizar_proceso_ventas();
   }
   if (params.get("view") === "consultas") {
-    listar_consultas();
-    filtro_consultas();
     actualizar_consulta();
     crear_ventas();
     agregar_consulta_cartera();
+    listar_consultas_paginadas(1);
+    $("#form_consultas").submit(function (e) {
+      e.preventDefault();
+      filtro_consultas(1); 
+    });
   } else {
     crear_consultas();
     rellenar_consulta();
@@ -81,6 +84,7 @@ $(function () {
     rellenar_ultima_meta();
   } else {
   }
+
 });
 
 const ventas_x_usuario = function () {
@@ -476,7 +480,6 @@ function construirPaginacion_ProcesoVentas(pagina_actual_pventas) {
     },
   });
 }
-
 const actualizar_proceso_ventas = function () {
   $("#formObtenerProcesoVentas").submit(function (e) {
     e.preventDefault();
@@ -527,7 +530,6 @@ data.forEach((valor, clave) => {
     });
   });
 };
-
 const agregar_procesoventas = function () {
   $("#formAgregarProcesoVentas").submit(function (e) {
     e.preventDefault();
@@ -570,7 +572,6 @@ const agregar_procesoventas = function () {
     });
   });
 };
-
 const obtener_procesoventas = function (id) {
   $("#obtener-procesoventas").modal("show");
   $.ajax({
@@ -697,20 +698,16 @@ const crear_cartera = function () {
             text: response.message,
           });
         } else {
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3500,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
-          Toast.fire({
+          Swal.fire({
+            title: "Felicidades",
+            text: response.message,
             icon: "success",
-            title: response.message,
+            confirmButtonColor: "rgb(33,219,130)",
+            backdrop: `
+          rgba(33,219,130,0.2)
+          left top
+          no-repeat
+          `,
           });
           listar_cartera();
           $("#agregar-cartera").modal("hide");
@@ -822,7 +819,6 @@ const cartera_x_dni = function () {
             html =
               html +
               `<tr>
-              <td>${id}</td>
               <td>${nombres}</td>
               <td>${dni}</td>
               <td>${celular}</td>
@@ -836,7 +832,7 @@ const cartera_x_dni = function () {
           });
         } else {
           Swal.fire({
-            title: "No se encontraron campañas.",
+            title: "No se encontraron campañas con el DNI solicitado.",
             padding: "2em",
           });
           listar_cartera();
@@ -2797,38 +2793,39 @@ const crear_usuarios = function () {
 
 /* ------------------   CONSULTAS   --------------------- */
 
-const listar_consultas = function () {
-  $.ajax({
-    url: "controller/consultas.php",
-    success: function (response) {
-      const data = JSON.parse(response);
-      let html = ``;
-      if (data.length > 0) {
-        data.map((x) => {
-          const { id, dni, celular, descripcion, campana } = x;
-          html =
-            html +
-            `<tr>
-              <td>${dni}</td>
-              <td>${celular}</td>
-              <td>${descripcion}</td>
-              <td>${campana}</td>
-              <td class="text-center">
-                <a onclick="obtener_consultas(${id})"><i class="fa-solid fa-circle-plus me-3"></i></a>
-                <a onclick="obtener_consulta_cartera(${id})"><i class="fa-solid fa-wallet me-3"></i>
-                <a onclick="eliminar_consulta(${id})"><i class="fa-solid fa-trash me-3"></i></a>
-              </td>
-            </tr>`;
-        });
-      } else {
-        html =
-          html +
-          `<tr><td class='text-center' colspan='6'>No se encontraron resultados.</td>`;
-      }
-      $("#listar_consultas").html(html);
-    },
-  });
-};
+// const listar_consultas = function () {
+//   $.ajax({
+//     url: "controller/consultas.php",
+//     success: function (response) {
+//       const data = JSON.parse(response);
+//       let html = ``;
+//       if (data.length > 0) {
+//         data.map((x) => {
+//           const { id, dni, celular, descripcion, campana } = x;
+//           html =
+//             html +
+//             `<tr>
+//               <td>${dni}</td>
+//               <td>${celular}</td>
+//               <td>${descripcion}</td>
+//               <td>${campana}</td>
+//               <td class="text-center">
+//                 <a onclick="obtener_consultas(${id})"><i class="fa-solid fa-circle-plus me-3"></i></a>
+//                 <a onclick="obtener_consulta_cartera(${id})"><i class="fa-solid fa-wallet me-3"></i>
+//                 <a onclick="eliminar_consulta(${id})"><i class="fa-solid fa-trash me-3"></i></a>
+//               </td>
+//             </tr>`;
+//         });
+//       } else {
+//         html =
+//           html +
+//           `<tr><td class='text-center' colspan='6'>No se encontraron resultados.</td>`;
+//       }
+//       $("#listar_consultas").html(html);
+//     },
+//   });
+// };
+
 const obtener_consulta_cartera = function (id) {
   $("#agregar-consulta-cartera").modal("show");
   $.ajax({
@@ -2885,7 +2882,7 @@ const agregar_consulta_cartera = function () {
             icon: "success",
             title: response.message,
           });
-          listar_consultas();
+          listar_consultas_paginadas();
           $("#agregar-consulta-cartera").modal("hide");
           $("#formAgregarCartera").trigger("reset");
         }
@@ -3046,7 +3043,7 @@ const eliminar_consulta = function (id) {
               icon: "success",
               confirmButtonColor: "rgb(33,219,130)",
             });
-            listar_consultas();
+            listar_consultas_paginadas(1);
           } else {
             alert("algo salio mal" + data);
           }
@@ -3055,49 +3052,92 @@ const eliminar_consulta = function (id) {
     }
   });
 };
-const filtro_consultas = function () {
-  $("#form_consultas").submit(function (e) {
-    e.preventDefault();
-    var dni = document.getElementById("c-dni").value.trim();
-    var campana = document.getElementById("c-campana").value.trim();
-    $.ajax({
-      url: "controller/consultas.php",
-      method: "POST",
-      data: {
-        dni: dni,
-        campana: campana,
-        option: "filtro_consultas",
-      },
-      success: function (response) {
-        const data = JSON.parse(response);
-        let html = ``;
-        if (data.length > 0) {
-          data.map((x) => {
-            const { id, dni, celular, descripcion, campana } = x;
-            html =
-              html +
-              `<tr>
-                <td>${id}</td>
-                <td>${dni}</td>
-                <td>${celular}</td>
-                <td>${descripcion}</td>
-                <td>${campana}</td>
-                <td class="text-center">
-                  <a onclick="obtener_consultas(${id})"><i class="fa-solid fa-circle-plus me-3"></i></a>
-                  <a onclick="obtener_consulta_cartera(${id})"><i class="fa-solid fa-wallet me-3"></i>
-                  <a onclick="eliminar_consulta(${id})"><i class="fa-solid fa-trash me-3"></i></a>
-                </tr>`;
-          });
-        } else {
-          html =
-            html +
-            `<tr><td class='text-center' colspan='6'>No se encontraron resultados.</td>`;
-        }
-        $("#listar_consultas").html(html);
-      },
-    });
+const filtro_consultas = function (pagina = 1) {
+  var dni = document.getElementById("c-dni").value.trim();
+  var campana = document.getElementById("c-campana").value.trim();
+
+  $.ajax({
+    url: "controller/consultas.php",
+    method: "POST",
+    data: {
+      dni: dni,
+      campana: campana,
+      option: "filtro_consultas",
+      pagina: pagina
+    },
+    success: function (response) {
+      const data = JSON.parse(response);
+      let html = ``;
+      if (data.length > 0) {
+        data.map((x) => {
+          const { id, dni, celular, descripcion, campana, created_at } = x;
+          let estadocampana = campana == "Si" ? "aprobado" : "desaprobado";
+
+          html += `
+            <tr>
+              <td>${dni}</td>
+              <td>${celular}</td>
+              <td>${descripcion}</td>
+              <td class="text-center"><span class="icon-estado-${estadocampana}">${campana}</span></td>        
+              <td class="text-center">
+                <a onclick="obtener_consultas(${id})"><i class="fa-solid fa-circle-plus me-2"></i></a>
+                <a onclick="obtener_consulta_cartera(${id})"><i class="fa-solid fa-wallet me-2"></i></a>
+                <a onclick="eliminar_consulta(${id})"><i class="fa-solid fa-trash me-2"></i></a>     
+              </td>
+            </tr>`;
+        });
+      } else {
+        html = `<tr><td class='text-center' colspan='6'>No se encontraron resultados.</td></tr>`;
+      }
+
+      $("#listar_consultas").html(html);
+
+      construirPaginacion_consultas_filtro(pagina, dni, campana);
+    },
   });
 };
+function construirPaginacion_consultas_filtro(pagina_actual_consultas, dni, campana) {
+  $.ajax({
+    url: "controller/consultas.php",
+    type: "POST",
+    data: { option: "contar_consultas_filtro",
+      dni: dni,
+      campana: campana,},
+    dataType: "json",
+    success: function (response) {
+      let total_consultas_filtro = response.total;
+      let por_pagina = 7; // Cantidad de registros por página
+      let total_paginas = Math.ceil(total_consultas_filtro / por_pagina);
+      let html = "";
+
+      if (total_paginas > 1) {
+        // Botón anterior
+        html += `<li class="page-item ${pagina_actual_consultas == 1 ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="filtro_consultas(${pagina_actual_consultas - 1
+          });">Anterior</a>
+                      </li>`;
+
+        // Botones de páginas
+        for (let i = 1; i <= total_paginas; i++) {
+          html += `<li class="page-item ${pagina_actual_consultas == i ? "active" : ""
+            }">
+                              <a class="page-link" href="javascript:void(0);" onclick="filtro_consultas(${i});">${i}</a>
+                          </li>`;
+        }
+
+        // Botón siguiente
+        html += `<li class="page-item ${pagina_actual_consultas == total_paginas ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="filtro_consultas(${pagina_actual_consultas + 1
+          });">Siguiente</a>
+                      </li>`;
+      }
+
+      $("#paginacion_consultas").html(html);
+    },
+  });
+}
 const obtener_consultas = function (id) {
   $("#editar-consulta").modal("show");
   $.ajax({
@@ -3137,6 +3177,91 @@ const actualizar_consulta = function () {
     });
   });
 };
+const listar_consultas_paginadas = function (pagina) {
+  $.ajax({
+    url: "controller/consultas.php",
+    type: "POST",
+    data: { option: "listar_consultas_pag", pagina: pagina },
+    dataType: "json",
+    success: function (response) {
+      let html = "";
+      if (response.length > 0) {
+        response.map((x) => {
+          const { id, dni, celular, descripcion, campana } = x;
+
+          if (campana == "Si") {
+            estadocampana =
+              "aprobado";
+          } else if (campana == "No") {
+            estadocampana =
+              "desaprobado";
+          } 
+
+          html =
+            html +
+            `<tr>
+              <td>${dni}</td>
+              <td>${celular}</td>
+              <td>${descripcion}</td>
+              <td class="text-center"><span class="icon-estado-${estadocampana}">${campana}</span></td>        
+              <td class="text-center">
+                <a onclick="obtener_consultas(${id})"><i class="fa-solid fa-circle-plus me-2"></i></a>
+                <a onclick="obtener_consulta_cartera(${id})"><i class="fa-solid fa-wallet me-2"></i>
+                <a onclick="eliminar_consulta(${id})"><i class="fa-solid fa-trash me-2"></i></a>     
+              </td>
+            </tr>`;
+        });
+      } else {
+        html =
+          html +
+          `<tr><td class='text-center' colspan='5'>No se encontraron resultados.</td>`;
+      }
+      $("#listar_consultas").html(html);
+
+      construirPaginacion_consultas(pagina);
+    },
+  });
+};
+function construirPaginacion_consultas(pagina_actual_consultas) {
+  $.ajax({
+    url: "controller/consultas.php",
+    type: "POST",
+    data: { option: "contar_consultas" },
+    dataType: "json",
+    success: function (response) {
+      let total_consultas = response.total;
+      let por_pagina = 7; // Cantidad de registros por página
+      let total_paginas = Math.ceil(total_consultas / por_pagina);
+      let html = "";
+
+      if (total_paginas > 1) {
+        // Botón anterior
+        html += `<li class="page-item ${pagina_actual_consultas == 1 ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="listar_consultas_paginadas(${pagina_actual_consultas - 1
+          });">Anterior</a>
+                      </li>`;
+
+        // Botones de páginas
+        for (let i = 1; i <= total_paginas; i++) {
+          html += `<li class="page-item ${pagina_actual_consultas == i ? "active" : ""
+            }">
+                              <a class="page-link" href="javascript:void(0);" onclick="listar_consultas_paginadas(${i});">${i}</a>
+                          </li>`;
+        }
+
+        // Botón siguiente
+        html += `<li class="page-item ${pagina_actual_consultas == total_paginas ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="listar_consultas_paginadas(${pagina_actual_consultas + 1
+          });">Siguiente</a>
+                      </li>`;
+      }
+
+      $("#paginacion_consultas").html(html);
+    },
+  });
+}
 
 /* ----------------------------------------------------- */
 

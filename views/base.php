@@ -16,9 +16,7 @@
                         <button type="submit" class="btn btn-dark w-25"><i class="fa-solid fa-magnifying-glass me-2"></i></button>
                         </form>
                     </div>
-
                     <?php if ($_SESSION['rol'] === '2' || $_SESSION['rol'] === '1') { ?>
-
                         <div class="col-lg-7 mb-3">
                             <form id="uploadForm" enctype="multipart/form-data">
                                 <div class="row">
@@ -29,14 +27,9 @@
                                         <button type="submit" value="Upload" class="btn btn-success"><i class="fa-solid fa-file-import me-2"></i>Importar Excel</button>
                                     </div>
                                 </div>
-
                             </form>
-
                         </div>
-
-
                     <?php }  ?>
-
                     <div class="col-lg-12">
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover table-striped">
@@ -57,7 +50,6 @@
                                         <th scope="col">Producto</th>
                                         <th scope="col">Combo</th>
                                         <?php if ($_SESSION['rol'] != 2) { ?><th scope="col">Acción</th><?php } ?>
-
                                     </tr>
                                 </thead>
                                 <tbody id="listar_base">
@@ -73,15 +65,12 @@
                             </nav>
                         </div>
                     </div>
-
                     <?php if ($_SESSION['rol'] === '2' || $_SESSION['rol'] === '1') { ?>
-
                         <div class="col-lg-12 mb-3 d-flex justify-content-start mt-4">
                             <button type="button" id="btn-borrar-base" class="btn btn-danger me-3"><i class="fa-solid fa-trash me-2"></i>Borrar base</button>
                             <button type="button" id="btn-descargar-excel" class="btn btn-success me-3"><i class="fa-solid fa-file-excel me-2"></i>Plantilla Excel</button>
                             <button type="button" id="btn-descargar-word" class="btn btn-primary"><i class="fa-solid fa-file-word me-2"></i>Solicitud de Crédito</button>
                         </div>
-
                     <?php } else { ?>
                         <div class="col-lg-12 mb-3 d-flex justify-content-start mt-4">
                             <button type="button" id="btn-descargar-word" class="btn btn-success"><i class="fa-solid fa-file-word me-2"></i>Solicitud de Crédito</button>
@@ -93,10 +82,15 @@
     </section>
 </main>
 
+
+
+<!--======================== MODALS ========================-->
+
 <div class="modal fade" id="obtener-base" tabindex="-1" aria-labelledby="obtener-baseModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
                 <h1 class="modal-title fs-5" id="obtener-baseLabel">Transladar a Ventas</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -162,7 +156,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Transladar</button>
+                <button type="submit" class="btn btn-success">Transladar</button>
             </div>
             </form>
         </div>
@@ -173,6 +167,7 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header">
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
                 <h1 class="modal-title fs-5" id="obtener-carteraModalLabel">Trasladar Cartera</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -199,21 +194,18 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Trasladar</button>
+                <button type="submit" class="btn btn-success">Trasladar</button>
             </div>
             </form>
         </div>
     </div>
 </div>
 
-
-
-<!--------------            TRASLADAR A VENTAS EN PROCESO            -------------->
-
 <div class="modal fade" id="obtener-procesoventas" tabindex="-1" aria-labelledby="obtener-ProcesoVentasModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
                 <h1 class="modal-title fs-5" id="obtener-procesoventasLabel">Transladar a Ventas en Proceso</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

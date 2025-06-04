@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <div class="col-lg-12 pt-3">
-                        <div class="table-responsive  border-4">
+                        <div class="table-responsive border-4">
                             <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
@@ -77,12 +77,14 @@
 </main>
 
 
+<!--======================== MODALS ========================-->
+
 <div class="modal fade" id="obtener-proceso-ventas" tabindex="-1" aria-labelledby="obtener-ProcesoVentasModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
-                <h1 class="modal-title fs-5" id="obtener-procesoventasLabel">Transladar a Ventas Desembolsadas</h1>
+                <h1 class="modal-title fs-5" id="obtener-procesoventasLabel">Ver y Editar Ventas en Proceso</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -179,7 +181,6 @@
                                     <i class="fa-solid fa-eye me-2"></i>Ver solicitud
                                 </button>
                                 <p id="documento-preview" class="form-text text-muted">No se ha seleccionado ningún archivo.</p>
-
                             </div>
                         </div>
                     </div>
@@ -196,15 +197,12 @@
     </div>
 </div>
 
-
-
-
-
 <div class="modal fade" id="agregar-procesoventa" tabindex="-1" aria-labelledby="agregar-ProcesoVentasModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="agregar-procesoventasLabel">Transladar a Ventas en Proceso</h1>
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
+                <h1 class="modal-title fs-5" id="agregar-procesoventasLabel">Agregar Proceso en Ventas</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

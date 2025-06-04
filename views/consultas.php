@@ -25,8 +25,8 @@
                         </form>
                     </div>
                     <div class="col-lg-12">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover table-striped">
+                        <div class="table-responsive  border-4">
+                            <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th scope="col">Dni</th>
@@ -42,6 +42,11 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <nav aria-label="Navegación de páginas">
+                                <ul id="paginacion_consultas" class="pagination justify-content-center">
+                                    <!-- Aquí se agregarán dinámicamente los enlaces de paginación -->
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
@@ -51,12 +56,14 @@
 </main>
 
 
-<!-- Modal -->
+<!--======================== MODALS ========================-->
+
 <div class="modal fade" id="editar-consulta" tabindex="-1" aria-labelledby="editar-consultaModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="editar-consultaModalLabel">Transladar a Ventas</h1>
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
+                <h1 class="modal-title fs-5" id="editar-consultaModalLabel">Trasladar a Ventas</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -121,19 +128,19 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" class="btn btn-success">Trasladar</button>
             </div>
             </form>
         </div>
     </div>
 </div>
 
-
 <div class="modal fade" id="agregar-consulta-cartera" tabindex="-1" aria-labelledby="agregar-consulta-carteraModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="agregar-consulta-carteraModalLabel">Transladar a Ventas</h1>
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
+                <h1 class="modal-title fs-5" id="agregar-consulta-carteraModalLabel">Transladar a Cartera</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -160,7 +167,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" class="btn btn-success">Guardar</button>
             </div>
             </form>
         </div>

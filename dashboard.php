@@ -14,7 +14,7 @@ if (!isset($_SESSION['id'])) {
     <link rel="stylesheet" href="css/bootstrapcss/bootstrap.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <title>CREDIMANAGER | Buró Group</title>
+    <title>SERVIMANAGER | Servicore Group</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="icon" href="img/logotipo-mini.ico">
 </head>

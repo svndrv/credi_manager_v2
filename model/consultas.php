@@ -7,11 +7,9 @@ class Consultas extends Conectar {
         $this->db = Conectar::conexion();
         $this->consultas = array();
     }
-
     public function setDb($db) {
         $this->db = $db;
     }
-
     public function obtener_consultas(){
         $sql = "SELECT * FROM consultas";
         $sql = $this->db->prepare($sql);
@@ -40,25 +38,55 @@ class Consultas extends Conectar {
         ];
         return $response;
     }
-    public function obtener_x_dni_campana($dni, $campana){
-        $sql = "SELECT * FROM consultas WHERE 1=1";
+    public function obtener_x_dni_campana($dni, $campana, $limit, $offset) {
+    $sql = "SELECT * FROM consultas WHERE 1=1";
+    $params = [];
 
-        if ($dni) {
-            $sql .= " AND dni = :dni";
-        }
-        if ($campana) {
-            $sql .= " AND campana = :campana";
-        }
-        $stmt = $this->db->prepare($sql);
-        if ($dni) {
-            $stmt->bindParam(':dni', $dni, PDO::PARAM_STR);
-        }
-        if ($campana) {
-            $stmt->bindParam(':campana', $campana, PDO::PARAM_STR);
-        }
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if (!empty($dni)) {
+        $sql .= " AND dni = :dni";
+        $params[':dni'] = $dni;
     }
+
+    if (!empty($campana)) {
+        $sql .= " AND campana = :campana";
+        $params[':campana'] = $campana;
+    }
+
+    $sql .= " LIMIT :limit OFFSET :offset";
+
+    $stmt = $this->db->prepare($sql);
+
+    foreach ($params as $key => $value) {
+        $stmt->bindValue($key, $value);
+    }
+
+    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function contar_consultas_filtro($dni, $campana) {
+    $sql = "SELECT COUNT(*) as total FROM consultas WHERE 1=1";
+    if ($dni) {
+        $sql .= " AND dni = :dni";
+    }
+    if ($campana) {
+        $sql .= " AND campana = :campana";
+    }
+    $stmt = $this->db->prepare($sql);
+    if ($dni) {
+        $stmt->bindParam(':dni', $dni, PDO::PARAM_STR);
+    }
+    if ($campana) {
+        $stmt->bindParam(':campana', $campana, PDO::PARAM_STR);
+    }
+    $stmt->execute();
+    $resultado = $stmt->fetch(PDO::FETCH_ASSOC); // <-- CAMBIA AQUÍ
+    return (int)$resultado['total']; // <-- DEVUELVE SOLO EL NÚMERO
+}
+
     public function obtener_consulta_x_id($id){
         $sql = "SELECT * FROM consultas WHERE id = ?";
         $sql = $this->db->prepare($sql);
@@ -78,5 +106,22 @@ class Consultas extends Conectar {
         echo "ok";
 
     }
+
+
+    public function obtener_consultas_paginados($limit, $offset) {
+        $sql = "SELECT * FROM consultas LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } 
+    public function contar_consultas() {
+        $sql = "SELECT COUNT(*) as total FROM consultas";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
 }
 ?>
