@@ -4,6 +4,7 @@ const params = new URLSearchParams(url.search);
 $(function () {
   cargar_perfil();
 
+
   if (params.get("view") === "gestionar") {
     base_x_dni();
     listarRegistros(1);
@@ -31,6 +32,7 @@ $(function () {
     $("#form_consultas").submit(function (e) {
       e.preventDefault();
       filtro_consultas(1); 
+      
     });
   } else {
     crear_consultas();
@@ -67,11 +69,15 @@ $(function () {
     filtro_metasfv();
   }
   if (params.get("view") === "cartera") {
-    listar_cartera();
+    listar_carteras_paginadas(1);
     crear_cartera();
     actualizar_cartera();
     crear_ventas();
-    cartera_x_dni();
+    $("#form_filtro_cartera").submit(function (e) {
+      e.preventDefault();
+      filtro_cartera(1); 
+    });
+    
   }
   if (params.get("view") === "inicio") {
     listar_bonos();
@@ -709,7 +715,7 @@ const crear_cartera = function () {
           no-repeat
           `,
           });
-          listar_cartera();
+          listar_carteras_paginadas(1);
           $("#agregar-cartera").modal("hide");
           $("#formAgregarCartera").trigger("reset");
         }
@@ -753,7 +759,7 @@ const eliminar_cartera = function (id) {
               icon: "success",
               title: response.message,
             });
-            listar_cartera();
+            listar_carteras_paginadas(1);
           } else {
             alert("algo salio mal" + data);
           }
@@ -789,7 +795,7 @@ const actualizar_cartera = function () {
             icon: "success",
             title: response.message,
           });
-          listar_cartera();
+          listar_carteras_paginadas(1);
           $("#editar-cartera").modal("hide");
           $("#formActualizarCartera").trigger("reset");
         } else {
@@ -835,13 +841,176 @@ const cartera_x_dni = function () {
             title: "No se encontraron campañas con el DNI solicitado.",
             padding: "2em",
           });
-          listar_cartera();
+          listar_carteras_paginadas(1);
         }
         $("#listar_cartera").html(html);
       },
     });
   });
 };
+
+const listar_carteras_paginadas = function (pagina) {
+  $.ajax({
+    url: "controller/cartera.php",
+    type: "POST",
+    data: { option: "listar_pcartera", pagina: pagina },
+    dataType: "json",
+    success: function (response) {
+      let html = "";
+      if (response.length > 0) {
+        response.map((x) => {
+          const { id, nombres, dni, celular, created_at } = x;
+          html =
+            html +
+            `<tr>
+              <td>${nombres}</td>
+              <td>${dni}</td>
+              <td>${celular}</td>
+              <td>${created_at}</td>
+              <td class="text-center">
+                <a onclick="obtener_cartera(${id})"><i class="fa-regular fa-pen-to-square me-2" style="color: #001b2b"></i></a>
+                <a onclick="trasladar_venta(${id})"><i class="fa-solid fa-circle-plus me-2" style="color: #001b2b"></i>
+                <a onclick="eliminar_cartera(${id})"><i class="fa-solid fa-trash" style="color: #001b2b"></i></a>
+              </td>
+            </tr>`;
+        });
+      } else {
+        html =
+          html +
+          `<tr><td class='text-center' colspan='11'>No se encontraron resultados.</td>`;
+      }
+      $("#listar_cartera").html(html);
+
+      construirPaginacion_Cartera(pagina);
+    },
+  });
+};
+function construirPaginacion_Cartera(pagina_actual_pcartera) {
+  $.ajax({
+    url: "controller/cartera.php",
+    type: "POST",
+    data: { option: "contar_pcartera" },
+    dataType: "json",
+    success: function (response) {
+      let total_pcartera = response.total;
+      let por_pagina = 11; // Cantidad de registros por página
+      let total_paginas = Math.ceil(total_pcartera / por_pagina);
+      let html = "";
+
+      if (total_paginas > 1) {
+        // Botón anterior
+        html += `<li class="page-item ${pagina_actual_pcartera == 1 ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="listar_carteras_paginadas(${pagina_actual_pcartera - 1
+          });">Anterior</a>
+                      </li>`;
+
+        // Botones de páginas
+        for (let i = 1; i <= total_paginas; i++) {
+          html += `<li class="page-item ${pagina_actual_pcartera == i ? "active" : ""
+            }">
+                              <a class="page-link" href="javascript:void(0);" onclick="listar_carteras_paginadas(${i});">${i}</a>
+                          </li>`;
+        }
+
+        // Botón siguiente
+        html += `<li class="page-item ${pagina_actual_pcartera == total_paginas ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="listar_carteras_paginadas(${pagina_actual_pcartera + 1
+          });">Siguiente</a>
+                      </li>`;
+      }
+
+      $("#paginacion_pcartera").html(html);
+    },
+  });
+}
+
+const filtro_cartera = function (pagina = 1) {
+  var dni = document.getElementById("ca-dni").value.trim();
+
+  $.ajax({
+    url: "controller/cartera.php",
+    method: "POST",
+    data: {
+      dni: dni,
+      option: "filtro_cartera",
+      pagina: pagina
+    },
+    success: function (response) {
+      const data = JSON.parse(response);
+      let html = "";
+      if (data.length > 0) {
+        data.map((x) => {
+          const { id, nombres, dni, celular, created_at } = x;
+          html =
+            html +
+            `<tr>
+              <td>${nombres}</td>
+              <td>${dni}</td>
+              <td>${celular}</td>
+              <td>${created_at}</td>
+              <td class="text-center">
+                <a onclick="obtener_cartera(${id})"><i class="fa-regular fa-pen-to-square me-2" style="color: #001b2b"></i></a>
+                <a onclick="trasladar_venta(${id})"><i class="fa-solid fa-circle-plus me-2" style="color: #001b2b"></i>
+                <a onclick="eliminar_cartera(${id})"><i class="fa-solid fa-trash" style="color: #001b2b"></i></a>
+              </td>
+            </tr>`;
+        });
+      } else {
+        html =
+          html +
+          `<tr><td class='text-center' colspan='5'>No se encontraron resultados.</td>`;
+      }
+      $("#listar_cartera").html(html);
+
+      construirPaginacion_cartera_filtro(pagina, dni);
+    }
+  });
+};
+
+function construirPaginacion_cartera_filtro(pagina_actual_consultas, dni) {
+  $.ajax({
+    url: "controller/cartera.php",
+    type: "POST",
+    data: { option: "contar_cartera_filtro",
+      dni: dni,},
+    dataType: "json",
+    success: function (response) {
+      let total_cartera_filtro = response.total;
+      let por_pagina = 11; // Cantidad de registros por página
+      let total_paginas = Math.ceil(total_cartera_filtro / por_pagina);
+      let html = "";
+
+      if (total_paginas > 1) {
+        // Botón anterior
+        html += `<li class="page-item ${pagina_actual_consultas == 1 ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="filtro_cartera(${pagina_actual_consultas - 1
+          });">Anterior</a>
+                      </li>`;
+
+        // Botones de páginas
+        for (let i = 1; i <= total_paginas; i++) {
+          html += `<li class="page-item ${pagina_actual_consultas == i ? "active" : ""
+            }">
+                              <a class="page-link" href="javascript:void(0);" onclick="filtro_cartera(${i});">${i}</a>
+                          </li>`;
+        }
+
+        // Botón siguiente
+        html += `<li class="page-item ${pagina_actual_consultas == total_paginas ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="filtro_cartera(${pagina_actual_consultas + 1
+          });">Siguiente</a>
+                      </li>`;
+      }
+
+      $("#paginacion_pcartera").html(html);
+    },
+  });
+}
+
 
 /* -------------------   VENTASMETAS   ---------------------- */
 

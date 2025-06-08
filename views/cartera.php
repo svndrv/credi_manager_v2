@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col-lg-3 mb-4">
                         <form id="form_filtro_cartera">
-                            <input type="text" class="form-control" id="c-dni" name="dni" placeholder="Ingrese un DNI">
+                            <input type="text" class="form-control" id="ca-dni" name="dni" placeholder="Ingrese un DNI">
                     </div>
                     <div class="col-lg-2 mb-3">
                         <button type="submit" class="btn btn-dark w-25"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -38,6 +38,11 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <nav aria-label="Navegación de páginas">
+                                <ul id="paginacion_pcartera" class="pagination justify-content-center">
+                                    <!-- Aquí se agregarán dinámicamente los enlaces de paginación -->
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>

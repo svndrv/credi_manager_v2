@@ -63,9 +63,7 @@ switch($option){
     break;  
     default:
         //echo json_encode($consultas->obtener_consultas());
-        //echo json_encode(['error' => 'Opción no válida']);
-$total = $consultas->contar_consultas_filtro($dni, $campana);
-    echo json_encode(['total' => $total]);
+        echo json_encode(['error' => 'Opción no válida']);
     break;
 
 }

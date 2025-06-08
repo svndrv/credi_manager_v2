@@ -65,28 +65,26 @@ class Consultas extends Conectar {
 
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-public function contar_consultas_filtro($dni, $campana) {
-    $sql = "SELECT COUNT(*) as total FROM consultas WHERE 1=1";
-    if ($dni) {
-        $sql .= " AND dni = :dni";
     }
-    if ($campana) {
-        $sql .= " AND campana = :campana";
+    public function contar_consultas_filtro($dni, $campana) {
+        $sql = "SELECT COUNT(*) as total FROM consultas WHERE 1=1";
+        if ($dni) {
+            $sql .= " AND dni = :dni";
+        }
+        if ($campana) {
+            $sql .= " AND campana = :campana";
+        }
+        $stmt = $this->db->prepare($sql);
+        if ($dni) {
+            $stmt->bindParam(':dni', $dni, PDO::PARAM_STR);
+        }
+        if ($campana) {
+            $stmt->bindParam(':campana', $campana, PDO::PARAM_STR);
+        }
+        $stmt->execute();
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC); // <-- CAMBIA AQUÍ
+        return (int)$resultado['total']; // <-- DEVUELVE SOLO EL NÚMERO
     }
-    $stmt = $this->db->prepare($sql);
-    if ($dni) {
-        $stmt->bindParam(':dni', $dni, PDO::PARAM_STR);
-    }
-    if ($campana) {
-        $stmt->bindParam(':campana', $campana, PDO::PARAM_STR);
-    }
-    $stmt->execute();
-    $resultado = $stmt->fetch(PDO::FETCH_ASSOC); // <-- CAMBIA AQUÍ
-    return (int)$resultado['total']; // <-- DEVUELVE SOLO EL NÚMERO
-}
-
     public function obtener_consulta_x_id($id){
         $sql = "SELECT * FROM consultas WHERE id = ?";
         $sql = $this->db->prepare($sql);
@@ -106,8 +104,6 @@ public function contar_consultas_filtro($dni, $campana) {
         echo "ok";
 
     }
-
-
     public function obtener_consultas_paginados($limit, $offset) {
         $sql = "SELECT * FROM consultas LIMIT :limit OFFSET :offset";
         $stmt = $this->db->prepare($sql);
