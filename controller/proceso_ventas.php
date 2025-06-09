@@ -20,6 +20,7 @@ $tem = isset($_POST['tem']) ? $_POST['tem'] : '';
 $id_usuario = isset($_POST['id_usuario']) ? $_POST['id_usuario'] : '';
 $tipo_producto = isset($_POST['tipo_producto']) ? $_POST['tipo_producto'] : '';
 $estado = isset($_POST['estado']) ? $_POST['estado'] : '';
+$created_at = isset($_POST['created_at']) ? $_POST['created_at'] : '';
 
 switch ($option) {
 
@@ -28,16 +29,27 @@ switch ($option) {
         $offset = ($pagina - 1) * $por_pagina;
         $pventas = $proceso_ventas->obtener_procesoventas_paginados($por_pagina, $offset, $_SESSION['id']);
         echo json_encode($pventas);
-        break;
+    break;
 
     case 'procesoventas_x_id':
         echo json_encode($proceso_ventas->obtener_procesoventas_x_id($id));
-        break;
+    break;
 
     case 'contar_pventas':
         $total_procesoventas = $proceso_ventas->contar_procesoventas($_SESSION['id']);
         echo json_encode(['total' => $total_procesoventas]);
-        break;
+    break;
+    case "filtro_procesoventas":
+        $por_pagina = 7;
+        $offset = ($pagina - 1) * $por_pagina;
+        $proceso_ventas = $proceso_ventas->obtener_procesoventas_filtro($_SESSION['id'],
+        $dni, $estado, $tipo_producto, $created_at, $por_pagina, $offset);
+        echo json_encode($proceso_ventas);
+    break;
+    case 'contar_procesoventas_filtro':
+        $total = $proceso_ventas->contar_procesoventas_filtro($_SESSION['id'], $dni, $estado, $tipo_producto, $created_at);
+        echo json_encode(['total' => $total]);
+    break;
 
     case 'agregar_procesoventas':
         echo json_encode(
@@ -55,7 +67,7 @@ switch ($option) {
                 $_FILES['documento']
             )
         );
-        break;
+    break;
 
     case 'actualizar_procesoventas':
         echo json_encode(
@@ -74,9 +86,9 @@ switch ($option) {
                 $_FILES['documento'] ?? null
             )
         );
-        break;
+    break;
 
     default:
-        echo json_encode(['error' => 'Opción no válida']);
-        break;
+        echo json_encode(['error' => 'Opción no válida']);     
+    break;
 }

@@ -9,19 +9,21 @@
             <div class="card-body p-4">
                 <div class="row">
                     <div class="col-lg-2 mb-4">
-                        <form id="form_filtro_ventas">
-                            <input type="text" class="form-control" id="dni_f" name="dni" placeholder="Ingrese un DNI">
+                        <form id="form_filtro_procesoventas">
+                            <input type="text" class="form-control" id="pv_dni" name="dni" placeholder="Ingrese un DNI">
                     </div>
                     <div class="col-lg-3 mb-4">
-                        <select class="form-select" name="estado" id="estado_f">
+                        <select class="form-select" id="pv_estado" name="estado">
                             <option value="0">Estado</option>
                             <option value="Pendiente">Pendiente</option>
-                            <option value="Desembolsado">Desembolsado</option>
+                            <option value="Aprobado">Aprobado</option>
+                            <option value="Apelando">Apelando</option>
+                            <option value="Desaprobado">Desaprobado</option>
                             <!-- <option value="Cancelado">Cancelado</option> -->
                         </select>
                     </div>
                     <div class="col-lg-2 mb-4">
-                        <select class="form-select" name="tipo_producto" id="tipo_producto_f">
+                        <select class="form-select" id="pv_tipoproducto" name="tipo_producto">
                             <option value="0">Producto</option>
                             <option value="LD">LD</option>
                             <option value="TC">TC</option>
@@ -29,7 +31,7 @@
                         </select>
                     </div>
                     <div class="col-lg-2 mb-4">
-                        <input type="date" class="form-control" id="fecha_misventas" name="fecha_misventas" value="<?= date('Y-m-d') ?>">
+                        <input type="date" class="form-control" id="pv_createdat" name="created_at" value="">
                     </div>
                     <div class="col-lg-3">
                         <div class="row">

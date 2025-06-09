@@ -134,4 +134,84 @@ class ProcesoVentas extends Conectar {
         ];
     }
 
+
+
+    public function obtener_procesoventas_filtro($id, $dni, $estado, $tipo_producto, $created_at, $limit, $offset) {
+        $sql = "SELECT * FROM proceso_ventas WHERE id_usuario = :id";
+        $params = [];
+
+        if (!empty($dni)) {
+            $sql .= " AND dni = :dni";
+            $params[':dni'] = $dni;
+        }
+
+        if (!empty($estado)) {
+            $sql .= " AND estado = :estado";
+            $params[':estado'] = $estado;
+        }
+
+        if (!empty($tipo_producto)) {
+            $sql .= " AND tipo_producto = :tipo_producto";
+            $params[':tipo_producto'] = $tipo_producto;
+        }
+
+        if (!empty($created_at)) {
+            $sql .= " AND DATE(created_at) = :created_at";
+            $params[':created_at'] = $created_at;
+        }
+
+        $sql .= " LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->db->prepare($sql);
+
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+        public function contar_procesoventas_filtro($id, $dni, $estado, $tipo_producto, $created_at) {
+        $sql = "SELECT COUNT(*) as total FROM proceso_ventas WHERE id_usuario = :id";
+        if ($dni) {
+            $sql .= " AND dni = :dni";
+        }
+        if ($estado) {
+            $sql .= " AND estado = :estado";
+        }
+        if ($tipo_producto) {
+            $sql .= " AND tipo_producto = :tipo_producto";
+        }
+        if ($created_at) {
+            $sql .= " AND DATE(created_at) = :created_at";
+        }
+        $stmt = $this->db->prepare($sql);
+        if ($dni) {
+            $stmt->bindParam(':dni', $dni, PDO::PARAM_STR);
+        }
+        if ($estado) {
+            $stmt->bindParam(':estado', $estado, PDO::PARAM_STR);
+        }
+        if ($tipo_producto) {
+            $stmt->bindParam(':tipo_producto', $tipo_producto, PDO::PARAM_STR);
+        }
+        if ($created_at) {
+            $stmt->bindParam(':created_at', $created_at, PDO::PARAM_STR);
+        }
+        
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+        $stmt->execute();
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC); 
+        return (int)$resultado['total']; 
+    }
+
+
+
+
 }

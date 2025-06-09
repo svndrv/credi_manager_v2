@@ -19,10 +19,15 @@ $(function () {
   }
   if (params.get("view") === "proceso_ventas") {
     listarRegistros_ProcesoVentas(1);
-    construirPaginacion_ProcesoVentas();
     agregar_procesoventas();
     no_tras_ventas();
     actualizar_proceso_ventas();
+    $("#form_filtro_procesoventas").submit(function (e) {
+      e.preventDefault();
+      filtro_procesoventa(1);
+      
+    });
+    
   }
   if (params.get("view") === "consultas") {
     actualizar_consulta();
@@ -608,6 +613,130 @@ const obtener_procesoventas = function (id) {
   });
 };
 
+const filtro_procesoventa = function (pagina = 1) {
+  var dni = document.getElementById("pv_dni").value.trim();
+  var estado = document.getElementById("pv_estado").value.trim();
+  var tipo_producto = document.getElementById("pv_tipoproducto").value.trim();
+  var created_at = document.getElementById("pv_createdat").value.trim();
+
+  $.ajax({
+    url: "controller/proceso_ventas.php",
+    method: "POST",
+    data: {
+      dni: dni,
+      estado: estado,
+      tipo_producto: tipo_producto,
+      created_at: created_at,
+      option: "filtro_procesoventas",
+      pagina: pagina
+    },
+    success: function (response) {
+      const data = JSON.parse(response);
+      let html = "";
+      if (data.length > 0) {
+        data.map((x) => {
+          const { id, nombres, dni, celular, created_at, estado } = x;
+          if (estado === "Pendiente") {
+            iconestado = "<i class='fa-solid fa-clock-rotate-left me-2'></i>";
+            bgestado = "pendiente";
+          } else if (estado === "Aprobado") {
+            iconestado = "<i class='fa-solid fa-check me-2'></i>";
+            bgestado = "aprobado";
+          } else if (estado === "Desaprobado") {
+            iconestado = "<i class='fa-solid fa-xmark me-2'></i>";
+            bgestado = "desaprobado";
+          } else if (estado === "Apelando") {
+            iconestado = "<i class='fa-solid fa-exclamation me-2'></i>";
+            bgestado = "apelando";
+          }
+
+          if (estado == "Aprobado") {
+            icontoventas =
+              "<a onclick='to_ventas_desembolsadas(${id})'></a><i class='icon-to-ventas fa-solid fa-circle-check '></i></a>";
+          } else if (estado == "Pendiente") {
+            icontoventas =
+              "<a href='#' id='pen_venta'><i class='icon-pen-ventas fa-solid fa-clock'></i></a>";
+          } else if (estado == "Apelando") {
+            icontoventas =
+              "<a href='#' id='apela_venta'><i class='icon-apela-ventas fa-solid fa-circle-exclamation'></i></a>";
+          } else if (estado == "Desaprobado") {
+            icontoventas =
+              "<a href='#' id='desa_venta'><i class='icon-no-ventas fa-solid fa-circle-xmark'></i></a>";
+          }
+
+          html =
+            html +
+            `<tr>
+              <td>${nombres}</td>
+              <td>${dni}</td>
+              <td>${celular}</td>
+              <td>${created_at}</td>
+              <td class="text-center"><span class="icon-estado-${bgestado}">${iconestado}${estado}</span></td>             
+              <td class="text-center">
+                <a onclick="obtener_procesoventas_x_id(${id})"><i class="fa-solid fa-clipboard me-2"></i></a>
+                <a onclick="obtener_cartera(${id})"></a><i class="fa-solid fa-box-archive me-2"></i></a>          
+                ${icontoventas}     
+              </td>
+            </tr>`;
+        });
+      } else {
+        html =
+          html +
+          `<tr><td class='text-center' colspan='6'>No se encontraron resultados.</td>`;
+      }
+      $("#listar_procesoventas").html(html);
+
+      construirPaginacion_ProcesoVentas_filtro(pagina, dni, estado, tipo_producto, created_at);
+    }
+  });
+};
+
+function construirPaginacion_ProcesoVentas_filtro(pagina_actual_procesoventas, dni, estado, tipo_producto, created_at) {
+  $.ajax({
+    url: "controller/proceso_ventas.php",
+    type: "POST",
+    data: { option: "contar_procesoventas_filtro",
+      dni: dni,
+      estado: estado,
+      tipo_producto: tipo_producto,
+      created_at: created_at,
+    },
+    dataType: "json",
+    success: function (response) {
+      let total_procesoventas_filtro = response.total;
+      let por_pagina = 7; // Cantidad de registros por página
+      let total_paginas = Math.ceil(total_procesoventas_filtro / por_pagina);
+      let html = "";
+
+      if (total_paginas > 1) {
+        // Botón anterior
+        html += `<li class="page-item ${pagina_actual_procesoventas == 1 ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="filtro_procesoventa(${pagina_actual_procesoventas - 1
+          });">Anterior</a>
+                      </li>`;
+
+        // Botones de páginas
+        for (let i = 1; i <= total_paginas; i++) {
+          html += `<li class="page-item ${pagina_actual_procesoventas == i ? "active" : ""
+            }">
+                              <a class="page-link" href="javascript:void(0);" onclick="filtro_procesoventa(${i});">${i}</a>
+                          </li>`;
+        }
+
+        // Botón siguiente
+        html += `<li class="page-item ${pagina_actual_procesoventas == total_paginas ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="filtro_procesoventa(${pagina_actual_procesoventas + 1
+          });">Siguiente</a>
+                      </li>`;
+      }
+
+      $("#paginacion_pventas").html(html);
+    },
+  });
+}
+
 /* -------------------   CARTERA   ---------------------- */
 
 const listar_cartera = function () {
@@ -925,7 +1054,6 @@ function construirPaginacion_Cartera(pagina_actual_pcartera) {
     },
   });
 }
-
 const filtro_cartera = function (pagina = 1) {
   var dni = document.getElementById("ca-dni").value.trim();
 
@@ -968,7 +1096,6 @@ const filtro_cartera = function (pagina = 1) {
     }
   });
 };
-
 function construirPaginacion_cartera_filtro(pagina_actual_consultas, dni) {
   $.ajax({
     url: "controller/cartera.php",
