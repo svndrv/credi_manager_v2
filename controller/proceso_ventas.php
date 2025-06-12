@@ -21,6 +21,7 @@ $id_usuario = isset($_POST['id_usuario']) ? $_POST['id_usuario'] : '';
 $tipo_producto = isset($_POST['tipo_producto']) ? $_POST['tipo_producto'] : '';
 $estado = isset($_POST['estado']) ? $_POST['estado'] : '';
 $created_at = isset($_POST['created_at']) ? $_POST['created_at'] : '';
+$documento = isset($_POST['documento']) ? $_POST['documento'] : '';
 
 switch ($option) {
 
@@ -65,6 +66,24 @@ switch ($option) {
                 $tipo_producto,
                 $estado,
                 $_FILES['documento']
+            )
+        );
+    break;
+    case 'trasladar_to_ventas':
+        echo json_encode(
+            $proceso_ventas->proceso_to_desembolsado(
+                $id,
+                $nombres,
+                $dni,
+                $celular,
+                $credito,
+                $linea,
+                $plazo,
+                $tem,
+                $id_usuario,
+                $tipo_producto,
+                $estado,
+                $documento
             )
         );
     break;

@@ -20,6 +20,7 @@ $(function () {
   if (params.get("view") === "proceso_ventas") {
     listarRegistros_ProcesoVentas(1);
     agregar_procesoventas();
+    trasladar_to_ventas();
     no_tras_ventas();
     actualizar_proceso_ventas();
     $("#form_filtro_procesoventas").submit(function (e) {
@@ -322,6 +323,62 @@ const obtener_procesoventas_x_id = function (id) {
     },
   });
 };
+
+const to_ventas_desembolsadas = function (id) {
+  $("#to-ventasdesembolsadas").modal("show");
+  $.ajax({
+    url: "controller/proceso_ventas.php",
+    method: "POST",
+    data: {
+      id: id,
+      option: "procesoventas_x_id",
+    },
+    success: function (response) {
+      data = JSON.parse(response);
+      $.each(data, function (i, e) {
+        $("#view-nombres-to-ventas").text(data[i]["nombres"]);
+        $("#view-dni-to-ventas").text(data[i]["dni"]);
+        $("#view-celular-to-ventas").text(data[i]["celular"]);
+        $("#view-linea-to-ventas").text(data[i]["linea"]);
+        $("#view-plazo-to-ventas").text(data[i]["plazo"]);
+        $("#view-credito-to-ventas").text(data[i]["credito"]);
+        $("#view-estado-to-ventas").text(data[i]["estado"]);
+        $("#view-tipoproducto-to-ventas").text(data[i]["tipo_producto"]);
+        $("#view-tem-to-ventas").text(data[i]["tem"]);
+
+        $("#id_to_ventas").val(data[i]["id"]);
+        $("#nombres_to_ventas").val(data[i]["nombres"]);
+        $("#dni_to_ventas").val(data[i]["dni"]);
+        $("#celular_to_ventas").val(data[i]["celular"]);
+        $("#credito_to_ventas").val(data[i]["credito"]);
+        $("#linea_to_ventas").val(data[i]["linea"]);
+        $("#plazo_to_ventas").val(data[i]["plazo"]);
+        $("#estado_to_ventas").val(data[i]["estado"]);
+        $("#tipoproducto_to_ventas").val(data[i]["tipo_producto"]);
+        $("#tem_to_ventas").val(data[i]["tem"]);
+
+        $("#documento-preview-to-ventas").val(data[i]["documento"]);
+
+        if (data[i]["documento"]) {
+          const rutaDocumento = "pdf/documents/" + data[i]["documento"];
+          $("#verSolicitud")
+            .off("click")
+            .on("click", function (e) {
+              e.preventDefault();
+              window.open(rutaDocumento, "_blank");
+            })
+            .show();
+        } else {
+          $("#verSolicitud").hide();
+        }
+      });
+    },
+    error: function (xhr, status, error) {
+      console.error("Error al obtener la meta: ", error);
+      alert("Hubo un error al obtener la meta.");
+    },
+  });
+};
 const trasladar_base_procesoventas = function () {
   $("#formObtenerProcesoVentas").submit(function (e) {
     e.preventDefault();
@@ -413,7 +470,7 @@ const listarRegistros_ProcesoVentas = function (pagina) {
 
           if (estado == "Aprobado") {
             icontoventas =
-              "<a onclick='to_ventas_desembolsadas(${id})'></a><i class='icon-to-ventas fa-solid fa-circle-check '></i></a>";
+              `<a href="#" onclick="to_ventas_desembolsadas(${id})"><i class="icon-to-ventas fa-solid fa-circle-check"></i></a>`;;
           } else if (estado == "Pendiente") {
             icontoventas =
               "<a href='#' id='pen_venta'><i class='icon-pen-ventas fa-solid fa-clock'></i></a>";
@@ -533,7 +590,7 @@ data.forEach((valor, clave) => {
             title: response.message,
           });
 
-          listarRegistros_ProcesoVentas();
+          listarRegistros_ProcesoVentas(1);
           $("#obtener-proceso-ventas").modal("hide");
           $("#formObtenerProcesoVentas").trigger("reset");
         }
@@ -575,9 +632,52 @@ const agregar_procesoventas = function () {
           no-repeat
           `,
           });
-          listarRegistros_ProcesoVentas();
+          listarRegistros_ProcesoVentas(1);
           $("#formAgregarProcesoVentas").trigger("reset");
           $("#agregar-procesoventa").modal("hide");
+        }
+      },
+    });
+  });
+};
+
+const trasladar_to_ventas = function () {
+  $("#formObtenerProcesoVentas_ventas").submit(function (e) {
+    e.preventDefault();
+    const data = new FormData($("#formObtenerProcesoVentas_ventas")[0]);
+    for (let pair of data.entries()) {
+  console.log(pair[0] + ':', pair[1]);
+}
+    $.ajax({
+      url: "controller/proceso_ventas.php",
+      method: "POST",
+      data: data,
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function (data) {
+        console.log("Respuesta del servidor:", data);
+        const response = JSON.parse(data);
+        if (response.status == "error") {
+          Swal.fire({
+            icon: "error",
+            title: "Lo sentimos",
+            text: response.message,
+          });
+        } else {
+          Swal.fire({
+            title: "Felicidades",
+            text: response.message,
+            icon: "success",
+            confirmButtonColor: "rgb(33,219,130)",
+            backdrop: `
+          rgba(33,219,130,0.2)
+          left top
+          no-repeat
+          `,
+          });
+          listarRegistros_ProcesoVentas(1);
+          $("#to-ventasdesembolsadas").modal("hide");
         }
       },
     });
@@ -612,7 +712,6 @@ const obtener_procesoventas = function (id) {
     },
   });
 };
-
 const filtro_procesoventa = function (pagina = 1) {
   var dni = document.getElementById("pv_dni").value.trim();
   var estado = document.getElementById("pv_estado").value.trim();
@@ -652,7 +751,7 @@ const filtro_procesoventa = function (pagina = 1) {
 
           if (estado == "Aprobado") {
             icontoventas =
-              "<a onclick='to_ventas_desembolsadas(${id})'></a><i class='icon-to-ventas fa-solid fa-circle-check '></i></a>";
+              `<a href="#" onclick="to_ventas_desembolsadas(${id})"><i class="icon-to-ventas fa-solid fa-circle-check"></i></a>`;
           } else if (estado == "Pendiente") {
             icontoventas =
               "<a href='#' id='pen_venta'><i class='icon-pen-ventas fa-solid fa-clock'></i></a>";
@@ -690,7 +789,6 @@ const filtro_procesoventa = function (pagina = 1) {
     }
   });
 };
-
 function construirPaginacion_ProcesoVentas_filtro(pagina_actual_procesoventas, dni, estado, tipo_producto, created_at) {
   $.ajax({
     url: "controller/proceso_ventas.php",

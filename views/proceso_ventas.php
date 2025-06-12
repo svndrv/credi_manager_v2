@@ -296,3 +296,89 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="to-ventasdesembolsadas" tabindex="-1" aria-labelledby="ventasdesembolsadasModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
+                <h1 class="modal-title fs-5" id="ventasdesembolsadasLabel">Trasladar a Ventas Desembolsadas</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formObtenerProcesoVentas_ventas" enctype="multipart/form-data">
+                    
+                    <input type="hidden" name="option" value="trasladar_to_ventas">
+                    <input type="hidden" name="id" id="id_to_ventas">
+                    <input type="hidden" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['id'] ?>">
+                    <div class="row p-2">
+                        <p class="h5 fw-bold pb-3">Resumen de venta</p>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label for="nombres_to_ventas" class="form-label fw-bold">Nombre completo</label>
+                                <p id="view-nombres-to-ventas"></p>
+                                <input type="hidden" class="form-control" id="nombres_to_ventas" name="nombres">
+                            </div>
+                            <div class="mb-3">
+                                <label for="dni_to_ventas" class="form-label fw-bold">Dni</label>
+                                <p id="view-dni-to-ventas"></p>
+                                <input type="hidden" class="form-control" id="dni_to_ventas" name="dni">
+                            </div>
+                            <div class="mb-3">
+                                <label for="celular_to_ventas" class="form-label fw-bold">Celular</label>
+                                <p id="view-celular-to-ventas"></p>
+                                <input type="hidden" class="form-control" id="celular_to_ventas" name="celular">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="tem_to_ventas" class="form-label fw-bold">TEM</label>
+                                <p id="view-tem-to-ventas"></p>
+                                <input type="hidden" class="form-control" id="tem_to_ventas" name="tem">
+                            </div>
+                            <div class="mb-3">
+                                <label for="documento" class="form-label fw-bold d-block">Documento</label>
+                                <img src="img/add-pv/img_pdf.jpg" class="logo-table-mini me-2"><a href="#" id="verSolicitud" style="display: none;">Ver solicitud</a>
+                                <input type="hidden" class="form-control" id="documento-preview-to-ventas" name="documento">
+                                <!-- <p id="documento-preview-to-ventas" class="form-text text-muted">No se ha seleccionado ningún archivo.</p> -->
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label for="credito_to_ventas" class="form-label fw-bold">Crédito</label>
+                                <p id="view-credito-to-ventas"></p>
+                                <input type="hidden" class="form-control" id="credito_to_ventas" name="credito">
+                            </div>
+                            <div class="mb-3">
+                                <label for="linea_to_ventas" class="form-label fw-bold">Linea</label>
+                                <p id="view-linea-to-ventas"></p>
+                                <input type="hidden" class="form-control" id="linea_to_ventas" name="linea">
+                            </div>
+                            <div class="mb-3">
+                                <label for="plazo_to_ventas" class="form-label fw-bold">Plazo</label>
+                                <p id="view-plazo-to-ventas"></p>
+                                <input type="hidden" class="form-control" id="plazo_to_ventas" name="plazo">
+                            </div>
+                            <div class="mb-3">
+                                <label for="tipoproducto_to_ventas" class="form-label fw-bold">Producto</label>
+                                <p id="view-tipoproducto-to-ventas"></p>
+                                <input type="hidden" class="form-control" id="tipoproducto_to_ventas" name="tipo_producto">
+                            </div>
+                            <div class="mb-3">
+                                <label for="estado_to_ventas" class="form-label fw-bold">Estado</label>
+                                <p id="view-estado-to-ventas"></p>
+                                <input type="hidden" class="form-control" id="estado_to_ventas" name="estado">
+                            </div>
+                        </div>
+                        
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="deshabilitar_text_edit()">Cerrar</button>
+                <button type="submit" class="btn btn-success">Trasladar</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>

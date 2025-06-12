@@ -134,7 +134,45 @@ class ProcesoVentas extends Conectar {
         ];
     }
 
+    public function proceso_to_desembolsado($id, $nombres, $dni, $celular, $credito, $linea, $plazo, $tem, $id_usuario, $tipo_producto, $estado, $documento)
+    {
+        if (empty($nombres) || empty($dni) || empty($celular) || empty($credito) || empty($linea) || empty($plazo) || empty($tem) || empty($id_usuario) || empty($tipo_producto) || empty($estado) || empty($documento)) {
+            return [
+                "status" => "error",
+                "message" => "Verifica los campos vacíos."
+            ];
+        }
 
+
+
+        $sql = "INSERT INTO ventas (nombres, dni, celular, credito, linea, plazo, tem, id_usuario, tipo_producto, estado, documento, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(1, $nombres);
+        $stmt->bindValue(2, $dni);
+        $stmt->bindValue(3, $celular);
+        $stmt->bindValue(4, $credito);
+        $stmt->bindValue(5, $linea);
+        $stmt->bindValue(6, $plazo);
+        $stmt->bindValue(7, $tem);
+        $stmt->bindValue(8, $id_usuario);
+        $stmt->bindValue(9, $tipo_producto);
+        $stmt->bindValue(10, $estado);
+        $stmt->bindValue(11, $documento);
+        $stmt->execute();
+
+        // Aquí se elimina el dato de proceso_ventas
+        $sql_delete = "DELETE FROM proceso_ventas WHERE id = ?";
+        $stmt_delete = $this->db->prepare($sql_delete);
+        $stmt_delete->bindValue(1, $id);
+        $stmt_delete->execute();
+
+        return [
+            "status" => "success",
+            "message" => "Se agregó correctamente."
+        ];
+    }
 
     public function obtener_procesoventas_filtro($id, $dni, $estado, $tipo_producto, $created_at, $limit, $offset) {
         $sql = "SELECT * FROM proceso_ventas WHERE id_usuario = :id";
@@ -175,7 +213,6 @@ class ProcesoVentas extends Conectar {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
         public function contar_procesoventas_filtro($id, $dni, $estado, $tipo_producto, $created_at) {
         $sql = "SELECT COUNT(*) as total FROM proceso_ventas WHERE id_usuario = :id";
         if ($dni) {
