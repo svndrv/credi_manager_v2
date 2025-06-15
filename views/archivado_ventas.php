@@ -10,10 +10,10 @@
                 <div class="row">
                     <div class="col-lg-2 mb-4">
                         <form id="form_filtro_archivadoventas">
-                            <input type="text" class="form-control" id="pv_dni" name="dni" placeholder="Ingrese un DNI">
+                            <input type="text" class="form-control" id="ar_dni" name="dni" placeholder="Ingrese un DNI">
                     </div>
                     <div class="col-lg-2 mb-4">
-                        <input type="date" class="form-control" id="pv_createdat" name="created_at" value="">
+                        <input type="date" class="form-control" id="ar_createdat" name="created_at" value="">
                     </div>
                     <div class="col-lg-3">
                         <div class="row">
@@ -31,7 +31,7 @@
                                         <th scope="col">Nombres</th>
                                         <th scope="col">Dni</th>
                                         <th scope="col">Motivo</th>
-                                        <th scope="col">Fecha</th>
+                                        <th scope="col">Fecha de archivado</th>
                                         <th scope="col">Acción</th>
                                     </tr>
                                 </thead>
@@ -43,7 +43,7 @@
 
                             </table>
                             <nav aria-label="Navegación de páginas">
-                                <ul id="paginacion_aventas" class="pagination justify-content-center">
+                                <ul id="paginacion_archivadoventas" class="pagination justify-content-center">
                                     <!-- Aquí se agregarán dinámicamente los enlaces de paginación -->
                                 </ul>
                             </nav>

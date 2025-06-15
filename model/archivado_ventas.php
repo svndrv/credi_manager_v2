@@ -115,6 +115,70 @@ class ArchivadoVentas extends Conectar {
         ];
     }
 
+    public function obtener_archivadoventas_filtro($id, $dni, $created_at, $limit, $offset) {
+        $sql = "SELECT
+        a.id AS id_archivado,
+        p.id AS id_proceso,
+        a.id_procesoventas,
+        p.nombres,
+        p.dni, 
+        a.descripcion,
+        DATE(a.created_at) AS created_at
+        FROM archivado_ventas a
+        JOIN proceso_ventas p ON a.id_procesoventas = p.id WHERE p.id_usuario = :id ";
+        $params = [];
+
+        if (!empty($dni)) {
+            $sql .= " AND p.dni = :dni";
+            $params[':dni'] = $dni;
+        }
+
+        if (!empty($created_at)) {
+            $sql .= " AND DATE(a.created_at) = :created_at";
+            $params[':created_at'] = $created_at;
+        }
+
+        $sql .= " LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->db->prepare($sql);
+
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function contar_archivados_filtro($id, $dni, $created_at) {
+        $sql = "SELECT COUNT(*) AS total
+            FROM archivado_ventas a
+            JOIN proceso_ventas p ON a.id_procesoventas = p.id
+            WHERE p.id_usuario = :id";
+        if ($dni) {
+            $sql .= " AND p.dni = :dni";
+        }
+        if ($created_at) {
+            $sql .= " AND DATE(a.created_at) = :created_at";
+        }
+        $stmt = $this->db->prepare($sql);
+        if ($dni) {
+            $stmt->bindParam(':dni', $dni, PDO::PARAM_STR);
+        }
+        if ($created_at) {
+            $stmt->bindParam(':created_at', $created_at, PDO::PARAM_STR);
+        }
+        
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+        $stmt->execute();
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC); 
+        return (int)$resultado['total']; 
+    }
+
 
 
 }

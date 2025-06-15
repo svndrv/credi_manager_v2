@@ -101,12 +101,11 @@ $(function () {
   if (params.get("view") === "archivado_ventas") {
     listar_archivadoventas(1);
     desarchivar_venta();
-    
-
-
-  
+     $("#form_filtro_archivadoventas").submit(function (e) {
+      e.preventDefault();
+      filtro_archivadoventas(1);
+    });
   }
-
 });
 
 const ventas_x_usuario = function () {
@@ -2571,7 +2570,7 @@ function construirPaginacion_ArhivadoVentas(pagina_actual_pventas) {
                       </li>`;
       }
 
-      $("#paginacion_aventas").html(html);
+      $("#paginacion_archivadoventas").html(html);
     },
   });
 }
@@ -2618,8 +2617,6 @@ const obtener_archivadoventas_x_id = function (id) {
     },
   });
 };
-
-
 const desarchivar_venta = function () {
   $("#formObtenerVentaArchivada").submit(function (e) {
     e.preventDefault();
@@ -2667,6 +2664,91 @@ const desarchivar_venta = function () {
     });
   });
 };
+const filtro_archivadoventas = function (pagina = 1) {
+  var dni = document.getElementById("ar_dni").value.trim();
+  var created_at = document.getElementById("ar_createdat").value.trim();
+
+  $.ajax({
+    url: "controller/archivado_ventas.php",
+    method: "POST",
+    data: {
+      dni: dni,
+      created_at: created_at,
+      option: "filtro_archivadoventas",
+      pagina: pagina
+    },
+    success: function (response) {
+      const data = JSON.parse(response);
+      let html = "";
+      if (data.length > 0) {
+        data.map((x) => {
+          const { id_archivado, nombres, dni, descripcion, created_at } = x;
+          html =
+            html +
+            `<tr>
+              <td>${nombres}</td>
+              <td>${dni}</td>
+              <td>${descripcion}</td>
+              <td>${created_at}</td>
+              <td class="text-center">
+                <a onclick="obtener_archivadoventas_x_id(${id_archivado})"><i class="fa-solid fa-box-open me-2"></i></a>   
+              </td>
+            </tr>`;
+        });
+      } else {
+        html =
+          html +
+          `<tr><td class='text-center' colspan='6'>No se encontraron resultados.</td>`;
+      }
+      $("#listar_archivadoventas").html(html);
+
+      construirPaginacion_ArchivadoVentas_filtro(pagina, dni, created_at);
+    }
+  });
+};
+function construirPaginacion_ArchivadoVentas_filtro(pagina_actual_archivadoventas, dni, created_at) {
+  $.ajax({
+    url: "controller/archivado_ventas.php",
+    type: "POST",
+    data: { option: "contar_archivados_filtro",
+      dni: dni,
+      created_at: created_at,
+    },
+    dataType: "json",
+    success: function (response) {
+      let total_archivadoventas_filtro = response.total;
+      let por_pagina = 3; // Cantidad de registros por página
+      let total_paginas = Math.ceil(total_archivadoventas_filtro / por_pagina);
+      let html = "";
+
+      if (total_paginas > 1) {
+        // Botón anterior
+        html += `<li class="page-item ${pagina_actual_archivadoventas == 1 ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="filtro_archivadoventas(${pagina_actual_archivadoventas - 1
+          });">Anterior</a>
+                      </li>`;
+
+        // Botones de páginas
+        for (let i = 1; i <= total_paginas; i++) {
+          html += `<li class="page-item ${pagina_actual_archivadoventas == i ? "active" : ""
+            }">
+                              <a class="page-link" href="javascript:void(0);" onclick="filtro_archivadoventas(${i});">${i}</a>
+                          </li>`;
+        }
+
+        // Botón siguiente
+        html += `<li class="page-item ${pagina_actual_archivadoventas == total_paginas ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="filtro_archivadoventas(${pagina_actual_archivadoventas + 1
+          });">Siguiente</a>
+                      </li>`;
+      }
+
+      $("#paginacion_archivadoventas").html(html);
+    },
+  });
+}
 
 /* ----------------------------------------------------- */
 /* -------------------   VENTAS   ---------------------- */

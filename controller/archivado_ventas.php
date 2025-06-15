@@ -11,6 +11,7 @@ $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
 
 $id = isset($_POST['id']) ? $_POST['id'] : '';
 $id_procesoventas = isset($_POST['id_procesoventas']) ? $_POST['id_procesoventas'] : '';
+$dni = isset($_POST['dni']) ? $_POST['dni'] : '';
 $descripcion = isset($_POST['descripcion']) ? $_POST['descripcion'] : '';
 $created_at = isset($_POST['created_at']) ? $_POST['created_at'] : '';
 $id_archivado = isset($_POST['id_archivado']) ? $_POST['id_archivado'] : '';
@@ -38,7 +39,7 @@ switch ($option) {
                 $created_at,
             ));
     break;
-    
+
     case 'obtener_archivados_x_id':
         echo json_encode($archivado_ventas->obtener_archivados_x_id($id));
     break;
@@ -47,7 +48,22 @@ switch ($option) {
         echo json_encode($archivado_ventas->desarchivar_venta($id_archivado, $id_proceso));
     break;
 
+    case "filtro_archivadoventas":
+        $por_pagina = 3;
+        $offset = ($pagina - 1) * $por_pagina;
+        $archivado_ventas = $archivado_ventas->obtener_archivadoventas_filtro(
+            $_SESSION['id'], 
+            $dni,  
+            $created_at, 
+            $por_pagina, 
+            $offset);
+        echo json_encode($archivado_ventas);  
+    break;
+    case 'contar_archivados_filtro':
+        $total = $archivado_ventas->contar_archivados_filtro($_SESSION['id'], $dni, $created_at);
+        echo json_encode(['total' => $total]);
+    break;
     default:
-        echo json_encode(['error' => 'Opción no válida']);     
+        echo json_encode(['error' => 'Opción no válida']); 
     break;
 }

@@ -127,6 +127,8 @@
                                         <option value="Aprobado">Aprobado</option>
                                     </select>
                                 </div>
+                            <?php } else { ?> 
+                                <input type="hidden" class="form-control" id="estado_ob_pventas" name="estado">
                             <?php } ?>
 
                             <!-- <div class="mb-3">
