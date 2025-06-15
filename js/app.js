@@ -23,6 +23,8 @@ $(function () {
     trasladar_to_ventas();
     no_tras_ventas();
     actualizar_proceso_ventas();
+    to_proceso_archivados();
+
     $("#form_filtro_procesoventas").submit(function (e) {
       e.preventDefault();
       filtro_procesoventa(1);
@@ -95,6 +97,14 @@ $(function () {
     contar_ld_monto_por_id();
     rellenar_ultima_meta();
   } else {
+  }
+  if (params.get("view") === "archivado_ventas") {
+    listar_archivadoventas(1);
+    desarchivar_venta();
+    
+
+
+  
   }
 
 });
@@ -323,7 +333,6 @@ const obtener_procesoventas_x_id = function (id) {
     },
   });
 };
-
 const to_ventas_desembolsadas = function (id) {
   $("#to-ventasdesembolsadas").modal("show");
   $.ajax({
@@ -443,6 +452,75 @@ const limpiarFormularioProcesoVentas = function () {
   $("#documento").val("");
   $("#documento-preview").text("No se ha seleccionado ningún archivo.");
 };
+const archivar_proceso_ventas = function (id) {
+  $("#archivar-procesoventas").modal("show");
+  $.ajax({
+    url: "controller/proceso_ventas.php",
+    method: "POST",
+    data: {
+      id: id,
+      option: "procesoventas_x_id",
+    },
+    success: function (response) {
+      data = JSON.parse(response);
+      $.each(data, function (i, e) {
+        $("#id_to_archivar_venta").val(data[i]["id"]);
+        $("#view-nombres-to-archive").text(data[i]["nombres"]);
+      });
+    },
+    error: function (xhr, status, error) {
+      console.error("Error al obtener la meta: ", error);
+      alert("Hubo un error al obtener la meta.");
+    },
+  });
+};
+const to_proceso_archivados = function () {
+  $("#formToArchivadoVentas").submit(function (e) {
+    e.preventDefault();
+    const data = new FormData($("#formToArchivadoVentas")[0]);
+for (let pair of data.entries()) {
+  console.log(`${pair[0]}: ${pair[1]}`);
+}
+    $.ajax({
+      url: "controller/archivado_ventas.php",
+      method: "POST",
+      data: data,
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function (data) {
+        const response = JSON.parse(data);
+        if (response.status == "error") {
+          Swal.fire({
+            icon: "error",
+            title: "Lo sentimos",
+            text: response.message,
+          });
+        } else {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "success",
+            title: response.message,
+          });
+          listarRegistros_ProcesoVentas(1);
+          $("#formToArchivadoVentas").trigger("reset");
+          $("#archivar-procesoventas").modal("hide");
+                 
+        }
+      },
+    });
+  });
+};
 const listarRegistros_ProcesoVentas = function (pagina) {
   $.ajax({
     url: "controller/proceso_ventas.php",
@@ -492,7 +570,7 @@ const listarRegistros_ProcesoVentas = function (pagina) {
               <td class="text-center"><span class="icon-estado-${bgestado}">${iconestado}${estado}</span></td>             
               <td class="text-center">
                 <a onclick="obtener_procesoventas_x_id(${id})"><i class="fa-solid fa-clipboard me-2"></i></a>
-                <a onclick="obtener_cartera(${id})"></a><i class="fa-solid fa-box-archive me-2"></i></a>          
+                <a onclick="archivar_proceso_ventas(${id})"><i class="fa-solid fa-box-archive me-2"></i></a>          
                 ${icontoventas}     
               </td>
             </tr>`;
@@ -640,7 +718,6 @@ const agregar_procesoventas = function () {
     });
   });
 };
-
 const trasladar_to_ventas = function () {
   $("#formObtenerProcesoVentas_ventas").submit(function (e) {
     e.preventDefault();
@@ -2422,6 +2499,176 @@ const agregar_base_cartera = function () {
 
 /* ----------------------------------------------------- */
 
+/* -------------------   VENTAS ARCHIVADAS   ---------------------- */
+
+const listar_archivadoventas = function (pagina) {
+  $.ajax({
+    url: "controller/archivado_ventas.php",
+    type: "POST",
+    data: { option: "listar_aventas", pagina: pagina },
+    dataType: "json",
+    success: function (response) {
+      let html = "";
+      if (response.length > 0) {
+        response.map((x) => {
+          const { id_archivado, nombres, dni, descripcion, created_at } = x;
+          html =
+            html +
+            `<tr>
+              <td>${nombres}</td>
+              <td>${dni}</td>
+              <td>${descripcion}</td>
+              <td>${created_at}</td>
+              <td class="text-center">
+                <a onclick="obtener_archivadoventas_x_id(${id_archivado})"><i class="fa-solid fa-box-open me-2"></i></a>   
+              </td>
+            </tr>`;
+        });
+      } else {
+        html =
+          html +
+          `<tr><td class='text-center' colspan='6'>No se encontraron resultados.</td>`;
+      }
+      $("#listar_archivadoventas").html(html);
+
+      construirPaginacion_ArhivadoVentas(pagina);
+    },
+  });
+};
+function construirPaginacion_ArhivadoVentas(pagina_actual_pventas) {
+  $.ajax({
+    url: "controller/archivado_ventas.php",
+    type: "POST",
+    data: { option: "contar_aventas" },
+    dataType: "json",
+    success: function (response) {
+      let total_aventas = response.total;
+      let por_pagina = 7; // Cantidad de registros por página
+      let total_paginas = Math.ceil(total_aventas / por_pagina);
+      let html = "";
+
+      if (total_paginas > 1) {
+        // Botón anterior
+        html += `<li class="page-item ${pagina_actual_pventas == 1 ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="listar_archivadoventas(${pagina_actual_pventas - 1
+          });">Anterior</a>
+                      </li>`;
+
+        // Botones de páginas
+        for (let i = 1; i <= total_paginas; i++) {
+          html += `<li class="page-item ${pagina_actual_pventas == i ? "active" : ""
+            }">
+                              <a class="page-link" href="javascript:void(0);" onclick="listar_archivadoventas(${i});">${i}</a>
+                          </li>`;
+        }
+
+        // Botón siguiente
+        html += `<li class="page-item ${pagina_actual_pventas == total_paginas ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="listar_archivadoventas(${pagina_actual_pventas + 1
+          });">Siguiente</a>
+                      </li>`;
+      }
+
+      $("#paginacion_aventas").html(html);
+    },
+  });
+}
+const obtener_archivadoventas_x_id = function (id) {
+  $("#obtener-venta-archivada").modal("show");
+  $.ajax({
+    url: "controller/archivado_ventas.php",
+    method: "POST",
+    data: {
+      id: id,
+      option: "obtener_archivados_x_id",
+    },
+    success: function (response) {
+      data = JSON.parse(response);
+      $.each(data, function (i, e) {
+        $("#id_archivado_ventas").val(data[i]["id_archivado"]);
+        $("#id_procesoventas_archivado_ventas").val(data[i]["id_proceso"]);
+        $("#view-nombres-archivado").text(data[i]["nombres"]);
+        $("#view-dni-archivado").text(data[i]["dni"]);
+        $("#view-celular-archivado").text(data[i]["celular"]);
+        $("#view-credito-archivado").text(data[i]["credito"]);
+        $("#view-linea-archivado").text(data[i]["linea"]);
+        $("#view-plazo-archivado").text(data[i]["plazo"]);
+        $("#view-estado-archivado").text(data[i]["estado"]);
+        $("#view-tipoproducto-archivado").text(data[i]["tipo_producto"]);
+        $("#view-tem-archivado").text(data[i]["tem"]);
+        $("#view-descripcion-archivado").text(data[i]["descripcion"]);
+        $("#documento_actual").text(data[i]["documento"]);
+        $("#documento-preview").text(data[i]["documento"] ? data[i]["documento"] : "No se ha seleccionado ningún archivo.");
+
+        if (data[i]["documento"]) {
+          const rutaDocumento = "pdf/documents/" + data[i]["documento"]; // ⚠️ Ajusta esto
+          $("#verArchivado").off("click").on("click", function () {
+            window.open(rutaDocumento, "_blank");
+          }).show();
+        } else {
+          $("#verArchivado").hide();
+        }
+      });
+    },
+    error: function (xhr, status, error) {
+      console.error("Error al obtener la meta: ", error);
+      alert("Hubo un error al obtener la meta.");
+    },
+  });
+};
+
+
+const desarchivar_venta = function () {
+  $("#formObtenerVentaArchivada").submit(function (e) {
+    e.preventDefault();
+    const data = new FormData($("#formObtenerVentaArchivada")[0]);
+    for (const [key, value] of data.entries()) {
+    console.log(key, value);}
+
+    $.ajax({
+      url: "controller/archivado_ventas.php",
+      method: "POST",
+      data: data,
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function (data) {
+        const response = JSON.parse(data);
+        console.log(response);
+        if (response.status == "error") {
+          Swal.fire({
+            icon: "error",
+            title: "Lo sentimos",
+            text: response.message,
+          });
+        } else {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "success",
+            title: response.message,
+          });
+          listar_archivadoventas(1);
+          $("#obtener-venta-archivada").modal("hide");
+          $("#formObtenerVentaArchivada").trigger("reset");
+        }
+      },
+    });
+  });
+};
+
+/* ----------------------------------------------------- */
 /* -------------------   VENTAS   ---------------------- */
 
 const listar_ventas = function () {

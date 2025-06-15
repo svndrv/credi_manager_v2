@@ -76,7 +76,7 @@ class ProcesoVentas extends Conectar {
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
     public function obtener_procesoventas_paginados($limit, $offset, $id) {
-        $sql = "SELECT * FROM proceso_ventas WHERE id_usuario = :id LIMIT :limit OFFSET :offset";
+        $sql = "SELECT * FROM proceso_ventas WHERE id_usuario = :id AND estado NOT IN ('Archivado', 'Desembolsado')  LIMIT :limit OFFSET :offset";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
@@ -85,7 +85,7 @@ class ProcesoVentas extends Conectar {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function contar_procesoventas($id) {
-        $sql = "SELECT COUNT(*) as total FROM proceso_ventas WHERE id_usuario = ?";
+        $sql = "SELECT COUNT(*) as total FROM proceso_ventas WHERE id_usuario = ? AND estado != 'Archivado'";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(1, $id);
         $stmt->execute();
@@ -133,7 +133,6 @@ class ProcesoVentas extends Conectar {
             "message" => "Se agregó correctamente."
         ];
     }
-
     public function proceso_to_desembolsado($id, $nombres, $dni, $celular, $credito, $linea, $plazo, $tem, $id_usuario, $tipo_producto, $estado, $documento)
     {
         if (empty($nombres) || empty($dni) || empty($celular) || empty($credito) || empty($linea) || empty($plazo) || empty($tem) || empty($id_usuario) || empty($tipo_producto) || empty($estado) || empty($documento)) {
@@ -162,20 +161,18 @@ class ProcesoVentas extends Conectar {
         $stmt->bindValue(11, $documento);
         $stmt->execute();
 
-        // Aquí se elimina el dato de proceso_ventas
-        $sql_delete = "DELETE FROM proceso_ventas WHERE id = ?";
-        $stmt_delete = $this->db->prepare($sql_delete);
-        $stmt_delete->bindValue(1, $id);
-        $stmt_delete->execute();
+        $sql_update = "UPDATE proceso_ventas SET estado = 'Desembolsado', updated_at = NOW() WHERE id = ?";
+        $stmt_update = $this->db->prepare($sql_update);
+        $stmt_update->bindValue(1, $id);
+        $stmt_update->execute();
 
         return [
             "status" => "success",
             "message" => "Se agregó correctamente."
         ];
     }
-
     public function obtener_procesoventas_filtro($id, $dni, $estado, $tipo_producto, $created_at, $limit, $offset) {
-        $sql = "SELECT * FROM proceso_ventas WHERE id_usuario = :id";
+        $sql = "SELECT * FROM proceso_ventas WHERE id_usuario = :id AND estado NOT IN ('Archivado', 'Desembolsado')";
         $params = [];
 
         if (!empty($dni)) {
@@ -213,8 +210,8 @@ class ProcesoVentas extends Conectar {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-        public function contar_procesoventas_filtro($id, $dni, $estado, $tipo_producto, $created_at) {
-        $sql = "SELECT COUNT(*) as total FROM proceso_ventas WHERE id_usuario = :id";
+    public function contar_procesoventas_filtro($id, $dni, $estado, $tipo_producto, $created_at) {
+        $sql = "SELECT COUNT(*) as total FROM proceso_ventas WHERE id_usuario = :id AND estado NOT IN ('Archivado', 'Desembolsado')";
         if ($dni) {
             $sql .= " AND dni = :dni";
         }

@@ -100,25 +100,25 @@
                     <div class="row p-2">
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label for="nombres_ob_pventas" class="form-label">Nombre completo</label>
+                                <label for="nombres_ob_pventas" class="form-label fw-bold">Nombre completo</label>
                                 <input type="text" class="form-control" id="nombres_ob_pventas" name="nombres" disabled>
                             </div>
                             <div class="mb-3">
-                                <label for="dni_ob_pventas" class="form-label">Dni</label>
+                                <label for="dni_ob_pventas" class="form-label fw-bold">Dni</label>
                                 <input type="text" class="form-control" id="dni_ob_pventas" name="dni" disabled>
                             </div>
                             <div class="mb-3">
-                                <label for="celular_ob_pventas" class="form-label">Celular</label>
+                                <label for="celular_ob_pventas" class="form-label fw-bold">Celular</label>
                                 <input type="text" class="form-control" id="celular_ob_pventas" name="celular" disabled>
                             </div>
 
                             <div class="mb-3">
-                                <label for="tem_ob_pventas" class="form-label">TEM</label>
+                                <label for="tem_ob_pventas" class="form-label fw-bold">TEM</label>
                                 <input type="text" class="form-control" id="tem_ob_pventas" name="tem" disabled>
                             </div>
                             <?php if ($_SESSION['rol'] === '1' || $_SESSION['rol'] === '2') { ?>
                                 <div class="mb-3">
-                                    <label for="estado_ob_pventas" class="form-label">Estado:</label>
+                                    <label for="estado_ob_pventas" class="form-label fw-bold">Estado:</label>
                                     <select class="form-select" name="estado" id="estado_ob_pventas" disabled>
                                         <option value="0">Estado</option>
                                         <option value="Pendiente">Pendiente</option>
@@ -136,15 +136,15 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label for="credito_ob_pventas" class="form-label">Crédito</label>
+                                <label for="credito_ob_pventas" class="form-label fw-bold">Crédito</label>
                                 <input type="text" class="form-control" id="credito_ob_pventas" name="credito" disabled>
                             </div>
                             <div class="mb-3">
-                                <label for="linea_ob_pventas" class="form-label">Linea</label>
+                                <label for="linea_ob_pventas" class="form-label fw-bold">Linea</label>
                                 <input type="text" class="form-control" id="linea_ob_pventas" name="linea" disabled>
                             </div>
                             <div class="mb-3">
-                                <label for="plazo_ob_pventas" class="form-label">Plazo</label>
+                                <label for="plazo_ob_pventas" class="form-label fw-bold">Plazo</label>
                                 <select class="form-select" id="plazo_ob_pventas" name="plazo" disabled>
                                     <option selected>Plazo</option>
                                     <option value="0">0</option>
@@ -156,7 +156,7 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="tipoproducto_ob_pventas" class="form-label">Producto</label>
+                                <label for="tipoproducto_ob_pventas" class="form-label fw-bold">Producto</label>
                                 <select class="form-select" id="tipoproducto_ob_pventas" name="tipo_producto" disabled>
                                     <option value="0">Producto</option>
                                     <option value="LD">LD</option>
@@ -167,7 +167,7 @@
                         </div>
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <label for="documento" class="form-label">Documento</label>
+                                <label for="documento" class="form-label fw-bold">Documento</label>
                                 <div class="input-group mb-3">
                                     <input class="form-control d-none" type="file" name="documento" id="documento" accept="application/pdf">
                                     <button id="bton-trash-edit-pv" class="btn btn-secondary d-none" type="button" onclick="
@@ -297,7 +297,6 @@
     </div>
 </div>
 
-
 <div class="modal fade" id="to-ventasdesembolsadas" tabindex="-1" aria-labelledby="ventasdesembolsadasModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -308,7 +307,7 @@
             </div>
             <div class="modal-body">
                 <form id="formObtenerProcesoVentas_ventas" enctype="multipart/form-data">
-                    
+
                     <input type="hidden" name="option" value="trasladar_to_ventas">
                     <input type="hidden" name="id" id="id_to_ventas">
                     <input type="hidden" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['id'] ?>">
@@ -370,13 +369,57 @@
                                 <input type="hidden" class="form-control" id="estado_to_ventas" name="estado">
                             </div>
                         </div>
-                        
+
                     </div>
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="deshabilitar_text_edit()">Cerrar</button>
                 <button type="submit" class="btn btn-success">Trasladar</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="archivar-procesoventas" tabindex="-1" aria-labelledby="archivar_procesoventasModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
+                <h1 class="modal-title fs-5" id="archivar_procesoventasLabel">Archivar Venta</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formToArchivadoVentas" enctype="multipart/form-data">
+                    <input type="text" name="id_procesoventas" id="id_to_archivar_venta">
+                    <input type="text" name="option" value="agregar_archivadoventas">
+                    <div class="row p-2">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label for="nombres_to_ventas" class="form-label fw-bold">Nombre completo</label>
+                                <p id="view-nombres-to-archive"></p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label for="fechar_archivar" class="form-label fw-bold">Fecha</label>
+                                <input type="date" class="form-control" id="fecha_archivar" name="created_at" value="<?= date('Y-m-d') ?>" readonly>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="descripcion_archivar" class="form-label fw-bold">Motivo</label>
+                                <textarea class="form-control" id="descripcion_archivar" rows="4" name="descripcion" style="resize: none;"></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="deshabilitar_text_edit()">Cerrar</button>
+                <button type="submit" class="btn btn-success">Archivar</button>
             </div>
             </form>
         </div>

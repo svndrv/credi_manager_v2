@@ -49,6 +49,9 @@
                         <li <?php echo ($view === 'ventas') ? 'class="sidebar-active-link"' : ''; ?>>
                                 <a href="dashboard.php?view=ventas" class="sidebar-link">Desembolsado</a>
                         </li>
+                        <li <?php echo ($view === 'archivado_ventas') ? 'class="sidebar-active-link"' : ''; ?>>
+                                <a href="dashboard.php?view=archivado_ventas" class="sidebar-link">Archivados</a>
+                        </li>
                     </ul>
                 </li>
 
