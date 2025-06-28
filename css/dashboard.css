@@ -2,15 +2,19 @@
 
 
 :root{
-    --green-custom:#75de3d;
-    --red-custom:#fe4343;
-    --blue-custom: #3ea1f7ef;
-    --yellow-custom: #fff200;
+    --green-custom:#8ff757;
+    --red-custom:#fa5050;
+    --blue-custom: #3fa5feef;
+    --yellow-custom: #fff349;
 
     --green-custom-hover: #528e32;
     --red-custom-hover: #a72626;
     --blue-custom-hover: #2c6faaef;
     --yellow-custom-hover: #a9a220;
+
+    --producto-bg-ld: #70eab3;
+    --producto-bg-tc: #d18ced;
+    --producto-bg-combo: #ffe1a4;
 
 }
 
@@ -30,6 +34,12 @@
     width: 50px; 
     height: 50px; 
     border-radius: 50%; 
+    object-fit: cover;
+}
+.img-usuario-mini{
+    width: 30px; 
+    height: 30px; 
+    border-radius: 30%; 
     object-fit: cover;
 }
 
@@ -53,10 +63,22 @@
     border-radius: 3px;
 }
 
-
+.icon-producto-ld{
+    background-color: var(--producto-bg-ld);
+}
+.icon-producto-tc{
+    background-color: var(--producto-bg-tc);
+}
+.icon-producto-combo{
+    background-color: var(--producto-bg-combo);
+}
 
 .icon-to-ventas{
     color: var(--green-custom);
+}
+
+.icon-pen-ventas{
+    color: var(--blue-custom);
 }
 
 .icon-no-ventas{
@@ -92,9 +114,21 @@
     width: 10rem;               
     line-height: 28px;             
     color: #ffffff;
-    border-radius: 3px;
+    border-radius: 1rem;
     padding: 0.3rem;
     font-weight: bold;  
+}
+
+.icon-producto-ld,
+.icon-producto-tc,
+.icon-producto-combo {
+    display: inline-block;     
+    width: 5.5rem;               
+    line-height: 1.5rem;             
+    color: #ffffff;
+    border-radius: 1rem;
+    padding: 0.3rem;
+    font-weight: bold;     
 }
 
 

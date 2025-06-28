@@ -59,11 +59,81 @@
                     </div>
                 </div>
     </section>
+
     <section class="container-fluid">
         <article class="card shadow bg-body-tertiary">
             <div class="card-header card-style-custom">
                 <h5 class="card-title fw-bold p-1">
-                    Tabla de ventas
+                    Mis Ventas Desembolsadas
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-lg-3 mb-4">
+                        <form id="form_filtro_misventas">
+                            <input type="text" class="form-control" id="dni_f" name="dni" placeholder="Ingrese un DNI">
+                    </div>
+                    <div class="col-lg-3 mb-4">
+                        <select class="form-select" name="estado" id="estado_f">
+                            <option value="0">Estado</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Desembolsado">Desembolsado</option>
+                            <!-- <option value="Cancelado">Cancelado</option> -->
+                        </select>
+                    </div>
+                    <div class="col-lg-3 mb-4">
+                        <select class="form-select" name="tipo_producto" id="tipo_producto_f">
+                            <option value="0">Producto</option>
+                            <option value="LD">LD</option>
+                            <option value="TC">TC</option>
+                            <option value="LD/TC">LD/TC</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2 mb-3">
+                        <button type="submit" class="btn btn-dark w-25"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </form>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="table-responsive border-4">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Nombres</th>
+                                        <th scope="col">Dni</th>
+                                        <th scope="col">Celular</th>
+                                        <th scope="col">Credito</th>
+                                        <th scope="col">Linea</th>
+                                        <th scope="col">Plazo</th>
+                                        <th scope="col">TEM</th>
+                                        <th scope="col">Producto</th>
+                                        <th scope="col">Documento</th>
+                                        <th scope="col">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listar_misventas">
+                                    <tr>
+                                        <td colspan="12" class="text-center">No hay datos...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <nav aria-label="Navegación de páginas">
+                                <ul id="paginacion_misventas" class="pagination justify-content-center">
+                                    <!-- Aquí se agregarán dinámicamente los enlaces de paginación -->
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section class="container-fluid">
+        <article class="card shadow bg-body-tertiary">
+            <div class="card-header card-style-custom">
+                <h5 class="card-title fw-bold p-1">
+                    Ventas Desembolsado de Fuerza de Venta
                 </h5>
             </div>
             <div class="card-body p-4">
@@ -93,21 +163,27 @@
                         </form>
                     </div>
                     <div class="col-lg-12">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover table-striped">
+                        <div class="table-responsive border-4">
+                            <table class="table table-bordered table-hover">
                                 <thead>
-                                    <tr>
-                                        <th scope="col">Nombres</th>
+                                    <tr class="text-center">
+                                    <?php if ($_SESSION['rol'] == 3) { ?>                                
+                                        <th scope="col">ID</th>
                                         <th scope="col">Dni</th>
-                                        <th scope="col">Celular</th>
                                         <th scope="col">Credito</th>
                                         <th scope="col">Linea</th>
-                                        <th scope="col">Plazo</th>
-                                        <th scope="col">TEM</th>
                                         <th scope="col">Usuario</th>
                                         <th scope="col">Producto</th>
-                                        <th scope="col">Estado</th>
+                                    <?php } else { ?> 
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Dni</th>
+                                        <th scope="col">Credito</th>
+                                        <th scope="col">Linea</th>
+                                        <th scope="col">Usuario</th>
+                                        <th scope="col">Producto</th>
+                                        <th scope="col">Documento</th>
                                         <th scope="col">Acción</th>
+                                    <?php } ?>
                                     </tr>
                                 </thead>
                                 <tbody id="listar_ventas">
@@ -116,6 +192,11 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <nav aria-label="Navegación de páginas">
+                                <ul id="paginacion_ventas" class="pagination justify-content-center">
+                                    <!-- Aquí se agregarán dinámicamente los enlaces de paginación -->
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
@@ -123,6 +204,9 @@
         </article>
     </section>
 </main>
+
+
+<!------------------------- MODALS ------------------------->
 
 <div class="modal fade" id="obtener-ventas" tabindex="-1" aria-labelledby="obtener-ventasModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

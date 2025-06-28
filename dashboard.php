@@ -1,9 +1,12 @@
 <?php
 session_start();
+$rol = $_SESSION['rol'];
 if (!isset($_SESSION['id'])) {
     header("Location:index.php");
 };
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -91,5 +94,12 @@ if (!isset($_SESSION['id'])) {
 <!-- JS -->
 <script src="js/dashboard.js"></script>
 <script src="js/app.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.min.js"></script>
+<script src="js/pdf-link.js"></script>
+
+<script>
+  const rolUsuario = <?= json_encode($rol) ?>;
+</script>
 
 </html>

@@ -50,7 +50,8 @@ $(function () {
     contar_ld();
     contar_tc();
     contar_ld_monto();
-    listar_ventas();
+    listar_ventas_paginados(1);
+    listar_misventas_paginados(1);
     crear_ventas();
     filtro_ventas();
     actualizar_ventas();
@@ -217,6 +218,114 @@ const listar_metas_inicio = function () {
     },
   });
 };
+
+/* -------------------       MIS VENTAS      ---------------------- */
+
+const listar_misventas_paginados = function (pagina) {
+  $.ajax({
+    url: "controller/misventas.php",
+    type: "POST",
+    data: { option: "listar_misventas", pagina: pagina },
+    dataType: "json",
+    success: function (response) {
+      let html = "";
+      if (response.length > 0) {
+        response.map((x) => {
+          const { id,
+            nombres,
+            dni,
+            celular,
+            credito,
+            linea,
+            plazo,
+            tem,
+            nombre_completo,
+            tipo_producto,
+            documento, } = x;
+
+          if (tipo_producto == "TC") {
+            bgproducto = "tc";
+            iconproducto = `<i class="fa-solid fa-credit-card"></i>`;
+          } else if (tipo_producto == "LD") {
+            bgproducto = "ld";
+            iconproducto = `<i class="fa-solid fa-sack-dollar"></i>`;
+          } else if (tipo_producto == "LD/TC") {
+            bgproducto = "combo";
+            iconproducto = `<i class="fa-solid fa-sack-dollar me-2"></i><i class="fa-solid fa-credit-card"></i>`;
+          }
+          html =
+            html +
+            `<tr>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
+              <td>${nombres}</td>
+              <td>${dni}</td>
+              <td>${celular}</td>
+              <td>S/.${credito}</td>
+              <td>S/.${linea}</td>
+              <td>${plazo}</td>
+              <td>${tem}%</td>
+              <td class="text-center">
+                <span class="icon-producto-${bgproducto}">${iconproducto}</span>
+              </td>
+              <td class="text-center"><a href="pdf/documents/${documento}" target="_blank" id="verSolicitud"><img src="img/add-pv/img_pdf.jpg" class="logo-table-mini me-2"></a></td>
+              <td class="text-center">
+                <a onclick="obtener_ventas(${id})"><i class="fa-regular fa-pen-to-square me-3" style="color: #001b2b"></i></a>
+                <a onclick="eliminar_venta(${id})"><i class="fa-solid fa-trash"></i></a>
+              </td>
+            </tr>`;
+        });
+      } else {
+        html =
+          html +
+          `<tr><td class='text-center' colspan='12'>No se encontraron resultados.</td>`;
+      }
+      $("#listar_misventas").html(html);
+
+      construirPaginacion_MisVentas(pagina);
+    },
+  });
+};
+function construirPaginacion_MisVentas(pagina_actual_misventas) {
+  $.ajax({
+    url: "controller/misventas.php",
+    type: "POST",
+    data: { option: "contar_misventas" },
+    dataType: "json",
+    success: function (response) {
+      let total_misventas = response.total;
+      let por_pagina = 7; // Cantidad de registros por página
+      let total_paginas = Math.ceil(total_misventas / por_pagina);
+      let html = "";
+
+      if (total_paginas > 1) {
+        // Botón anterior
+        html += `<li class="page-item ${pagina_actual_misventas == 1 ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="listar_misventas_paginados(${pagina_actual_misventas - 1
+          });">Anterior</a>
+                      </li>`;
+
+        // Botones de páginas
+        for (let i = 1; i <= total_paginas; i++) {
+          html += `<li class="page-item ${pagina_actual_misventas == i ? "active" : ""
+            }">
+                              <a class="page-link" href="javascript:void(0);" onclick="listar_misventas_paginados(${i});">${i}</a>
+                          </li>`;
+        }
+
+        // Botón siguiente
+        html += `<li class="page-item ${pagina_actual_misventas == total_paginas ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="listar_misventas_paginados(${pagina_actual_misventas + 1
+          });">Siguiente</a>
+                      </li>`;
+      }
+
+      $("#paginacion_misventas").html(html);
+    },
+  });
+}
+
 
 /* -------------------   VENTAS EN PROCESO   ---------------------- */
 
@@ -2753,6 +2862,132 @@ function construirPaginacion_ArchivadoVentas_filtro(pagina_actual_archivadoventa
 /* ----------------------------------------------------- */
 /* -------------------   VENTAS   ---------------------- */
 
+const listar_ventas_paginados = function (pagina) {
+  $.ajax({
+    url: "controller/ventas.php",
+    type: "POST",
+    data: { option: "listar_ventas", pagina: pagina },
+    dataType: "json",
+    success: function (response) {
+      let html = "";
+      if (response.length > 0) {
+        response.map((x) => {
+          const { id,
+            nombres,
+            dni,
+            celular,
+            credito,
+            linea,
+            plazo,
+            tem,
+            nombre_completo,
+            tipo_producto,
+            documento, foto } = x;
+
+          if (tipo_producto == "TC") {
+            bgproducto = "tc";
+            iconproducto = `<i class="fa-solid fa-credit-card"></i>`;
+          } else if (tipo_producto == "LD") {
+            bgproducto = "ld";
+            iconproducto = `<i class="fa-solid fa-sack-dollar"></i>`;
+          } else if (tipo_producto == "LD/TC") {
+            bgproducto = "combo";
+            iconproducto = `<i class="fa-solid fa-sack-dollar me-2"></i><i class="fa-solid fa-credit-card"></i>`;
+          }
+
+
+          if(rolUsuario == 3){
+            html = html +
+            `                 
+            <tr>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
+              <td>${dni}</td>
+              <td>S/.${credito}</td>
+              <td>S/.${linea}</td>
+              <td class="text-center" scope="row">
+                <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
+                ${nombre_completo}
+              </td>
+              <td class="text-center">
+                <span class="icon-producto-${bgproducto}">${iconproducto}</span>
+              </td>
+            </tr>`;
+          }else{
+            html = html +
+              `                 
+            <tr>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
+              <td>${dni}</td>
+              <td>S/.${credito}</td>
+              <td>S/.${linea}</td>
+              <td class="text-center" scope="row">
+                <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
+                ${nombre_completo}
+              </td>
+              <td class="text-center">
+                <span class="icon-producto-${bgproducto}">${iconproducto}</span>
+              </td>
+              <td class="text-center"><a href="pdf/documents/${documento}" target="_blank" id="verSolicitud"><img src="img/add-pv/img_pdf.jpg" class="logo-table-mini me-2"></a></td>
+              <td class="text-center">
+                <a onclick="obtener_ventas(${id})"><i class="fa-regular fa-pen-to-square me-3" style="color: #001b2b"></i></a>
+                <a onclick="eliminar_venta(${id})"><i class="fa-solid fa-trash me-3"></i></a>
+              </td>
+            </tr>`;
+          }
+          
+        });
+      } else {
+        html =
+          html +
+          `<tr><td class='text-center' colspan='12'>No se encontraron resultados.</td>`;
+      }
+      $("#listar_ventas").html(html);
+
+      construirPaginacion_Ventas(pagina);
+    },
+  });
+};
+function construirPaginacion_Ventas(pagina_actual_ventas) {
+  $.ajax({
+    url: "controller/ventas.php",
+    type: "POST",
+    data: { option: "contar_ventas" },
+    dataType: "json",
+    success: function (response) {
+      let total_ventas = response.total;
+      let por_pagina = 7; // Cantidad de registros por página
+      let total_paginas = Math.ceil(total_ventas / por_pagina);
+      let html = "";
+
+      if (total_paginas > 1) {
+        // Botón anterior
+        html += `<li class="page-item ${pagina_actual_ventas == 1 ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="listar_ventas_paginados(${pagina_actual_ventas - 1
+          });">Anterior</a>
+                      </li>`;
+
+        // Botones de páginas
+        for (let i = 1; i <= total_paginas; i++) {
+          html += `<li class="page-item ${pagina_actual_ventas == i ? "active" : ""
+            }">
+                              <a class="page-link" href="javascript:void(0);" onclick="listar_ventas_paginados(${i});">${i}</a>
+                          </li>`;
+        }
+
+        // Botón siguiente
+        html += `<li class="page-item ${pagina_actual_ventas == total_paginas ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="listar_ventas_paginados(${pagina_actual_ventas + 1
+          });">Siguiente</a>
+                      </li>`;
+      }
+
+      $("#paginacion_ventas").html(html);
+    },
+  });
+}
+
 const listar_ventas = function () {
   $.ajax({
     url: "controller/ventas.php",
@@ -3218,6 +3453,7 @@ const select_usuarios = function () {
     },
   });
 };
+
 const filtro_empleados = function () {
   $("#form_filtro_empleados").submit(function (e) {
     e.preventDefault();
