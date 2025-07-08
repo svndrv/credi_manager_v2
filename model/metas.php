@@ -9,6 +9,11 @@ class Metas extends Conectar
         $this->db = Conectar::conexion();
         $this->metas = array();
     }
+
+    public function setDb($dbh)
+    {
+        $this->dbh = $dbh;
+    }
     public function obtener_metas()
     {
         $sql = "SELECT m.id, m.ld_cantidad, m.tc_cantidad, m.ld_monto, CONCAT(u.nombres, ' ', u.apellidos) AS usuario_nombre, m.mes, m.cumplido, m.created_at, m.updated_at FROM metas m JOIN usuario u ON m.id_usuario = u.id";

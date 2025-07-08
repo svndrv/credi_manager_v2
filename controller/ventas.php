@@ -36,6 +36,7 @@ if(isset($_POST['tem'])){ $tem = $_POST['tem']; }else{ $tem = "";};
 if(isset($_POST['id_usuario'])){ $id_usuario = $_POST['id_usuario']; }else{ $id_usuario = "";};
 if(isset($_POST['tipo_producto'])){ $tipo_producto = $_POST['tipo_producto']; }else{ $tipo_producto = "";};
 if(isset($_POST['estado'])){ $estado = $_POST['estado']; }else{ $estado = "";};
+if(isset($_POST['created_at'])){ $created_at = $_POST['created_at']; }else{ $created_at = "";};
 
 switch ($option) {
     case 'listar_ventas':
@@ -47,6 +48,23 @@ switch ($option) {
     case 'contar_ventas':
         $total_ventas = $ventas->contar_ventas();
         echo json_encode(['total' => $total_ventas]);
+    break;
+    case "filtro_ventas":
+               $por_pagina = 7;
+        $offset = ($pagina - 1) * $por_pagina;
+        $mis_ventas = $ventas->obtener_ventas_filtro(
+            $id,
+            $id_usuario, 
+            $dni,  
+            $tipo_producto,
+            $created_at, 
+            $por_pagina, 
+            $offset);
+        echo json_encode($mis_ventas);
+    break;
+    case 'contar_ventas_filtro':
+        $total = $ventas->contar_ventas_filtro($id, $id_usuario, $dni, $tipo_producto, $created_at);
+        echo json_encode(['total' => $total]);
     break;
     case 'agregar_ventas':
         echo json_encode($ventas->agregar_ventas($nombres, $dni, $celular,$credito, $linea, $plazo,$tem,$id_usuario,$tipo_producto,$estado));
@@ -62,9 +80,6 @@ switch ($option) {
     break;
     case 'venta_x_id':
         echo json_encode($ventas->obtener_venta_x_id($id));
-    break;
-    case 'filtro_ventas':
-        echo json_encode($ventas->venta_x_dni_estado_producto($dni, $estado, $tipo_producto));
     break;
     case 'actualizar_ventas':
         echo json_encode($ventas->actualizar_venta($id, $nombres, $dni, $celular, $credito, $linea, $plazo, $tem, $tipo_producto, $estado));
@@ -98,6 +113,8 @@ switch ($option) {
         break;
     default:
         echo json_encode(['error' => 'Opción no válida']); 
+        $total = $ventas->contar_ventas_filtro($id, $id_usuario, $dni, $tipo_producto, $created_at);
+        echo json_encode(['total' => $total]);
     break;
     
 }

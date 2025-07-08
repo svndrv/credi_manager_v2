@@ -7,6 +7,11 @@ class Metasfv extends Conectar {
         $this->metasfv = array();
     }
 
+    public function setDb($dbh)
+{
+    $this->db = $dbh;
+}
+    
     public function obtener_metasfv() {
         $sql = "SELECT * FROM metasfv";
         $sql = $this->db->prepare($sql);

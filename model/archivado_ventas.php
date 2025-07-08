@@ -9,6 +9,11 @@ class ArchivadoVentas extends Conectar {
         $this->archivadoventas = array();
     }
 
+    public function setDb($dbh)
+    {
+        $this->db = $dbh;
+    }
+
     public function obtener_archivadoventas_paginados($limit, $offset, $id) {
         $sql = "SELECT
         a.id AS id_archivado,

@@ -10,6 +10,11 @@ class Ventas extends Conectar
         $this->db = Conectar::conexion();
         $this->ventas = array();
     }
+
+    public function setDb($dbh)
+    {
+        $this->db = $dbh;
+    }
     public function obtener_ventas_x_usuario($id_usuario, $mes)
     {
         $sql = "SELECT ld_cantidad, tc_cantidad, ld_monto FROM ventas_por_usuario WHERE id_usuario = ? AND mes = ?;";
@@ -266,15 +271,81 @@ ON
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
+    public function obtener_ventas_filtro($id, $id_usuario, $dni, $tipo_producto, $created_at, $limit, $offset) {
+       $sql = "SELECT 
+            v.id,
+            v.nombres, 
+            v.dni, 
+            v.celular, 
+            v.credito, 
+            v.linea, 
+            v.plazo, 
+            v.tem,
+            v.documento,
+            v.id_usuario,
+            u.foto, 
+            CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, 
+            v.tipo_producto, 
+            v.estado
+        FROM 
+            ventas v 
+        INNER JOIN 
+            usuario u 
+        ON 
+            v.id_usuario = u.id";
+        $params = [];
 
-    public function contar_ventas_filtro($id, $dni, $estado, $tipo_producto, $created_at)
-    {
-        $sql = "SELECT COUNT(*) as total FROM ventas";
+        if (!empty($id)) {
+            $sql .= " AND v.id = :id";
+            $params[':id'] = $id;
+        }
+
+        if (!empty($dni)) {
+            $sql .= " AND v.dni = :dni";
+            $params[':dni'] = $dni;
+        }
+
+        if (!empty($id_usuario)) {
+            $sql .= " AND v.id_usuario = :id_usuario";
+            $params[':id_usuario'] = $id_usuario;
+        }
+
+        if (!empty($tipo_producto)) {
+            $sql .= " AND v.tipo_producto = :tipo_producto";
+            $params[':tipo_producto'] = $tipo_producto;
+        }
+
+        if (!empty($created_at)) {
+            $sql .= " AND DATE(v.created_at) = :created_at";
+            $params[':created_at'] = $created_at;
+        }
+
+        $sql .= " ORDER BY id DESC LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->db->prepare($sql);
+
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function contar_ventas_filtro($id, $id_usuario, $dni, $tipo_producto, $created_at) {
+        $sql = "SELECT COUNT(*) AS total
+            FROM ventas";
+
+        if ($id) {
+            $sql .= " AND id = :id";
+        }
         if ($dni) {
             $sql .= " AND dni = :dni";
         }
-        if ($estado) {
-            $sql .= " AND estado = :estado";
+        if ($id_usuario) {
+            $sql .= " AND id_usuario = :id_usuario";
         }
         if ($tipo_producto) {
             $sql .= " AND tipo_producto = :tipo_producto";
@@ -282,12 +353,14 @@ ON
         if ($created_at) {
             $sql .= " AND DATE(created_at) = :created_at";
         }
+
         $stmt = $this->db->prepare($sql);
+
+        if ($id) {
+            $stmt->bindParam(':id', $id, PDO::PARAM_STR);
+        }
         if ($dni) {
             $stmt->bindParam(':dni', $dni, PDO::PARAM_STR);
-        }
-        if ($estado) {
-            $stmt->bindParam(':estado', $estado, PDO::PARAM_STR);
         }
         if ($tipo_producto) {
             $stmt->bindParam(':tipo_producto', $tipo_producto, PDO::PARAM_STR);
@@ -295,11 +368,9 @@ ON
         if ($created_at) {
             $stmt->bindParam(':created_at', $created_at, PDO::PARAM_STR);
         }
-
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-
+        
         $stmt->execute();
-        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-        return (int)$resultado['total'];
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC); 
+        return (int)$resultado['total']; 
     }
 }

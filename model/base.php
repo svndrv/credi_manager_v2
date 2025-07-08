@@ -9,9 +9,9 @@ class Base extends Conectar{
         $this->base = array();
     }
 
-    public function setDb($pdo)
+    public function setDb($dbh)
     {
-        $this->db = $pdo;
+        $this->db = $dbh;
     }
 
     public function verificar_dni_base($dni){

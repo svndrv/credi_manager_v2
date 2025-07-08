@@ -11,6 +11,11 @@ class Usuario extends Conectar
         $this->usuarios = array();
     }
 
+    public function setDb($dbh)
+    {
+        $this->db = $dbh;
+    }
+
     public function login($usuario, $contrasena)
     {
         $sql = "SELECT * FROM usuario WHERE usuario = ?";

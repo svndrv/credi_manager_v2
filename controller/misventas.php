@@ -36,6 +36,7 @@ if(isset($_POST['tem'])){ $tem = $_POST['tem']; }else{ $tem = "";};
 if(isset($_POST['id_usuario'])){ $id_usuario = $_POST['id_usuario']; }else{ $id_usuario = "";};
 if(isset($_POST['tipo_producto'])){ $tipo_producto = $_POST['tipo_producto']; }else{ $tipo_producto = "";};
 if(isset($_POST['estado'])){ $estado = $_POST['estado']; }else{ $estado = "";};
+if(isset($_POST['created_at'])){ $created_at = $_POST['created_at']; }else{ $created_at = "";};
 
 
 switch ($option) {
@@ -51,8 +52,27 @@ switch ($option) {
         echo json_encode(['total' => $total_misventas]);
     break;
 
+    case "filtro_misventas":
+        $por_pagina = 7;
+        $offset = ($pagina - 1) * $por_pagina;
+        $mis_ventas = $misventas->obtener_misventas_filtro(
+            $id,
+            $_SESSION['id'], 
+            $dni,  
+            $tipo_producto,
+            $created_at, 
+            $por_pagina, 
+            $offset);
+        echo json_encode($mis_ventas);  
+    break;
+
+    case 'contar_misventas_filtro':
+        $total = $misventas->contar_misventas_filtro($id, $_SESSION['id'], $dni, $tipo_producto, $created_at);
+        echo json_encode(['total' => $total]);
+    break;
+    
     default:
-        echo json_encode(['error' => 'Opción no válida']); 
+        echo json_encode(['error' => 'Opción no válida']);             
     break;
 
 }

@@ -9,6 +9,11 @@ class ProcesoVentas extends Conectar {
         $this->procesoventas = array();
     }
 
+    public function setDb($dbh)
+    {
+        $this->db = $dbh;
+    }
+
     public function obtener_procesoventas_x_id($id){
         $sql = "SELECT * FROM proceso_ventas WHERE id = ?";
         $sql = $this->db->prepare($sql);

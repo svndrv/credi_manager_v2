@@ -1,5 +1,5 @@
-<main class="content-pages content px-5 py-4">
-    <section class="container-fluid mt-3">
+<main class="content-pages content px-5 py-5">
+    <!-- <section class="container-fluid mt-3">
                 <div class="col-lg-12 mt-3">
                     <div class="row">
                         <div class="col-lg-4">
@@ -58,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-    </section>
+    </section> -->
 
     <section class="container-fluid">
         <article class="card shadow bg-body-tertiary">
@@ -69,25 +69,23 @@
             </div>
             <div class="card-body p-4">
                 <div class="row">
-                    <div class="col-lg-3 mb-4">
-                        <form id="form_filtro_misventas">
-                            <input type="text" class="form-control" id="dni_f" name="dni" placeholder="Ingrese un DNI">
+                    <div class="col-lg-2 mb-4">
+                        <form id="form_filtro_misventas">                            
+                            <input type="text" class="form-control" id="mv_id" name="id" placeholder="Ingrese un ID">
                     </div>
-                    <div class="col-lg-3 mb-4">
-                        <select class="form-select" name="estado" id="estado_f">
-                            <option value="0">Estado</option>
-                            <option value="Pendiente">Pendiente</option>
-                            <option value="Desembolsado">Desembolsado</option>
-                            <!-- <option value="Cancelado">Cancelado</option> -->
-                        </select>
+                    <div class="col-lg-2 mb-4">
+                            <input type="text" class="form-control" id="mv_dni" name="dni" placeholder="Ingrese un DNI">
                     </div>
-                    <div class="col-lg-3 mb-4">
-                        <select class="form-select" name="tipo_producto" id="tipo_producto_f">
+                    <div class="col-lg-2 mb-4">
+                        <select class="form-select" id="mv_tipo_producto" name="tipo_producto">
                             <option value="0">Producto</option>
                             <option value="LD">LD</option>
                             <option value="TC">TC</option>
                             <option value="LD/TC">LD/TC</option>
                         </select>
+                    </div>
+                    <div class="col-lg-2 mb-4">
+                        <input type="date" class="form-control" id="mv_createdat" name="created_at" value="">
                     </div>
                     <div class="col-lg-2 mb-3">
                         <button type="submit" class="btn btn-dark w-25"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -106,6 +104,7 @@
                                         <th scope="col">Linea</th>
                                         <th scope="col">Plazo</th>
                                         <th scope="col">TEM</th>
+                                        <th scope="col">Fecha</th>
                                         <th scope="col">Producto</th>
                                         <th scope="col">Documento</th>
                                         <th scope="col">Acción</th>
@@ -138,28 +137,32 @@
             </div>
             <div class="card-body p-4">
                 <div class="row">
-                    <div class="col-lg-3 mb-4">
+                    <div class="col-lg-2 mb-4">
                         <form id="form_filtro_ventas">
-                            <input type="text" class="form-control" id="dni_f" name="dni" placeholder="Ingrese un DNI">
+                            <input type="text" class="form-control" id="v_id" name="id" placeholder="Ingrese un ID">
+                    </div>
+                    <div class="col-lg-2 mb-4">
+                        <form id="form_filtro_ventas">
+                            <input type="text" class="form-control" id="v_dni" name="dni" placeholder="Ingrese un DNI">
                     </div>
                     <div class="col-lg-3 mb-4">
-                        <select class="form-select" name="estado" id="estado_f">
-                            <option value="0">Estado</option>
-                            <option value="Pendiente">Pendiente</option>
-                            <option value="Desembolsado">Desembolsado</option>
-                            <!-- <option value="Cancelado">Cancelado</option> -->
+                        <select class="form-select mb-4" aria-label="Default select example" id="id_usuario_f" name="id_usuario_f">
+                                <option value=0>Seleccionar Usuario</option>
                         </select>
                     </div>
-                    <div class="col-lg-3 mb-4">
-                        <select class="form-select" name="tipo_producto" id="tipo_producto_f">
+                    <div class="col-lg-2 mb-4">
+                        <select class="form-select" name="tipo_producto" id="v_tipo_producto">
                             <option value="0">Producto</option>
                             <option value="LD">LD</option>
                             <option value="TC">TC</option>
                             <option value="LD/TC">LD/TC</option>
                         </select>
                     </div>
-                    <div class="col-lg-2 mb-3">
-                        <button type="submit" class="btn btn-dark w-25"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <div class="col-lg-2 mb-4">
+                        <input type="date" class="form-control" id="v_createdat" name="created_at" value="">
+                    </div>
+                    <div class="col-lg-1 mb-3">
+                        <button type="submit" class="btn btn-dark w-50"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </form>
                     </div>
                     <div class="col-lg-12">

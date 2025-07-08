@@ -55,6 +55,12 @@ $(function () {
     crear_ventas();
     filtro_ventas();
     actualizar_ventas();
+    $("#form_filtro_misventas").submit(function (e) {
+      e.preventDefault();
+      filtro_misventas(1);
+      
+    });
+    
   }
   if (params.get("view") === "usuarios") {
     listar_empleados();
@@ -239,8 +245,8 @@ const listar_misventas_paginados = function (pagina) {
             linea,
             plazo,
             tem,
-            nombre_completo,
             tipo_producto,
+            created_at,
             documento, } = x;
 
           if (tipo_producto == "TC") {
@@ -264,6 +270,7 @@ const listar_misventas_paginados = function (pagina) {
               <td>S/.${linea}</td>
               <td>${plazo}</td>
               <td>${tem}%</td>
+              <td>${created_at}</td>
               <td class="text-center">
                 <span class="icon-producto-${bgproducto}">${iconproducto}</span>
               </td>
@@ -325,6 +332,133 @@ function construirPaginacion_MisVentas(pagina_actual_misventas) {
     },
   });
 }
+
+const filtro_misventas = function (pagina = 1) {
+  var id = document.getElementById("mv_id").value.trim();
+  var dni = document.getElementById("mv_dni").value.trim();
+  var tipo_producto = document.getElementById("mv_tipo_producto").value.trim();
+  var created_at = document.getElementById("mv_createdat").value.trim();
+
+  $.ajax({
+    url: "controller/misventas.php",
+    method: "POST",
+    data: {
+      id: id,
+      dni: dni,
+      tipo_producto: tipo_producto,
+      created_at: created_at,
+      option: "filtro_misventas",
+      pagina: pagina
+    },
+    success: function (response) {
+      const data = JSON.parse(response);
+      let html = "";
+      if (data.length > 0) {
+        data.map((x) => {
+          const { id,
+            nombres,
+            dni,
+            celular,
+            credito,
+            linea,
+            plazo,
+            tem,
+            tipo_producto,
+            created_at,
+            documento, } = x;
+
+           if (tipo_producto == "TC") {
+            bgproducto = "tc";
+            iconproducto = `<i class="fa-solid fa-credit-card"></i>`;
+          } else if (tipo_producto == "LD") {
+            bgproducto = "ld";
+            iconproducto = `<i class="fa-solid fa-sack-dollar"></i>`;
+          } else if (tipo_producto == "LD/TC") {
+            bgproducto = "combo";
+            iconproducto = `<i class="fa-solid fa-sack-dollar me-2"></i><i class="fa-solid fa-credit-card"></i>`;
+          }
+
+          html =
+            html +
+            `<tr>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
+              <td>${nombres}</td>
+              <td>${dni}</td>
+              <td>${celular}</td>
+              <td>S/.${credito}</td>
+              <td>S/.${linea}</td>
+              <td>${plazo}</td>
+              <td>${tem}%</td>
+              <td>${created_at}</td>
+              <td class="text-center">
+                <span class="icon-producto-${bgproducto}">${iconproducto}</span>
+              </td>
+              <td class="text-center"><a href="pdf/documents/${documento}" target="_blank" id="verSolicitud"><img src="img/add-pv/img_pdf.jpg" class="logo-table-mini me-2"></a></td>
+              <td class="text-center">
+                <a onclick="obtener_ventas(${id})"><i class="fa-regular fa-pen-to-square me-3" style="color: #001b2b"></i></a>
+                <a onclick="eliminar_venta(${id})"><i class="fa-solid fa-trash"></i></a>
+              </td>
+            </tr>`;
+        });
+      } else {
+        html =
+          html +
+          `<tr><td class='text-center' colspan='12'>No se encontraron resultados.</td>`;
+      }
+      $("#listar_misventas").html(html);
+
+      construirPaginacion_MisVentas_filtro(pagina, id, dni, tipo_producto, created_at);
+    }
+  });
+};
+
+function construirPaginacion_MisVentas_filtro(pagina_actual_misventas, id, dni, tipo_producto, created_at) {
+  $.ajax({
+    url: "controller/misventas.php",
+    type: "POST",
+    data: { option: "contar_misventas_filtro",
+      id: id,
+      dni: dni,
+      tipo_producto: tipo_producto,
+      created_at: created_at,
+    },
+    dataType: "json",
+    success: function (response) {
+      let total_misventas_filtro = response.total;
+      let por_pagina = 7; // Cantidad de registros por página
+      let total_paginas = Math.ceil(total_misventas_filtro / por_pagina);
+      let html = "";
+
+      if (total_paginas > 1) {
+        // Botón anterior
+        html += `<li class="page-item ${pagina_actual_misventas == 1 ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="filtro_misventas(${pagina_actual_misventas - 1
+          });">Anterior</a>
+                      </li>`;
+
+        // Botones de páginas
+        for (let i = 1; i <= total_paginas; i++) {
+          html += `<li class="page-item ${pagina_actual_misventas == i ? "active" : ""
+            }">
+                              <a class="page-link" href="javascript:void(0);" onclick="filtro_misventas(${i});">${i}</a>
+                          </li>`;
+        }
+
+        // Botón siguiente
+        html += `<li class="page-item ${pagina_actual_misventas == total_paginas ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="filtro_misventas(${pagina_actual_misventas + 1
+          });">Siguiente</a>
+                      </li>`;
+      }
+
+      $("#paginacion_misventas").html(html);
+    },
+  });
+}
+
+
 
 
 /* -------------------   VENTAS EN PROCESO   ---------------------- */
@@ -2651,7 +2785,7 @@ function construirPaginacion_ArhivadoVentas(pagina_actual_pventas) {
     dataType: "json",
     success: function (response) {
       let total_aventas = response.total;
-      let por_pagina = 7; // Cantidad de registros por página
+      let por_pagina = 2; // Cantidad de registros por página
       let total_paginas = Math.ceil(total_aventas / por_pagina);
       let html = "";
 
