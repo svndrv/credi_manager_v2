@@ -62,6 +62,9 @@ if (!isset($_SESSION['id'])) {
                 case "archivado_ventas":
                     require './views/archivado_ventas.php';
                     break;
+                case "misventas":
+                    require './views/misventas.php';
+                    break;
                 default:
                     require './views/inicio.php';
                     break;

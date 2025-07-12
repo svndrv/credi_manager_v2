@@ -20,7 +20,7 @@ class MisVentas extends Conectar
         $sql = "SELECT id, nombres, dni, celular, credito, linea, plazo, tem,
                     documento, tipo_producto, estado, DATE(created_at) AS created_at 
                 FROM ventas 
-                WHERE id_usuario = :id 
+                WHERE id_usuario = :id AND estado = 'Desembolsado'
                 ORDER BY id DESC LIMIT :limit OFFSET :offset";
 
         $stmt = $this->db->prepare($sql);
@@ -32,7 +32,7 @@ class MisVentas extends Conectar
     }
     public function contar_misventas($id)
     {
-        $sql = "SELECT COUNT(*) as total FROM ventas WHERE id_usuario = ?";
+        $sql = "SELECT COUNT(*) as total FROM ventas WHERE id_usuario = ? AND estado = 'Desembolsado'";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(1, $id);
         $stmt->execute();
@@ -40,7 +40,7 @@ class MisVentas extends Conectar
     }
 
     public function obtener_misventas_filtro($id, $id_usuario, $dni, $tipo_producto, $created_at, $limit, $offset) {
-       $sql = "SELECT * FROM ventas WHERE id_usuario = :id_usuario";
+       $sql = "SELECT * FROM ventas WHERE id_usuario = :id_usuario AND estado = 'Desembolsado'";
         $params = [];
 
         if (!empty($id)) {
@@ -86,7 +86,7 @@ class MisVentas extends Conectar
 
     public function contar_misventas_filtro($id, $id_usuario, $dni, $tipo_producto, $created_at) {
         $sql = "SELECT COUNT(*) AS total
-            FROM ventas WHERE id_usuario = :id_usuario";
+            FROM ventas WHERE id_usuario = :id_usuario AND estado = 'Desembolsado'";
 
         if ($id) {
             $sql .= " AND id = :id";

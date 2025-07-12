@@ -62,6 +62,19 @@ $(function () {
     });
     
   }
+
+  if (params.get("view") === "misventas") {
+    listar_misventas_paginados(1);
+    crear_ventas();
+    actualizar_ventas();
+    $("#form_filtro_misventas").submit(function (e) {
+      e.preventDefault();
+      filtro_misventas(1);
+      
+    });
+    
+  }
+
   if (params.get("view") === "usuarios") {
     listar_empleados();
     ventas_x_usuario();
@@ -3482,10 +3495,7 @@ const actualizar_ventas = function (id) {
             icon: "success",
             title: response.message,
           });
-          listar_ventas();
-          contar_ld();
-          contar_tc();
-          contar_ld_monto();
+          listar_misventas_paginados(1);
           $("#obtener-ventas").modal("hide");
           $("#formObtenerVentas").trigger("reset");
         }
@@ -3529,10 +3539,8 @@ const eliminar_venta = function (id) {
               icon: "success",
               title: response.message,
             });
-            listar_ventas();
-            contar_ld();
-            contar_tc();
-            contar_ld_monto();
+            //listar_ventas_paginados();
+            listar_misventas_paginados(1);
             $("#obtener-ventas").modal("hide");
             $("#formObtenerVentas").trigger("reset");
           } else {

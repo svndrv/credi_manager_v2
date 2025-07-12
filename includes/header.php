@@ -28,6 +28,9 @@
 		case "cartera":
 			echo "<spans class='fw-bold' style='color: #d72324;'>>> Cartera de Clientes</spans>";
 			break;
+		case "misventas":
+			echo "<spans class='fw-bold' style='color: #d72324;'>>> Mis Ventas Desembolsadas</spans>";
+			break;
 		default:
 			echo "<h2></h2>";
 			break;
