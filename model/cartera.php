@@ -93,7 +93,7 @@ class Cartera extends Conectar {
     }
     // Paginado x ID_USUARIO
     public function obtener_cartera_paginados($limit, $offset, $id) {
-        $sql = "SELECT * FROM cartera WHERE id_usuario = :id LIMIT :limit OFFSET :offset";
+        $sql = "SELECT * FROM cartera WHERE id_usuario = :id ORDER BY id DESC LIMIT :limit OFFSET :offset";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
@@ -118,7 +118,7 @@ class Cartera extends Conectar {
             $params[':dni'] = $dni;
         }
 
-        $sql .= " LIMIT :limit OFFSET :offset";
+        $sql .= " ORDER BY id DESC LIMIT :limit OFFSET :offset";
 
         $stmt = $this->db->prepare($sql);
 

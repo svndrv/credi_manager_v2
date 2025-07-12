@@ -74,7 +74,6 @@
                             <input type="text" class="form-control" id="v_id" name="id" placeholder="Ingrese un ID">
                     </div>
                     <div class="col-lg-2 mb-4">
-                        <form id="form_filtro_ventas">
                             <input type="text" class="form-control" id="v_dni" name="dni" placeholder="Ingrese un DNI">
                     </div>
                     <div class="col-lg-3 mb-4">
@@ -108,6 +107,7 @@
                                         <th scope="col">Credito</th>
                                         <th scope="col">Linea</th>
                                         <th scope="col">Usuario</th>
+                                        <th scope="col">Fecha</th>
                                         <th scope="col">Producto</th>
                                     <?php } else { ?> 
                                         <th scope="col">ID</th>
@@ -116,6 +116,7 @@
                                         <th scope="col">Linea</th>
                                         <th scope="col">Usuario</th>
                                         <th scope="col">Producto</th>
+                                        <th scope="col">Fecha</th>
                                         <th scope="col">Documento</th>
                                         <th scope="col">Acción</th>
                                     <?php } ?>
@@ -123,7 +124,7 @@
                                 </thead>
                                 <tbody id="listar_ventas">
                                     <tr>
-                                        <td colspan="12" class="text-center">No hay datos...</td>
+                                        <td colspan="9" class="text-center">No hay datos...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -209,13 +210,7 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="estado" class="form-label">Producto:</label>
-                                <select class="form-select" name="estado" id="estado2">
-                                    <option value="0">Estado</option>
-                                    <option value="Pendiente">Pendiente</option>
-                                    <option value="Desembolsado">Desembolsado</option>
-                                    <!-- <option value="Cancelado">Cancelado</option> -->
-                                </select>
+                                <input type="hidden" class="form-control" id="estado2" name="estado">
                             </div>
                         </div>
                     </div>

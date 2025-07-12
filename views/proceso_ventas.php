@@ -368,7 +368,7 @@
                             <div class="mb-3">
                                 <label for="estado_to_ventas" class="form-label fw-bold">Estado</label>
                                 <p id="view-estado-to-ventas"></p>
-                                <input type="hidden" class="form-control" id="estado_to_ventas" name="estado">
+                                <input type="hidden" class="form-control" value="Desembolsado" name="estado">
                             </div>
                         </div>
 

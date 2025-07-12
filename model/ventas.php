@@ -248,6 +248,7 @@ ON
             v.documento,
             v.id_usuario,
             u.foto, 
+            DATE(v.created_at) AS created_at,
             CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, 
             v.tipo_producto, 
             v.estado,
@@ -257,7 +258,7 @@ ON
         INNER JOIN 
             usuario u 
         ON 
-            v.id_usuario = u.id LIMIT :limit OFFSET :offset";
+            v.id_usuario = u.id WHERE v.estado = 'Desembolsado' ORDER BY v.id DESC LIMIT :limit OFFSET :offset";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
@@ -266,7 +267,7 @@ ON
     }
     public function contar_ventas()
     {
-        $sql = "SELECT COUNT(*) as total FROM ventas";
+        $sql = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'Desembolsado'";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
@@ -284,6 +285,7 @@ ON
             v.documento,
             v.id_usuario,
             u.foto, 
+            DATE(v.created_at) AS created_at,
             CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, 
             v.tipo_producto, 
             v.estado
@@ -292,7 +294,7 @@ ON
         INNER JOIN 
             usuario u 
         ON 
-            v.id_usuario = u.id";
+            v.id_usuario = u.id WHERE v.estado = 'Desembolsado'";
         $params = [];
 
         if (!empty($id)) {
@@ -320,7 +322,7 @@ ON
             $params[':created_at'] = $created_at;
         }
 
-        $sql .= " ORDER BY id DESC LIMIT :limit OFFSET :offset";
+        $sql .= " ORDER BY v.id DESC LIMIT :limit OFFSET :offset";
 
         $stmt = $this->db->prepare($sql);
 
@@ -336,7 +338,7 @@ ON
     }
     public function contar_ventas_filtro($id, $id_usuario, $dni, $tipo_producto, $created_at) {
         $sql = "SELECT COUNT(*) AS total
-            FROM ventas";
+            FROM ventas WHERE estado = 'Desembolsado'";
 
         if ($id) {
             $sql .= " AND id = :id";
@@ -361,6 +363,9 @@ ON
         }
         if ($dni) {
             $stmt->bindParam(':dni', $dni, PDO::PARAM_STR);
+        }
+        if ($id_usuario) {
+            $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_STR);
         }
         if ($tipo_producto) {
             $stmt->bindParam(':tipo_producto', $tipo_producto, PDO::PARAM_STR);

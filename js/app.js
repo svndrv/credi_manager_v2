@@ -53,11 +53,11 @@ $(function () {
     listar_ventas_paginados(1);
     listar_misventas_paginados(1);
     crear_ventas();
-    filtro_ventas();
     actualizar_ventas();
-    $("#form_filtro_misventas").submit(function (e) {
+    select_usuarios();
+    $("#form_filtro_ventas").submit(function (e) {
       e.preventDefault();
-      filtro_misventas(1);
+      filtro_ventas(1);
       
     });
     
@@ -3027,6 +3027,7 @@ const listar_ventas_paginados = function (pagina) {
             linea,
             plazo,
             tem,
+            created_at,
             nombre_completo,
             tipo_producto,
             documento, foto } = x;
@@ -3055,6 +3056,7 @@ const listar_ventas_paginados = function (pagina) {
                 <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
                 ${nombre_completo}
               </td>
+              <td>${created_at}</td>
               <td class="text-center">
                 <span class="icon-producto-${bgproducto}">${iconproducto}</span>
               </td>
@@ -3071,9 +3073,11 @@ const listar_ventas_paginados = function (pagina) {
                 <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
                 ${nombre_completo}
               </td>
+              <td>${created_at}</td>
               <td class="text-center">
                 <span class="icon-producto-${bgproducto}">${iconproducto}</span>
               </td>
+              
               <td class="text-center"><a href="pdf/documents/${documento}" target="_blank" id="verSolicitud"><img src="img/add-pv/img_pdf.jpg" class="logo-table-mini me-2"></a></td>
               <td class="text-center">
                 <a onclick="obtener_ventas(${id})"><i class="fa-regular fa-pen-to-square me-3" style="color: #001b2b"></i></a>
@@ -3394,30 +3398,31 @@ const obtener_ventas = function (id) {
     },
   });
 };
-const filtro_ventas = function () {
-  $("#form_filtro_ventas").submit(function (e) {
-    e.preventDefault();
-    var dni = document.getElementById("dni_f").value.trim();
-    var estado = document.getElementById("estado_f").value.trim();
-    var tipo_producto = document.getElementById("tipo_producto_f").value.trim();
-    $.ajax({
-      url: "controller/ventas.php",
-      method: "POST",
-      data: {
-        dni: dni,
-        estado: estado,
-        tipo_producto: tipo_producto,
-        option: "filtro_ventas",
-      },
-      success: function (response) {
-        const data = JSON.parse(response);
-        console.log(data);
-
-        let html = ``;
-        if (data.length > 0) {
-          data.map((x) => {
-            const {
-              id,
+const filtro_ventas = function (pagina = 1) {
+    var id = document.getElementById("v_id").value.trim();
+    var dni = document.getElementById("v_dni").value.trim();
+    var id_usuario = document.getElementById("id_usuario_f").value.trim();
+    var tipo_producto = document.getElementById("v_tipo_producto").value.trim();
+    var created_at = document.getElementById("v_createdat").value.trim();
+ 
+     $.ajax({
+     url: "controller/ventas.php",
+     method: "POST",
+     data: {
+       id: id,
+       dni: dni,
+       id_usuario: id_usuario,
+       tipo_producto: tipo_producto,
+       created_at: created_at,
+       option: "filtro_ventas",
+       pagina: pagina
+     },
+     success: function (response) {
+       const data = JSON.parse(response);
+       let html = "";
+       if (data.length > 0) {
+         data.map((x) => {
+           const { id,
               nombres,
               dni,
               celular,
@@ -3425,40 +3430,126 @@ const filtro_ventas = function () {
               linea,
               plazo,
               tem,
+              created_at,
               nombre_completo,
               tipo_producto,
-              estado,
-            } = x;
-            html =
-              html +
-              `<tr>
-                <td>${id}</td>
-                <td>${nombres}</td>
-                <td>${dni}</td>
-                <td>${celular}</td>
-                <td>S/.${credito}</td>
-                <td>S/.${linea}</td>
-                <td>${plazo}</td>
-                <td>${tem}%</td>
-                <td>${nombre_completo}</td>
-                <td>${tipo_producto}</td>
-                <td>${estado}</td>
-                <td class="text-center">
-                  <a onclick="obtener_ventas(${id})"><i class="fa-regular fa-pen-to-square me-4" style="color: #001b2b"></i></a>
-                  <a onclick="eliminar_venta(${id})"><i class="fa-solid fa-trash"></i></a>
-                </td>
-              </tr>`;
-          });
-        } else {
-          html =
-            html +
-            `<tr><td class='text-center' colspan='12'>No se encontraron resultados</td>`;
-        }
-        $("#listar_ventas").html(html);
-      },
-    });
-  });
+              documento, foto } = x;
+
+            if (tipo_producto == "TC") {
+            bgproducto = "tc";
+            iconproducto = `<i class="fa-solid fa-credit-card"></i>`;
+          } else if (tipo_producto == "LD") {
+            bgproducto = "ld";
+            iconproducto = `<i class="fa-solid fa-sack-dollar"></i>`;
+          } else if (tipo_producto == "LD/TC") {
+            bgproducto = "combo";
+            iconproducto = `<i class="fa-solid fa-sack-dollar me-2"></i><i class="fa-solid fa-credit-card"></i>`;
+          }
+
+           if(rolUsuario == 3){
+            html = html +
+            `                 
+            <tr>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
+              <td>${dni}</td>
+              <td>S/.${credito}</td>
+              <td>S/.${linea}</td>
+              <td scope="row">
+                <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
+                ${nombre_completo}
+              </td>
+              <td>${created_at}</td>
+              <td class="text-center">
+                <span class="icon-producto-${bgproducto}">${iconproducto}</span>
+              </td>
+            </tr>`;
+          }else{
+            html = html +
+              `                 
+            <tr>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
+              <td>${dni}</td>
+              <td>S/.${credito}</td>
+              <td>S/.${linea}</td>
+              <td scope="row">
+                <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
+                ${nombre_completo}
+              </td>
+              <td>${created_at}</td>
+              <td class="text-center">
+                <span class="icon-producto-${bgproducto}">${iconproducto}</span>
+              </td>
+              <td class="text-center"><a href="pdf/documents/${documento}" target="_blank" id="verSolicitud"><img src="img/add-pv/img_pdf.jpg" class="logo-table-mini me-2"></a></td>
+              <td class="text-center">
+                <a onclick="obtener_ventas(${id})"><i class="fa-regular fa-pen-to-square me-3" style="color: #001b2b"></i></a>
+                <a onclick="eliminar_venta(${id})"><i class="fa-solid fa-trash me-3"></i></a>
+              </td>
+            </tr>`;
+          }
+          
+        });
+       } else {
+         html =
+           html +
+           `<tr><td class='text-center' colspan='12'>No se encontraron resultados.</td>`;
+       }
+       $("#listar_ventas").html(html);
+
+       construirPaginacion_Ventas_filtro(pagina, id, dni, id_usuario, tipo_producto, created_at);
+     }
+   });
+
+
 };
+
+function construirPaginacion_Ventas_filtro(pagina_actual_ventas, id, dni, id_usuario, tipo_producto, created_at) {
+  $.ajax({
+    url: "controller/ventas.php",
+    type: "POST",
+    data: { option: "contar_ventas_filtro",
+      id: id,
+      dni: dni,
+      id_usuario: id_usuario,
+      tipo_producto: tipo_producto,
+      created_at: created_at,
+    },
+    dataType: "json",
+    success: function (response) {
+      let total_ventas_filtro = response.total;
+      let por_pagina = 7; // Cantidad de registros por página
+      let total_paginas = Math.ceil(total_ventas_filtro / por_pagina);
+      let html = "";
+
+      if (total_paginas > 1) {
+        // Botón anterior
+        html += `<li class="page-item ${pagina_actual_ventas == 1 ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="filtro_ventas(${pagina_actual_ventas - 1
+          });">Anterior</a>
+                      </li>`;
+
+        // Botones de páginas
+        for (let i = 1; i <= total_paginas; i++) {
+          html += `<li class="page-item ${pagina_actual_ventas == i ? "active" : ""
+            }">
+                              <a class="page-link" href="javascript:void(0);" onclick="filtro_ventas(${i});">${i}</a>
+                          </li>`;
+        }
+
+        // Botón siguiente
+        html += `<li class="page-item ${pagina_actual_ventas == total_paginas ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="filtro_ventas(${pagina_actual_ventas + 1
+          });">Siguiente</a>
+                      </li>`;
+      }
+
+      $("#paginacion_ventas").html(html);
+    },
+  });
+}
+
+
 const actualizar_ventas = function (id) {
   $("#formObtenerVentas").submit(function (e) {
     e.preventDefault();
@@ -3496,6 +3587,7 @@ const actualizar_ventas = function (id) {
             title: response.message,
           });
           listar_misventas_paginados(1);
+          listar_ventas_paginados(1);
           $("#obtener-ventas").modal("hide");
           $("#formObtenerVentas").trigger("reset");
         }
@@ -3539,7 +3631,7 @@ const eliminar_venta = function (id) {
               icon: "success",
               title: response.message,
             });
-            //listar_ventas_paginados();
+            listar_ventas_paginados(1);
             listar_misventas_paginados(1);
             $("#obtener-ventas").modal("hide");
             $("#formObtenerVentas").trigger("reset");
@@ -3560,8 +3652,9 @@ const select_usuarios = function () {
   $.ajax({
     url: "controller/usuario.php",
     type: "GET",
+    option: "obtener_usuarios",
     success: function (response) {
-      const usuarios = JSON.parse(response);
+      const usuarios = JSON.parse(response);      
       var selectIds = ["#id_usuario_f", "#modal_id_usuario", "#id_usuario2"];
 
       // Limpiar los selects antes de agregar nuevas opciones

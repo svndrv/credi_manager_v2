@@ -67,7 +67,7 @@ class Consultas extends Conectar {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function contar_consultas_filtro($dni, $campana) {
-        $sql = "SELECT COUNT(*) as total FROM consultas WHERE 1=1";
+        $sql = "SELECT COUNT(*) as total FROM consultas WHERE 1=1 ORDER BY id DESC";
         if ($dni) {
             $sql .= " AND dni = :dni";
         }
@@ -105,7 +105,7 @@ class Consultas extends Conectar {
 
     }
     public function obtener_consultas_paginados($limit, $offset) {
-        $sql = "SELECT * FROM consultas LIMIT :limit OFFSET :offset";
+        $sql = "SELECT * FROM consultas ORDER BY id DESC LIMIT :limit OFFSET :offset";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
