@@ -81,7 +81,7 @@ class ProcesoVentas extends Conectar {
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
     public function obtener_procesoventas_paginados($limit, $offset, $id) {
-        $sql = "SELECT * FROM proceso_ventas WHERE id_usuario = :id AND estado NOT IN ('Archivado', 'Desembolsado')  LIMIT :limit OFFSET :offset";
+        $sql = "SELECT * FROM proceso_ventas WHERE id_usuario = :id AND estado NOT IN ('Archivado', 'Desembolsado') ORDER BY id DESC  LIMIT :limit OFFSET :offset";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
@@ -90,7 +90,7 @@ class ProcesoVentas extends Conectar {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function contar_procesoventas($id) {
-        $sql = "SELECT COUNT(*) as total FROM proceso_ventas WHERE id_usuario = ? AND estado != 'Archivado'";
+        $sql = "SELECT COUNT(*) as total FROM proceso_ventas WHERE id_usuario = ? AND estado NOT IN ('Archivado', 'Desembolsado')";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(1, $id);
         $stmt->execute();
@@ -200,7 +200,7 @@ class ProcesoVentas extends Conectar {
             $params[':created_at'] = $created_at;
         }
 
-        $sql .= " LIMIT :limit OFFSET :offset";
+        $sql .= " ORDER BY id DESC LIMIT :limit OFFSET :offset";
 
         $stmt = $this->db->prepare($sql);
 

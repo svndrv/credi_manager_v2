@@ -108,6 +108,8 @@ switch ($option) {
     break;
 
     default:
-        echo json_encode(['error' => 'Opción no válida']);     
+        echo json_encode(['error' => 'Opción no válida']); 
+        $total_procesoventas = $proceso_ventas->contar_procesoventas($_SESSION['id']);
+        echo json_encode(['total' => $total_procesoventas]);
     break;
 }

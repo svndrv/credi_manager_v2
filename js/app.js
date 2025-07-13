@@ -34,9 +34,10 @@ $(function () {
   }
   if (params.get("view") === "consultas") {
     actualizar_consulta();
-    crear_ventas();
+    //crear_ventas();
     agregar_consulta_cartera();
     listar_consultas_paginadas(1);
+    trasladar_base_procesoventas();
     $("#form_consultas").submit(function (e) {
       e.preventDefault();
       filtro_consultas(1); 
@@ -101,6 +102,7 @@ $(function () {
     crear_cartera();
     actualizar_cartera();
     crear_ventas();
+    trasladar_base_procesoventas();
     $("#form_filtro_cartera").submit(function (e) {
       e.preventDefault();
       filtro_cartera(1); 
@@ -688,6 +690,7 @@ const trasladar_base_procesoventas = function () {
             `,
           });
           limpiarFormularioProcesoVentas();
+          
         }
       },
       error: function () {
@@ -702,7 +705,8 @@ const trasladar_base_procesoventas = function () {
 };
 const limpiarFormularioProcesoVentas = function () {
   $("#obtener-procesoventas").modal("hide");
-  $("#formObtenerProcesoVentas")[0].reset();
+  $("#to_consultas_procesoventas").modal("hide");
+  $("#to_cartera_procesoventas").modal("hide");
   $("#formObtenerProcesoVentas")[0].reset();
   $("#documento").val("");
   $("#documento-preview").text("No se ha seleccionado ningún archivo.");
@@ -1222,7 +1226,7 @@ const obtener_cartera = function (id) {
   });
 };
 const trasladar_venta = function (id) {
-  $("#obtener_cartera").modal("show");
+  $("#to_cartera_procesoventas").modal("show");
   $.ajax({
     url: "controller/cartera.php",
     method: "POST",
@@ -1233,10 +1237,10 @@ const trasladar_venta = function (id) {
     success: function (response) {
       data = JSON.parse(response);
       $.each(data, function (i, e) {
-        $("#car_id").val(data[i]["id"]);
-        $("#car_nombres").val(data[i]["nombres"]);
-        $("#car_dni").val(data[i]["dni"]);
-        $("#car_celular").val(data[i]["celular"]);
+        $("#id").val(data[i]["id"]);
+        $("#nombres_to_procesoventas").val(data[i]["nombres"]);
+        $("#dni_to_procesoventas").val(data[i]["dni"]);
+        $("#celular_to_procesoventas").val(data[i]["celular"]);
       });
     },
   });
@@ -2553,9 +2557,9 @@ const listarRegistros = function (pagina) {
             html =
               html +
               `<tr><td>${nombres}</td><td>${dni}</td><td>${tipo_cliente}</td><td>${direccion}</td><td>${distrito}</td><td>S/.${credito_max}</td><td>S/.${linea_max}</td><td>${plazo_max}</td><td>${tem}%</td><td>${celular_1}</td><td>${celular_2}</td><td>${celular_3}</td><td>${tipo_producto}</td><td>${combo}</td><td>
-                <a onclick="obtener_base(${id})"><i class="fa-solid fa-user-plus me-2"></i></a>
-                <a onclick="trasladar_base(${id})"><i class="fa-solid fa-wallet"></i></a>
-                <a onclick="obtener_procesoventas(${id})"><i class="fa-solid fa-plus"></i></a>
+                
+                <a onclick="trasladar_base(${id})"><i class="fa-solid fa-wallet me-2"></i></a>
+                <a onclick="obtener_procesoventas(${id})"><i class="fa-solid fa-circle-plus"></i></a>
               </td></tr>`;
           } else {
             html =
@@ -4333,7 +4337,7 @@ function construirPaginacion_consultas_filtro(pagina_actual_consultas, dni, camp
   });
 }
 const obtener_consultas = function (id) {
-  $("#editar-consulta").modal("show");
+  $("#to_consultas_procesoventas").modal("show");
   $.ajax({
     url: "controller/consultas.php",
     method: "POST",
@@ -4344,9 +4348,9 @@ const obtener_consultas = function (id) {
     success: function (response) {
       data = JSON.parse(response);
       $.each(data, function (i, e) {
-        $("#id2").val(data[i]["id"]);
-        $("#dni2").val(data[i]["dni"]);
-        $("#celular2").val(data[i]["celular"]);
+        $("#id").val(data[i]["id"]);
+        $("#dni_to_procesoventas").val(data[i]["dni"]);
+        $("#celular_to_procesoventas").val(data[i]["celular"]);
       });
     },
   });
@@ -4484,7 +4488,7 @@ const importar = function () {
               no-repeat
               `,
           });
-          listarRegistros();
+          listarRegistros(1);
           $("#file").val("");
         } else {
           Swal.fire({
