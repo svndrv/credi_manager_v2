@@ -27,7 +27,7 @@ session_start();
     <?php require "includes/navbar.php" ?>
 
     <!-- HERO -->
-    <section id="hero" class="min-vh-100 d-flex align-items-center text-center">
+    <!-- <section id="hero" class="min-vh-100 d-flex align-items-center text-center">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -41,12 +41,11 @@ session_start();
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
-    <?php require "includes/carrusel.php" ?>
 
     <!-- SERVICIOS -->
-    <section id="servicios" class="section-padding">
+    <!-- <section id="servicios" class="section-padding">
         <div class="container">
             <div class="row">
                 <div class="col-12 text-center" data-aos="fade-down" data-aos-delay="150">
@@ -90,7 +89,7 @@ session_start();
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- CONSULTAR -->
     <section class="section-padding bg-light" id="consultar">
@@ -139,7 +138,7 @@ session_start();
     </section>
 
     <!-- SERVICES -->
-    <section id="campannas" class="section-padding border-top">
+    <!-- <section id="campannas" class="section-padding border-top">
         <div class="container">
             <div class="row">
                 <div class="col-12 text-center" data-aos="fade-down" data-aos-delay="150">
@@ -181,10 +180,10 @@ session_start();
                 
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- COUNTER -->
-    <section id="counter" class="section-padding">
+    <!-- <section id="counter" class="section-padding">
         <div class="container text-center">
             <div class="row g-4">
                 <div class="col-lg-3 col-sm-6" data-aos="fade-down" data-aos-delay="150">
@@ -205,10 +204,10 @@ session_start();
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- PORTFOLIO -->
-    <section id="beneficios" class="section-padding">
+    <!-- <section id="beneficios" class="section-padding">
         <div class="container">
             <div class="row">
                 <div class="col-12 text-center" data-aos="fade-down" data-aos-delay="150">
@@ -264,7 +263,7 @@ session_start();
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!--  PARTE INFERIOR  -->
     <div class="text-center pt-5">
