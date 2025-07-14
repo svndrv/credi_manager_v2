@@ -31,6 +31,9 @@
 		case "misventas":
 			echo "<spans class='fw-bold' style='color: #d72324;'>>> Mis Ventas Desembolsadas</spans>";
 			break;
+		case "gestion_ventas":
+			echo "<spans class='fw-bold' style='color: #d72324;'>>> Ventas en Gestión</spans>";
+			break;
 		default:
 			echo "<h2></h2>";
 			break;

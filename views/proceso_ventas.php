@@ -49,7 +49,8 @@
                         <div class="table-responsive border-4">
                             <table class="table table-bordered table-hover">
                                 <thead>
-                                    <tr>
+                                    <tr class="text-center">
+                                        <th scope="col">ID</th>
                                         <th scope="col">Nombres</th>
                                         <th scope="col">Dni</th>
                                         <th scope="col">Celular</th>

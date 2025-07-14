@@ -32,6 +32,18 @@ $(function () {
     });
     
   }
+  if (params.get("view") === "gestion_ventas") {
+    listarRegistros_GestionVentas(1);
+    select_usuarios();
+    actualizar_gestion_ventas();
+    $("#form_filtro_gestionoventas").submit(function (e) {
+      e.preventDefault();
+      filtro_gestionventa(1);
+      
+    });
+    
+  }
+
   if (params.get("view") === "consultas") {
     actualizar_consulta();
     //crear_ventas();
@@ -250,9 +262,20 @@ const listar_misventas_paginados = function (pagina) {
     dataType: "json",
     success: function (response) {
       let html = "";
+
+      // ✅ Función para formatear soles
+      const formatearSoles = (valor) => {
+        return parseFloat(valor).toLocaleString("es-PE", {
+          style: "decimal",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      };
+
       if (response.length > 0) {
         response.map((x) => {
-          const { id,
+          const {
+            id,
             nombres,
             dni,
             celular,
@@ -262,7 +285,14 @@ const listar_misventas_paginados = function (pagina) {
             tem,
             tipo_producto,
             created_at,
-            documento, } = x;
+            documento,
+          } = x;
+
+          const creditoFormateado = `S/. ${formatearSoles(credito)}`;
+          const lineaFormateada = `S/. ${formatearSoles(linea)}`;
+
+          let bgproducto = "";
+          let iconproducto = "";
 
           if (tipo_producto == "TC") {
             bgproducto = "tc";
@@ -274,35 +304,41 @@ const listar_misventas_paginados = function (pagina) {
             bgproducto = "combo";
             iconproducto = `<i class="fa-solid fa-sack-dollar me-2"></i><i class="fa-solid fa-credit-card"></i>`;
           }
-          html =
-            html +
-            `<tr>
+
+          html += `
+            <tr>
               <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
               <td>${nombres}</td>
               <td>${dni}</td>
               <td>${celular}</td>
-              <td>S/.${credito}</td>
-              <td>S/.${linea}</td>
+              <td>${creditoFormateado}</td>
+              <td>${lineaFormateada}</td>
               <td>${plazo}</td>
               <td>${tem}%</td>
               <td>${created_at}</td>
               <td class="text-center">
                 <span class="icon-producto-${bgproducto}">${iconproducto}</span>
               </td>
-              <td class="text-center"><a href="pdf/documents/${documento}" target="_blank" id="verSolicitud"><img src="img/add-pv/img_pdf.jpg" class="logo-table-mini me-2"></a></td>
               <td class="text-center">
-                <a onclick="obtener_ventas(${id})"><i class="fa-regular fa-pen-to-square me-3" style="color: #001b2b"></i></a>
-                <a onclick="eliminar_venta(${id})"><i class="fa-solid fa-trash"></i></a>
+                <a href="pdf/documents/${documento}" target="_blank" id="verSolicitud">
+                  <img src="img/add-pv/img_pdf.jpg" class="logo-table-mini me-2">
+                </a>
+              </td>
+              <td class="text-center">
+                <a onclick="obtener_ventas(${id})">
+                  <i class="fa-regular fa-pen-to-square me-3" style="color: #001b2b"></i>
+                </a>
+                <a onclick="eliminar_venta(${id})">
+                  <i class="fa-solid fa-trash"></i>
+                </a>
               </td>
             </tr>`;
         });
       } else {
-        html =
-          html +
-          `<tr><td class='text-center' colspan='12'>No se encontraron resultados.</td>`;
+        html = `<tr><td class='text-center' colspan='12'>No se encontraron resultados.</td></tr>`;
       }
-      $("#listar_misventas").html(html);
 
+      $("#listar_misventas").html(html);
       construirPaginacion_MisVentas(pagina);
     },
   });
@@ -347,7 +383,6 @@ function construirPaginacion_MisVentas(pagina_actual_misventas) {
     },
   });
 }
-
 const filtro_misventas = function (pagina = 1) {
   var id = document.getElementById("mv_id").value.trim();
   var dni = document.getElementById("mv_dni").value.trim();
@@ -368,9 +403,20 @@ const filtro_misventas = function (pagina = 1) {
     success: function (response) {
       const data = JSON.parse(response);
       let html = "";
+
+      // ✅ Formateador de moneda en soles
+      const formatearSoles = (valor) => {
+        return parseFloat(valor).toLocaleString("es-PE", {
+          style: "decimal",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      };
+
       if (data.length > 0) {
         data.map((x) => {
-          const { id,
+          const {
+            id,
             nombres,
             dni,
             celular,
@@ -380,9 +426,16 @@ const filtro_misventas = function (pagina = 1) {
             tem,
             tipo_producto,
             created_at,
-            documento, } = x;
+            documento,
+          } = x;
 
-           if (tipo_producto == "TC") {
+          const creditoFormateado = `S/. ${formatearSoles(credito)}`;
+          const lineaFormateada = `S/. ${formatearSoles(linea)}`;
+
+          let bgproducto = "";
+          let iconproducto = "";
+
+          if (tipo_producto == "TC") {
             bgproducto = "tc";
             iconproducto = `<i class="fa-solid fa-credit-card"></i>`;
           } else if (tipo_producto == "LD") {
@@ -393,40 +446,45 @@ const filtro_misventas = function (pagina = 1) {
             iconproducto = `<i class="fa-solid fa-sack-dollar me-2"></i><i class="fa-solid fa-credit-card"></i>`;
           }
 
-          html =
-            html +
-            `<tr>
+          html += `
+            <tr>
               <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
               <td>${nombres}</td>
               <td>${dni}</td>
               <td>${celular}</td>
-              <td>S/.${credito}</td>
-              <td>S/.${linea}</td>
+              <td>${creditoFormateado}</td>
+              <td>${lineaFormateada}</td>
               <td>${plazo}</td>
               <td>${tem}%</td>
               <td>${created_at}</td>
               <td class="text-center">
                 <span class="icon-producto-${bgproducto}">${iconproducto}</span>
               </td>
-              <td class="text-center"><a href="pdf/documents/${documento}" target="_blank" id="verSolicitud"><img src="img/add-pv/img_pdf.jpg" class="logo-table-mini me-2"></a></td>
               <td class="text-center">
-                <a onclick="obtener_ventas(${id})"><i class="fa-regular fa-pen-to-square me-3" style="color: #001b2b"></i></a>
-                <a onclick="eliminar_venta(${id})"><i class="fa-solid fa-trash"></i></a>
+                <a href="pdf/documents/${documento}" target="_blank" id="verSolicitud">
+                  <img src="img/add-pv/img_pdf.jpg" class="logo-table-mini me-2">
+                </a>
+              </td>
+              <td class="text-center">
+                <a onclick="obtener_ventas(${id})">
+                  <i class="fa-regular fa-pen-to-square me-3" style="color: #001b2b"></i>
+                </a>
+                <a onclick="eliminar_venta(${id})">
+                  <i class="fa-solid fa-trash"></i>
+                </a>
               </td>
             </tr>`;
         });
       } else {
-        html =
-          html +
-          `<tr><td class='text-center' colspan='12'>No se encontraron resultados.</td>`;
+        html = `<tr><td class='text-center' colspan='12'>No se encontraron resultados.</td></tr>`;
       }
+
       $("#listar_misventas").html(html);
 
       construirPaginacion_MisVentas_filtro(pagina, id, dni, tipo_producto, created_at);
     }
   });
 };
-
 function construirPaginacion_MisVentas_filtro(pagina_actual_misventas, id, dni, tipo_producto, created_at) {
   $.ajax({
     url: "controller/misventas.php",
@@ -473,9 +531,351 @@ function construirPaginacion_MisVentas_filtro(pagina_actual_misventas, id, dni, 
   });
 }
 
+/* ----------------------------------------------------- */
+
+/* -------------------   VENTAS EN GESTION   ---------------------- */
+
+const listarRegistros_GestionVentas = function (pagina) {
+  $.ajax({
+    url: "controller/gestion_ventas.php",
+    type: "POST",
+    data: { option: "listar_gventas", pagina: pagina },
+    dataType: "json",
+    success: function (response) {
+      let html = "";
+
+      const formatearFechaSinSegundos = (fechaHora) => {
+        const fecha = new Date(fechaHora);
+        const año = fecha.getFullYear();
+        const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+        const dia = String(fecha.getDate()).padStart(2, "0");
+        const horas = String(fecha.getHours()).padStart(2, "0");
+        const minutos = String(fecha.getMinutes()).padStart(2, "0");
+        return `${año}-${mes}-${dia} ${horas}:${minutos}`;
+      };
+
+      if (response.length > 0) {
+        response.map((x) => {
+          const { id, nombres, dni, celular, created_at, estado, foto, nombre_completo } = x;
+
+          let iconestado = "";
+          let bgestado = "";
+
+          if (estado === "Pendiente") {
+            iconestado = "<i class='fa-solid fa-clock-rotate-left me-2'></i>";
+            bgestado = "pendiente";
+          } else if (estado === "Aprobado") {
+            iconestado = "<i class='fa-solid fa-check me-2'></i>";
+            bgestado = "aprobado";
+          } else if (estado === "Desaprobado") {
+            iconestado = "<i class='fa-solid fa-xmark me-2'></i>";
+            bgestado = "desaprobado";
+          } else if (estado === "Apelando") {
+            iconestado = "<i class='fa-solid fa-exclamation me-2'></i>";
+            bgestado = "apelando";
+          }
+
+          html += `
+            <tr>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
+              <td scope="row">
+                  <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
+                  ${nombre_completo}
+              </td>
+              <td>${nombres}</td>
+              <td><i class="fa-solid fa-address-card me-2"></i>${dni}</td>
+              <td><i class="fa-solid fa-phone me-2"></i>${celular}</td>
+              <td><i class="fa-solid fa-calendar me-2"></i>${formatearFechaSinSegundos(created_at)}</td>
+              <td class="text-center">
+                <span class="icon-estado-${bgestado}">${iconestado}${estado}</span>
+              </td>
+              <td class="text-center">
+                <a onclick="obtener_gestionventas_x_id(${id})"><i class="fa-solid fa-eye"></i></a>
+              </td>
+            </tr>`;
+        });
+      } else {
+        html = `<tr><td class='text-center' colspan='6'>No se encontraron resultados.</td></tr>`;
+      }
+
+      $("#listar_gestionventas").html(html);
+      construirPaginacion_GestionVentas(pagina);
+    },
+  });
+};
+function construirPaginacion_GestionVentas(pagina_actual_gventas) {
+  $.ajax({
+    url: "controller/gestion_ventas.php",
+    type: "POST",
+    data: { option: "contar_gventas" },
+    dataType: "json",
+    success: function (response) {
+      let total_gventas = response.total;
+      let por_pagina = 7; // Cantidad de registros por página
+      let total_paginas = Math.ceil(total_gventas / por_pagina);
+      let html = "";
+
+      if (total_paginas > 1) {
+        // Botón anterior
+        html += `<li class="page-item ${pagina_actual_gventas == 1 ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="listarRegistros_GestionVentas(${pagina_actual_gventas - 1
+          });">Anterior</a>
+                      </li>`;
+
+        // Botones de páginas
+        for (let i = 1; i <= total_paginas; i++) {
+          html += `<li class="page-item ${pagina_actual_gventas == i ? "active" : ""
+            }">
+                              <a class="page-link" href="javascript:void(0);" onclick="listarRegistros_GestionVentas(${i});">${i}</a>
+                          </li>`;
+        }
+
+        // Botón siguiente
+        html += `<li class="page-item ${pagina_actual_gventas == total_paginas ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="listarRegistros_GestionVentas(${pagina_actual_gventas + 1
+          });">Siguiente</a>
+                      </li>`;
+      }
+
+      $("#paginacion_gventas").html(html);
+    },
+  });
+}
+const filtro_gestionventa = function (pagina = 1) {
+  var dni = document.getElementById("gv_dni").value.trim();
+  var estado = document.getElementById("gv_estado").value.trim();
+  var id_usuario = document.getElementById("gv_id_usuario").value.trim();
+  var estado = document.getElementById("gv_estado").value.trim();
+  var tipo_producto = document.getElementById("gv_tipoproducto").value.trim();
+  var created_at = document.getElementById("gv_createdat").value.trim();
+
+  $.ajax({
+    url: "controller/gestion_ventas.php",
+    method: "POST",
+    data: {
+      dni: dni,
+      estado: estado,
+      id_usuario,
+      tipo_producto: tipo_producto,
+      created_at: created_at,
+      option: "filtro_gestionventas",
+      pagina: pagina
+    },
+    success: function (response) {
+      const data = JSON.parse(response);
+      let html = "";
+      const formatearFechaSinSegundos = (fechaHora) => {
+        const fecha = new Date(fechaHora);
+        const año = fecha.getFullYear();
+        const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+        const dia = String(fecha.getDate()).padStart(2, "0");
+        const horas = String(fecha.getHours()).padStart(2, "0");
+        const minutos = String(fecha.getMinutes()).padStart(2, "0");
+        return `${año}-${mes}-${dia} ${horas}:${minutos}`;
+      };
+      if (data.length > 0) {
+        data.map((x) => {
+          const { id, nombres, dni, celular, created_at, estado, foto, nombre_completo } = x;
+          if (estado === "Pendiente") {
+            iconestado = "<i class='fa-solid fa-clock-rotate-left me-2'></i>";
+            bgestado = "pendiente";
+          } else if (estado === "Aprobado") {
+            iconestado = "<i class='fa-solid fa-check me-2'></i>";
+            bgestado = "aprobado";
+          } else if (estado === "Desaprobado") {
+            iconestado = "<i class='fa-solid fa-xmark me-2'></i>";
+            bgestado = "desaprobado";
+          } else if (estado === "Apelando") {
+            iconestado = "<i class='fa-solid fa-exclamation me-2'></i>";
+            bgestado = "apelando";
+          }
+
+          if (estado == "Aprobado") {
+            icontoventas =
+              `<a href="#" onclick="to_ventas_desembolsadas(${id})"><i class="icon-to-ventas fa-solid fa-circle-check"></i></a>`;
+          } else if (estado == "Pendiente") {
+            icontoventas =
+              "<a href='#' id='pen_venta'><i class='icon-pen-ventas fa-solid fa-clock'></i></a>";
+          } else if (estado == "Apelando") {
+            icontoventas =
+              "<a href='#' id='apela_venta'><i class='icon-apela-ventas fa-solid fa-circle-exclamation'></i></a>";
+          } else if (estado == "Desaprobado") {
+            icontoventas =
+              "<a href='#' id='desa_venta'><i class='icon-no-ventas fa-solid fa-circle-xmark'></i></a>";
+          }
+
+          html += `
+            <tr>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
+              <td scope="row">
+                  <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
+                  ${nombre_completo}
+              </td>
+              <td>${nombres}</td>
+              <td><i class="fa-solid fa-address-card me-2"></i>${dni}</td>
+              <td><i class="fa-solid fa-phone me-2"></i>${celular}</td>
+              <td><i class="fa-solid fa-calendar me-2"></i>${formatearFechaSinSegundos(created_at)}</td>
+              <td class="text-center">
+                <span class="icon-estado-${bgestado}">${iconestado}${estado}</span>
+              </td>
+              <td class="text-center">
+                <a onclick="obtener_gestionventas_x_id(${id})"><i class="fa-solid fa-eye"></i></a>
+              </td>
+            </tr>`;
+        });
+      } else {
+        html =
+          html +
+          `<tr><td class='text-center' colspan='8'>No se encontraron resultados.</td>`;
+      }
+      $("#listar_gestionventas").html(html);
+
+      construirPaginacion_GestionVentas_filtro(pagina, dni, id_usuario, estado, tipo_producto, created_at);
+    }
+  });
+};
+function construirPaginacion_GestionVentas_filtro(pagina_actual_gestionventas, dni, id_usuario, estado, tipo_producto, created_at) {
+  $.ajax({
+    url: "controller/gestion_ventas.php",
+    type: "POST",
+    data: { option: "contar_gventas_filtro",
+      dni: dni,
+      id_usuario: id_usuario,
+      estado: estado,
+      tipo_producto: tipo_producto,
+      created_at: created_at,
+    },
+    dataType: "json",
+    success: function (response) {
+      let total_gestionventas_filtro = response.total;
+      let por_pagina = 7; // Cantidad de registros por página
+      let total_paginas = Math.ceil(total_gestionventas_filtro / por_pagina);
+      let html = "";
+
+      if (total_paginas > 1) {
+        // Botón anterior
+        html += `<li class="page-item ${pagina_actual_gestionventas == 1 ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="filtro_gestionventa(${pagina_actual_gestionventas - 1
+          });">Anterior</a>
+                      </li>`;
+
+        // Botones de páginas
+        for (let i = 1; i <= total_paginas; i++) {
+          html += `<li class="page-item ${pagina_actual_gestionventas == i ? "active" : ""
+            }">
+                              <a class="page-link" href="javascript:void(0);" onclick="filtro_gestionventa(${i});">${i}</a>
+                          </li>`;
+        }
+
+        // Botón siguiente
+        html += `<li class="page-item ${pagina_actual_gestionventas == total_paginas ? "disabled" : ""
+          }">
+                          <a class="page-link" href="javascript:void(0);" onclick="filtro_gestionventa(${pagina_actual_gestionventas + 1
+          });">Siguiente</a>
+                      </li>`;
+      }
+
+      $("#paginacion_gventas").html(html);
+    },
+  });
+}
+const obtener_gestionventas_x_id = function (id) {
+  $("#obtener-gestion-ventas").modal("show");
+  $.ajax({
+    url: "controller/proceso_ventas.php",
+    method: "POST",
+    data: {
+      id: id,
+      option: "procesoventas_x_id",
+    },
+    success: function (response) {
+      data = JSON.parse(response);
+      $.each(data, function (i, e) {
+        $("#id_ob_gventas").val(data[i]["id"]);
+        $("#nombres_ob_gventas").val(data[i]["nombres"]);
+        $("#dni_ob_gventas").val(data[i]["dni"]);
+        $("#celular_ob_gventas").val(data[i]["celular"]);
+        $("#credito_ob_gventas").val(data[i]["credito"]);
+        $("#linea_ob_gventas").val(data[i]["linea"]);
+        $("#plazo_ob_gventas").val(data[i]["plazo"]);
+        $("#estado_ob_gventas").val(data[i]["estado"]);
+        $("#tipoproducto_ob_gventas").val(data[i]["tipo_producto"]);
+        $("#tem_ob_gventas").val(data[i]["tem"]);
+        $("#documento_actual").val(data[i]["documento"]);
+        $("#documento-preview").text(data[i]["documento"] ? data[i]["documento"] : "No se ha seleccionado ningún archivo.");
+
+        if (data[i]["documento"]) {
+          const rutaDocumento = "pdf/documents/" + data[i]["documento"]; // ⚠️ Ajusta esto
+          $("#btnVerDocumento").off("click").on("click", function () {
+            window.open(rutaDocumento, "_blank");
+          }).show();
+        } else {
+          $("#btnVerDocumento").hide();
+        }
+      });
+    },
+    error: function (xhr, status, error) {
+      console.error("Error al obtener la meta: ", error);
+      alert("Hubo un error al obtener la meta.");
+    },
+  });
+};
+const actualizar_gestion_ventas = function () {
+  $("#formObtenerGestionVentas").submit(function (e) {
+    e.preventDefault();
+    const data = new FormData($("#formObtenerGestionVentas")[0]);
+
+data.forEach((valor, clave) => {
+  console.log(`${clave}:`, valor);
+});
+    $.ajax({
+      url: "controller/proceso_ventas.php", 
+      method: "POST",
+      data: data,
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function (data) {
+        const response = JSON.parse(data);
+
+        if (response.status === "error") {
+          Swal.fire({
+            icon: "error",
+            title: "Lo sentimos",
+            text: response.message,
+          });
+        } else {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+
+          Toast.fire({
+            icon: "success",
+            title: response.message,
+          });
+
+          listarRegistros_GestionVentas(1);
+          $("#obtener-gestion-ventas").modal("hide");
+          $("#formObtenerGestionVentas").trigger("reset");
+        }
+      },
+    });
+  });
+};
 
 
-
+/* ----------------------------------------------------- */
 /* -------------------   VENTAS EN PROCESO   ---------------------- */
 
 const habilitar_text_edit = function () {
@@ -590,6 +990,7 @@ const obtener_procesoventas_x_id = function (id) {
     },
   });
 };
+
 const to_ventas_desembolsadas = function (id) {
   $("#to-ventasdesembolsadas").modal("show");
   $.ajax({
@@ -601,32 +1002,42 @@ const to_ventas_desembolsadas = function (id) {
     },
     success: function (response) {
       data = JSON.parse(response);
+
+      // ✅ Función para formatear soles
+      const formatearSoles = (valor) => {
+        return "S/. " + parseFloat(valor).toLocaleString("es-PE", {
+          style: "decimal",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      };
+
       $.each(data, function (i, e) {
-        $("#view-nombres-to-ventas").text(data[i]["nombres"]);
-        $("#view-dni-to-ventas").text(data[i]["dni"]);
-        $("#view-celular-to-ventas").text(data[i]["celular"]);
-        $("#view-linea-to-ventas").text(data[i]["linea"]);
-        $("#view-plazo-to-ventas").text(data[i]["plazo"]);
-        $("#view-credito-to-ventas").text(data[i]["credito"]);
-        $("#view-estado-to-ventas").text(data[i]["estado"]);
-        $("#view-tipoproducto-to-ventas").text(data[i]["tipo_producto"]);
-        $("#view-tem-to-ventas").text(data[i]["tem"]);
+        $("#view-nombres-to-ventas").text(e["nombres"]);
+        $("#view-dni-to-ventas").text(e["dni"]);
+        $("#view-celular-to-ventas").text(e["celular"]);
+        $("#view-linea-to-ventas").text(formatearSoles(e["linea"]));      // ✅ Formateado
+        $("#view-plazo-to-ventas").text(e["plazo"]);
+        $("#view-credito-to-ventas").text(formatearSoles(e["credito"]));  // ✅ Formateado
+        $("#view-estado-to-ventas").text(e["estado"]);
+        $("#view-tipoproducto-to-ventas").text(e["tipo_producto"]);
+        $("#view-tem-to-ventas").text(e["tem"]);
 
-        $("#id_to_ventas").val(data[i]["id"]);
-        $("#nombres_to_ventas").val(data[i]["nombres"]);
-        $("#dni_to_ventas").val(data[i]["dni"]);
-        $("#celular_to_ventas").val(data[i]["celular"]);
-        $("#credito_to_ventas").val(data[i]["credito"]);
-        $("#linea_to_ventas").val(data[i]["linea"]);
-        $("#plazo_to_ventas").val(data[i]["plazo"]);
-        $("#estado_to_ventas").val(data[i]["estado"]);
-        $("#tipoproducto_to_ventas").val(data[i]["tipo_producto"]);
-        $("#tem_to_ventas").val(data[i]["tem"]);
+        $("#id_to_ventas").val(e["id"]);
+        $("#nombres_to_ventas").val(e["nombres"]);
+        $("#dni_to_ventas").val(e["dni"]);
+        $("#celular_to_ventas").val(e["celular"]);
+        $("#credito_to_ventas").val(e["credito"]);
+        $("#linea_to_ventas").val(e["linea"]);
+        $("#plazo_to_ventas").val(e["plazo"]);
+        $("#estado_to_ventas").val(e["estado"]);
+        $("#tipoproducto_to_ventas").val(e["tipo_producto"]);
+        $("#tem_to_ventas").val(e["tem"]);
 
-        $("#documento-preview-to-ventas").val(data[i]["documento"]);
+        $("#documento-preview-to-ventas").val(e["documento"]);
 
-        if (data[i]["documento"]) {
-          const rutaDocumento = "pdf/documents/" + data[i]["documento"];
+        if (e["documento"]) {
+          const rutaDocumento = "pdf/documents/" + e["documento"];
           $("#verSolicitud")
             .off("click")
             .on("click", function (e) {
@@ -645,6 +1056,7 @@ const to_ventas_desembolsadas = function (id) {
     },
   });
 };
+
 const trasladar_base_procesoventas = function () {
   $("#formObtenerProcesoVentas").submit(function (e) {
     e.preventDefault();
@@ -788,9 +1200,25 @@ const listarRegistros_ProcesoVentas = function (pagina) {
     dataType: "json",
     success: function (response) {
       let html = "";
+
+      const formatearFechaSinSegundos = (fechaHora) => {
+        const fecha = new Date(fechaHora);
+        const año = fecha.getFullYear();
+        const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+        const dia = String(fecha.getDate()).padStart(2, "0");
+        const horas = String(fecha.getHours()).padStart(2, "0");
+        const minutos = String(fecha.getMinutes()).padStart(2, "0");
+        return `${año}-${mes}-${dia} ${horas}:${minutos}`;
+      };
+
       if (response.length > 0) {
         response.map((x) => {
           const { id, nombres, dni, celular, created_at, estado } = x;
+
+          let iconestado = "";
+          let bgestado = "";
+          let icontoventas = "";
+
           if (estado === "Pendiente") {
             iconestado = "<i class='fa-solid fa-clock-rotate-left me-2'></i>";
             bgestado = "pendiente";
@@ -806,41 +1234,37 @@ const listarRegistros_ProcesoVentas = function (pagina) {
           }
 
           if (estado == "Aprobado") {
-            icontoventas =
-              `<a href="#" onclick="to_ventas_desembolsadas(${id})"><i class="icon-to-ventas fa-solid fa-circle-check"></i></a>`;;
+            icontoventas = `<a href="#" onclick="to_ventas_desembolsadas(${id})"><i class="icon-to-ventas fa-solid fa-circle-check"></i></a>`;
           } else if (estado == "Pendiente") {
-            icontoventas =
-              "<a href='#' id='pen_venta'><i class='icon-pen-ventas fa-solid fa-clock'></i></a>";
+            icontoventas = "<a href='#' id='pen_venta'><i class='icon-pen-ventas fa-solid fa-clock'></i></a>";
           } else if (estado == "Apelando") {
-            icontoventas =
-              "<a href='#' id='apela_venta'><i class='icon-apela-ventas fa-solid fa-circle-exclamation'></i></a>";
+            icontoventas = "<a href='#' id='apela_venta'><i class='icon-apela-ventas fa-solid fa-circle-exclamation'></i></a>";
           } else if (estado == "Desaprobado") {
-            icontoventas =
-              "<a href='#' id='desa_venta'><i class='icon-no-ventas fa-solid fa-circle-xmark'></i></a>";
+            icontoventas = "<a href='#' id='desa_venta'><i class='icon-no-ventas fa-solid fa-circle-xmark'></i></a>";
           }
 
-          html =
-            html +
-            `<tr>
+          html += `
+            <tr>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
               <td>${nombres}</td>
-              <td>${dni}</td>
-              <td>${celular}</td>
-              <td>${created_at}</td>
-              <td class="text-center"><span class="icon-estado-${bgestado}">${iconestado}${estado}</span></td>             
+              <td><i class="fa-solid fa-address-card me-2"></i>${dni}</td>
+              <td><i class="fa-solid fa-phone me-2"></i>${celular}</td>
+              <td><i class="fa-solid fa-calendar me-2"></i>${formatearFechaSinSegundos(created_at)}</td>
+              <td class="text-center">
+                <span class="icon-estado-${bgestado}">${iconestado}${estado}</span>
+              </td>
               <td class="text-center">
                 <a onclick="obtener_procesoventas_x_id(${id})"><i class="fa-solid fa-clipboard me-2"></i></a>
                 <a onclick="archivar_proceso_ventas(${id})"><i class="fa-solid fa-box-archive me-2"></i></a>          
-                ${icontoventas}     
+                ${icontoventas}
               </td>
             </tr>`;
         });
       } else {
-        html =
-          html +
-          `<tr><td class='text-center' colspan='6'>No se encontraron resultados.</td>`;
+        html = `<tr><td class='text-center' colspan='6'>No se encontraron resultados.</td></tr>`;
       }
-      $("#listar_procesoventas").html(html);
 
+      $("#listar_procesoventas").html(html);
       construirPaginacion_ProcesoVentas(pagina);
     },
   });
@@ -1068,6 +1492,15 @@ const filtro_procesoventa = function (pagina = 1) {
     success: function (response) {
       const data = JSON.parse(response);
       let html = "";
+      const formatearFechaSinSegundos = (fechaHora) => {
+        const fecha = new Date(fechaHora);
+        const año = fecha.getFullYear();
+        const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+        const dia = String(fecha.getDate()).padStart(2, "0");
+        const horas = String(fecha.getHours()).padStart(2, "0");
+        const minutos = String(fecha.getMinutes()).padStart(2, "0");
+        return `${año}-${mes}-${dia} ${horas}:${minutos}`;
+      };
       if (data.length > 0) {
         data.map((x) => {
           const { id, nombres, dni, celular, created_at, estado } = x;
@@ -1099,18 +1532,20 @@ const filtro_procesoventa = function (pagina = 1) {
               "<a href='#' id='desa_venta'><i class='icon-no-ventas fa-solid fa-circle-xmark'></i></a>";
           }
 
-          html =
-            html +
-            `<tr>
+          html += `
+            <tr>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
               <td>${nombres}</td>
-              <td>${dni}</td>
-              <td>${celular}</td>
-              <td>${created_at}</td>
-              <td class="text-center"><span class="icon-estado-${bgestado}">${iconestado}${estado}</span></td>             
+              <td><i class="fa-solid fa-address-card me-2"></i>${dni}</td>
+              <td><i class="fa-solid fa-phone me-2"></i>${celular}</td>
+              <td><i class="fa-solid fa-calendar me-2"></i>${formatearFechaSinSegundos(created_at)}</td>
+              <td class="text-center">
+                <span class="icon-estado-${bgestado}">${iconestado}${estado}</span>
+              </td>
               <td class="text-center">
                 <a onclick="obtener_procesoventas_x_id(${id})"><i class="fa-solid fa-clipboard me-2"></i></a>
-                <a onclick="obtener_cartera(${id})"></a><i class="fa-solid fa-box-archive me-2"></i></a>          
-                ${icontoventas}     
+                <a onclick="archivar_proceso_ventas(${id})"><i class="fa-solid fa-box-archive me-2"></i></a>          
+                ${icontoventas}
               </td>
             </tr>`;
         });
@@ -1581,15 +2016,29 @@ const listar_metas_ventas = function () {
     success: function (response) {
       const data = JSON.parse(response);
       let html = ``;
+
+      // ✅ Formateador moneda
+      const formatearSoles = (valor) => {
+        return `S/. ${parseFloat(valor || 0).toLocaleString("es-PE", {
+          style: "decimal",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
+      };
+
       if (data.length > 0) {
-        data.map((metas_venta) => {
+        data.map((x) => {
+          const ldc = `${x.ld_real_cantidad || 0} | ${x.ld_cantidad || 0}`;
+          const ldm = `${formatearSoles(x.ld_real_monto)} | ${formatearSoles(x.ld_monto)}`;
+          const tcc = `${x.tc_real_cantidad || 0} | ${x.tc_cantidad || 0}`;
+
           html += `
             <tr>
-           <td class="text-center">${metas_venta.Usuario}</td>
-              <td class="text-center">${metas_venta.LDCantidad}</td>
-              <td class="text-center">${metas_venta.LDMonto}</td>
-              <td class="text-center">${metas_venta.TCCantidad}</td>
-              <td class="text-center">${metas_venta.cumplido}</td>
+              <td class="text-center">${x.Usuario}</td>
+              <td class="text-center">${ldc}</td>
+              <td class="text-center">${ldm}</td>
+              <td class="text-center">${tcc}</td>
+              <td class="text-center">${x.cumplido}</td>
             </tr>`;
         });
       } else {
@@ -1795,55 +2244,30 @@ const listar_metas = function () {
     success: function (response) {
       const data = JSON.parse(response);
       let html = ``;
+
+      // ✅ Función para formatear a moneda peruana
+      const formatearSoles = (valor) => {
+        return `S/. ${parseFloat(valor).toLocaleString("es-PE", {
+          style: "decimal",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
+      };
+
       if (data.length > 0) {
         data.map((metas_por_usuario) => {
-          let mes = null;
-          switch (metas_por_usuario.mes) {
-            case "1":
-              mes = "Enero";
-              break;
-            case "2":
-              mes = "Febrero";
-              break;
-            case "3":
-              mes = "Marzo";
-              break;
-            case "4":
-              mes = "Abril";
-              break;
-            case "5":
-              mes = "Mayo";
-              break;
-            case "6":
-              mes = "Junio";
-              break;
-            case "7":
-              mes = "Julio";
-              break;
-            case "8":
-              mes = "Agosto";
-              break;
-            case "9":
-              mes = "Septiembre";
-              break;
-            case "10":
-              mes = "Octubre";
-              break;
-            case "11":
-              mes = "Noviembre";
-              break;
-            case "12":
-              mes = "Diciembre";
-              break;
-            default:
-              mes = "Mes desconocido";
-          }
+          const fecha = new Date(metas_por_usuario.mes);
+          const opciones = { month: 'long', year: 'numeric' };
+          let mes = fecha.toLocaleDateString('es-ES', opciones);
+          mes = mes.charAt(0).toUpperCase() + mes.slice(1);
+
+          const montoFormateado = formatearSoles(metas_por_usuario.ld_monto);
 
           html += `
             <tr>
               <th scope="row">${metas_por_usuario.id}</th>
               <td>${metas_por_usuario.ld_cantidad}</td>
-              <td>${metas_por_usuario.ld_monto}</td>
+              <td>${montoFormateado}</td>
               <td>${metas_por_usuario.tc_cantidad}</td>
               <td>${metas_por_usuario.usuario_nombre}</td>
               <td>${mes}</td>
@@ -1861,6 +2285,7 @@ const listar_metas = function () {
       } else {
         html = `<tr><td class='text-center' colspan='8'>No se encontraron resultados</td></tr>`;
       }
+
       $("#listar_metas").html(html);
     },
   });
@@ -2018,12 +2443,15 @@ const crear_metas = function () {
     });
   });
 };
+
 const filtro_metas = function () {
   $("#form_filtro_meta").submit(function (e) {
     e.preventDefault();
+
     var id_usuario = document.getElementById("id_usuario_f").value.trim();
     var mes = document.getElementById("mes_f").value.trim();
     var cumplido = document.getElementById("cumplido_f").value.trim();
+
     $.ajax({
       url: "controller/meta.php",
       method: "POST",
@@ -2036,49 +2464,20 @@ const filtro_metas = function () {
       success: function (response) {
         const data = JSON.parse(response);
         let html = ``;
+
+        const meses_es = [
+          "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+          "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ];
+
         if (data.length > 0) {
           data.map((metas_por_usuario) => {
-            let mes = null;
-            switch (metas_por_usuario.mes) {
-              case "1":
-                mes = "Enero";
-                break;
-              case "2":
-                mes = "Febrero";
-                break;
-              case "3":
-                mes = "Marzo";
-                break;
-              case "4":
-                mes = "Abril";
-                break;
-              case "5":
-                mes = "Mayo";
-                break;
-              case "6":
-                mes = "Junio";
-                break;
-              case "7":
-                mes = "Julio";
-                break;
-              case "8":
-                mes = "Agosto";
-                break;
-              case "9":
-                mes = "Septiembre";
-                break;
-              case "10":
-                mes = "Octubre";
-                break;
-              case "11":
-                mes = "Noviembre";
-                break;
-              case "12":
-                mes = "Diciembre";
-                break;
-              default:
-                mes = "Mes desconocido";
-            }
+            // metas_por_usuario.mes debe venir como 'YYYY-MM-DD'
+            const partesFecha = metas_por_usuario.mes.split('-'); // ['2025', '07', '01']
+            const anio = partesFecha[0];
+            const numeroMes = parseInt(partesFecha[1], 10); // 7
+            const nombreMes = meses_es[numeroMes - 1]; // "Julio"
+            const mesFormateado = `${nombreMes} de ${anio}`;
 
             html += `
               <tr>
@@ -2087,12 +2486,12 @@ const filtro_metas = function () {
                 <td>${metas_por_usuario.ld_monto}</td>
                 <td>${metas_por_usuario.tc_cantidad}</td>
                 <td>${metas_por_usuario.nombre_completo}</td>
-                <td>${mes}</td>
+                <td>${mesFormateado}</td>
                 <td>${metas_por_usuario.cumplido}</td>
                 <td class="text-center">
                   <a onclick="obtener_metas(${metas_por_usuario.id})">
-                  <i class="fa-regular fa-pen-to-square me-2"></i>
-                </a>
+                    <i class="fa-regular fa-pen-to-square me-2"></i>
+                  </a>
                   <a onclick="eliminar_meta(${metas_por_usuario.id})">
                     <i class="fa-solid fa-trash"></i>
                   </a>
@@ -2102,6 +2501,7 @@ const filtro_metas = function () {
         } else {
           html = `<tr><td class='text-center' colspan='8'>No se encontraron resultados</td></tr>`;
         }
+
         $("#listar_metas").html(html);
       },
     });
@@ -2476,6 +2876,16 @@ const base_x_dni = function () {
       success: function (response) {
         const data = JSON.parse(response);
         let html = ``;
+
+        // ✅ Función para formatear moneda
+        const formatearSoles = (valor) => {
+          return parseFloat(valor).toLocaleString("es-PE", {
+            style: "decimal",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+        };
+
         if (data.length > 0) {
           const rol = localStorage.getItem("rol");
           data.map((x) => {
@@ -2496,20 +2906,50 @@ const base_x_dni = function () {
               tipo_producto,
               combo,
             } = x;
+
+            // ✅ Formatear montos
+            const creditoFormateado = `S/. ${formatearSoles(credito_max)}`;
+            const lineaFormateada = `S/. ${formatearSoles(linea_max)}`;
+
             if (rol !== "2") {
-              html =
-                html +
-                `<tr><td>${nombres}</td><td>${dni}</td><td>${tipo_cliente}</td><td>${direccion}</td><td>${distrito}</td><td>S/.${credito_max}</td><td>S/.${linea_max}</td><td>${plazo_max}</td><td>${tem}%</td><td>${celular_1}</td><td>${celular_2}</td><td>${celular_3}</td><td>${tipo_producto}</td><td>${combo}</td>
+              html += `<tr>
+                <td>${nombres}</td>
+                <td>${dni}</td>
+                <td>${tipo_cliente}</td>
+                <td>${direccion}</td>
+                <td>${distrito}</td>
+                <td>${creditoFormateado}</td>
+                <td>${lineaFormateada}</td>
+                <td>${plazo_max}</td>
+                <td>${tem}%</td>
+                <td>${celular_1}</td>
+                <td>${celular_2}</td>
+                <td>${celular_3}</td>
+                <td>${tipo_producto}</td>
+                <td>${combo}</td>
                 <td>
                   <a onclick="obtener_base(${id})"><i class="fa-solid fa-plus me-4"></i></a>
-                  <a onclick="trasladar_base(${id})"><i class="fa-solid fa-wallet me-4"></i>
-                </td></tr>`;
+                  <a onclick="trasladar_base(${id})"><i class="fa-solid fa-wallet me-4"></i></a>
+                </td>
+              </tr>`;
             } else {
-              html =
-                html +
-                `<tr><td>${nombres}</td><td>${dni}</td><td>${tipo_cliente}</td><td>${direccion}</td><td>${distrito}</td><td>S/.${credito_max}</td><td>S/.${linea_max}</td><td>${plazo_max}</td><td>${tem}%</td><td>${celular_1}</td><td>${celular_2}</td><td>${celular_3}</td><td>${tipo_producto}</td><td>${combo}</td><td class="text-center">
-                  ...
-                </td></tr>`;
+              html += `<tr>
+                <td>${nombres}</td>
+                <td>${dni}</td>
+                <td>${tipo_cliente}</td>
+                <td>${direccion}</td>
+                <td>${distrito}</td>
+                <td>${creditoFormateado}</td>
+                <td>${lineaFormateada}</td>
+                <td>${plazo_max}</td>
+                <td>${tem}%</td>
+                <td>${celular_1}</td>
+                <td>${celular_2}</td>
+                <td>${celular_3}</td>
+                <td>${tipo_producto}</td>
+                <td>${combo}</td>
+                <td class="text-center">...</td>
+              </tr>`;
             }
           });
         } else {
@@ -2533,6 +2973,16 @@ const listarRegistros = function (pagina) {
     success: function (response) {
       const rol = localStorage.getItem("rol");
       let html = "";
+
+      // ✅ Función para formatear moneda: 8000 → "8,000.00"
+      const formatearSoles = (valor) => {
+        return parseFloat(valor).toLocaleString("es-PE", {
+          style: "decimal",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      };
+
       if (response.length > 0) {
         response.map((x) => {
           const {
@@ -2553,25 +3003,54 @@ const listarRegistros = function (pagina) {
             combo,
           } = x;
 
+          const creditoFormateado = `S/. ${formatearSoles(credito_max)}`;
+          const lineaFormateada = `S/. ${formatearSoles(linea_max)}`;
+
           if (rol !== "2") {
-            html =
-              html +
-              `<tr><td>${nombres}</td><td>${dni}</td><td>${tipo_cliente}</td><td>${direccion}</td><td>${distrito}</td><td>S/.${credito_max}</td><td>S/.${linea_max}</td><td>${plazo_max}</td><td>${tem}%</td><td>${celular_1}</td><td>${celular_2}</td><td>${celular_3}</td><td>${tipo_producto}</td><td>${combo}</td><td>
-                
+            html += `<tr>
+              <td>${nombres}</td>
+              <td>${dni}</td>
+              <td>${tipo_cliente}</td>
+              <td>${direccion}</td>
+              <td>${distrito}</td>
+              <td>${creditoFormateado}</td>
+              <td>${lineaFormateada}</td>
+              <td>${plazo_max}</td>
+              <td>${tem}%</td>
+              <td>${celular_1}</td>
+              <td>${celular_2}</td>
+              <td>${celular_3}</td>
+              <td>${tipo_producto}</td>
+              <td>${combo}</td>
+              <td>
                 <a onclick="trasladar_base(${id})"><i class="fa-solid fa-wallet me-2"></i></a>
                 <a onclick="obtener_procesoventas(${id})"><i class="fa-solid fa-circle-plus"></i></a>
-              </td></tr>`;
+              </td>
+            </tr>`;
           } else {
-            html =
-              html +
-              `<tr><td>${nombres}</td><td>${dni}</td><td>${tipo_cliente}</td><td>${direccion}</td><td>${distrito}</td><td>S/.${credito_max}</td><td>S/.${linea_max}</td><td>${plazo_max}</td><td>${tem}%</td><td>${celular_1}</td><td>${celular_2}</td><td>${celular_3}</td><td>${tipo_producto}</td><td>${combo}</td></tr>`;
+            html += `<tr>
+              <td>${nombres}</td>
+              <td>${dni}</td>
+              <td>${tipo_cliente}</td>
+              <td>${direccion}</td>
+              <td>${distrito}</td>
+              <td>${creditoFormateado}</td>
+              <td>${lineaFormateada}</td>
+              <td>${plazo_max}</td>
+              <td>${tem}%</td>
+              <td>${celular_1}</td>
+              <td>${celular_2}</td>
+              <td>${celular_3}</td>
+              <td>${tipo_producto}</td>
+              <td>${combo}</td>
+            </tr>`;
           }
         });
       } else {
         html = `<tr><td class='text-center' colspan='15'>No hay datos registrados</td></tr>`;
       }
-      $("#listar_base").html(html);
 
+      $("#listar_base").html(html);
       construirPaginacion(pagina); // Llamar a la función de construcción de paginación
     },
   });
@@ -3013,6 +3492,7 @@ function construirPaginacion_ArchivadoVentas_filtro(pagina_actual_archivadoventa
 /* ----------------------------------------------------- */
 /* -------------------   VENTAS   ---------------------- */
 
+
 const listar_ventas_paginados = function (pagina) {
   $.ajax({
     url: "controller/ventas.php",
@@ -3021,9 +3501,19 @@ const listar_ventas_paginados = function (pagina) {
     dataType: "json",
     success: function (response) {
       let html = "";
+
+      const formatearSoles = (valor) => {
+        return parseFloat(valor).toLocaleString("es-PE", {
+          style: "decimal",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      };
+
       if (response.length > 0) {
         response.map((x) => {
-          const { id,
+          const {
+            id,
             nombres,
             dni,
             celular,
@@ -3034,74 +3524,81 @@ const listar_ventas_paginados = function (pagina) {
             created_at,
             nombre_completo,
             tipo_producto,
-            documento, foto } = x;
+            documento,
+            foto,
+          } = x;
 
-          if (tipo_producto == "TC") {
+          const creditoFormateado = `S/. ${formatearSoles(credito)}`;
+          const lineaFormateada = `S/. ${formatearSoles(linea)}`;
+
+          let bgproducto = "";
+          let iconproducto = "";
+
+          if (tipo_producto === "TC") {
             bgproducto = "tc";
             iconproducto = `<i class="fa-solid fa-credit-card"></i>`;
-          } else if (tipo_producto == "LD") {
+          } else if (tipo_producto === "LD") {
             bgproducto = "ld";
             iconproducto = `<i class="fa-solid fa-sack-dollar"></i>`;
-          } else if (tipo_producto == "LD/TC") {
+          } else if (tipo_producto === "LD/TC") {
             bgproducto = "combo";
             iconproducto = `<i class="fa-solid fa-sack-dollar me-2"></i><i class="fa-solid fa-credit-card"></i>`;
           }
 
-
-          if(rolUsuario == 3){
-            html = html +
-            `                 
-            <tr>
-              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
-              <td>${dni}</td>
-              <td>S/.${credito}</td>
-              <td>S/.${linea}</td>
-              <td class="text-center" scope="row">
-                <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
-                ${nombre_completo}
-              </td>
-              <td>${created_at}</td>
-              <td class="text-center">
-                <span class="icon-producto-${bgproducto}">${iconproducto}</span>
-              </td>
-            </tr>`;
-          }else{
-            html = html +
-              `                 
-            <tr>
-              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
-              <td>${dni}</td>
-              <td>S/.${credito}</td>
-              <td>S/.${linea}</td>
-              <td class="text-center" scope="row">
-                <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
-                ${nombre_completo}
-              </td>
-              <td>${created_at}</td>
-              <td class="text-center">
-                <span class="icon-producto-${bgproducto}">${iconproducto}</span>
-              </td>
-              
-              <td class="text-center"><a href="pdf/documents/${documento}" target="_blank" id="verSolicitud"><img src="img/add-pv/img_pdf.jpg" class="logo-table-mini me-2"></a></td>
-              <td class="text-center">
-                <a onclick="obtener_ventas(${id})"><i class="fa-regular fa-pen-to-square me-3" style="color: #001b2b"></i></a>
-                <a onclick="eliminar_venta(${id})"><i class="fa-solid fa-trash me-3"></i></a>
-              </td>
-            </tr>`;
+          if (rolUsuario == 3) {
+            html += `
+              <tr>
+                <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
+                <td>${dni}</td>
+                <td>${creditoFormateado}</td>
+                <td>${lineaFormateada}</td>
+                <td class="text-center" scope="row">
+                  <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
+                  ${nombre_completo}
+                </td>
+                <td>${created_at}</td>
+                <td class="text-center">
+                  <span class="icon-producto-${bgproducto}">${iconproducto}</span>
+                </td>
+              </tr>`;
+          } else {
+            html += `
+              <tr>
+                <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
+                <td>${dni}</td>
+                <td>${creditoFormateado}</td>
+                <td>${lineaFormateada}</td>
+                <td class="text-center" scope="row">
+                  <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
+                  ${nombre_completo}
+                </td>
+                <td>${created_at}</td>
+                <td class="text-center">
+                  <span class="icon-producto-${bgproducto}">${iconproducto}</span>
+                </td>
+                <td class="text-center">
+                  <a href="pdf/documents/${documento}" target="_blank" id="verSolicitud">
+                    <img src="img/add-pv/img_pdf.jpg" class="logo-table-mini me-2">
+                  </a>
+                </td>
+                <td class="text-center">
+                  <a onclick="obtener_ventas(${id})"><i class="fa-regular fa-pen-to-square me-3" style="color: #001b2b"></i></a>
+                  <a onclick="eliminar_venta(${id})"><i class="fa-solid fa-trash me-3"></i></a>
+                </td>
+              </tr>`;
           }
-          
         });
       } else {
-        html =
-          html +
-          `<tr><td class='text-center' colspan='12'>No se encontraron resultados.</td>`;
+        html = `<tr><td class='text-center' colspan='12'>No se encontraron resultados.</td></tr>`;
       }
-      $("#listar_ventas").html(html);
 
+      $("#listar_ventas").html(html);
       construirPaginacion_Ventas(pagina);
     },
   });
 };
+
+
 function construirPaginacion_Ventas(pagina_actual_ventas) {
   $.ajax({
     url: "controller/ventas.php",
@@ -3289,14 +3786,24 @@ var contar_ld_monto = function () {
     success: function (response) {
       const data = JSON.parse(response);
       let html = ``;
+
+      const formatearSoles = (valor) => {
+        return `S/. ${parseFloat(valor).toLocaleString("es-PE", {
+          style: "decimal",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
+      };
+
       if (data.length > 0) {
         data.map((x) => {
           const { ld_monto } = x;
-          html = html + `<p class="card-text">S/. ${ld_monto}</p>`;
+          html += `<p class="card-text">${formatearSoles(ld_monto)}</p>`;
         });
       } else {
-        html = html + `<p class="card-text">S/. 0.0</p>`;
+        html += `<p class="card-text">S/. 0.00</p>`;
       }
+
       $("#ld_monto_text").html(html);
     },
   });
@@ -3359,14 +3866,24 @@ var contar_ld_monto_por_id = function (id_usuario) {
     success: function (response) {
       const data = JSON.parse(response);
       let html = ``;
+      
+      const formatearSoles = (valor) => {
+        return `S/. ${parseFloat(valor).toLocaleString("es-PE", {
+          style: "decimal",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
+      };
+
       if (data.length > 0) {
         data.map((x) => {
           const { ld_monto } = x;
-          html = html + `<p class="card-text">S/. ${ld_monto}</p>`;
+          html += `<p class="card-text">${formatearSoles(ld_monto)}</p>`;
         });
       } else {
-        html = html + `<p class="card-text">S/. 0.0</p>`;
+        html += `<p class="card-text">S/. 0.00</p>`;
       }
+
       $("#ld_monto_text_id").html(html);
     },
   });
@@ -3402,109 +3919,134 @@ const obtener_ventas = function (id) {
     },
   });
 };
-const filtro_ventas = function (pagina = 1) {
-    var id = document.getElementById("v_id").value.trim();
-    var dni = document.getElementById("v_dni").value.trim();
-    var id_usuario = document.getElementById("id_usuario_f").value.trim();
-    var tipo_producto = document.getElementById("v_tipo_producto").value.trim();
-    var created_at = document.getElementById("v_createdat").value.trim();
- 
-     $.ajax({
-     url: "controller/ventas.php",
-     method: "POST",
-     data: {
-       id: id,
-       dni: dni,
-       id_usuario: id_usuario,
-       tipo_producto: tipo_producto,
-       created_at: created_at,
-       option: "filtro_ventas",
-       pagina: pagina
-     },
-     success: function (response) {
-       const data = JSON.parse(response);
-       let html = "";
-       if (data.length > 0) {
-         data.map((x) => {
-           const { id,
-              nombres,
-              dni,
-              celular,
-              credito,
-              linea,
-              plazo,
-              tem,
-              created_at,
-              nombre_completo,
-              tipo_producto,
-              documento, foto } = x;
 
-            if (tipo_producto == "TC") {
+const filtro_ventas = function (pagina = 1) {
+  var id = document.getElementById("v_id").value.trim();
+  var dni = document.getElementById("v_dni").value.trim();
+  var id_usuario = document.getElementById("id_usuario_f").value.trim();
+  var tipo_producto = document.getElementById("v_tipo_producto").value.trim();
+  var created_at = document.getElementById("v_createdat").value.trim();
+
+  $.ajax({
+    url: "controller/ventas.php",
+    method: "POST",
+    data: {
+      id: id,
+      dni: dni,
+      id_usuario: id_usuario,
+      tipo_producto: tipo_producto,
+      created_at: created_at,
+      option: "filtro_ventas",
+      pagina: pagina,
+    },
+    success: function (response) {
+      const data = JSON.parse(response);
+      let html = "";
+
+      // ✅ Función para formatear montos como S/. 8,000.00
+      const formatearSoles = (valor) => {
+        return parseFloat(valor).toLocaleString("es-PE", {
+          style: "decimal",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      };
+
+      if (data.length > 0) {
+        data.map((x) => {
+          const {
+            id,
+            nombres,
+            dni,
+            celular,
+            credito,
+            linea,
+            plazo,
+            tem,
+            created_at,
+            nombre_completo,
+            tipo_producto,
+            documento,
+            foto,
+          } = x;
+
+          const creditoFormateado = `S/. ${formatearSoles(credito)}`;
+          const lineaFormateada = `S/. ${formatearSoles(linea)}`;
+
+          let bgproducto = "";
+          let iconproducto = "";
+
+          if (tipo_producto === "TC") {
             bgproducto = "tc";
             iconproducto = `<i class="fa-solid fa-credit-card"></i>`;
-          } else if (tipo_producto == "LD") {
+          } else if (tipo_producto === "LD") {
             bgproducto = "ld";
             iconproducto = `<i class="fa-solid fa-sack-dollar"></i>`;
-          } else if (tipo_producto == "LD/TC") {
+          } else if (tipo_producto === "LD/TC") {
             bgproducto = "combo";
             iconproducto = `<i class="fa-solid fa-sack-dollar me-2"></i><i class="fa-solid fa-credit-card"></i>`;
           }
 
-           if(rolUsuario == 3){
-            html = html +
-            `                 
-            <tr>
-              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
-              <td>${dni}</td>
-              <td>S/.${credito}</td>
-              <td>S/.${linea}</td>
-              <td scope="row">
-                <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
-                ${nombre_completo}
-              </td>
-              <td>${created_at}</td>
-              <td class="text-center">
-                <span class="icon-producto-${bgproducto}">${iconproducto}</span>
-              </td>
-            </tr>`;
-          }else{
-            html = html +
-              `                 
-            <tr>
-              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
-              <td>${dni}</td>
-              <td>S/.${credito}</td>
-              <td>S/.${linea}</td>
-              <td scope="row">
-                <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
-                ${nombre_completo}
-              </td>
-              <td>${created_at}</td>
-              <td class="text-center">
-                <span class="icon-producto-${bgproducto}">${iconproducto}</span>
-              </td>
-              <td class="text-center"><a href="pdf/documents/${documento}" target="_blank" id="verSolicitud"><img src="img/add-pv/img_pdf.jpg" class="logo-table-mini me-2"></a></td>
-              <td class="text-center">
-                <a onclick="obtener_ventas(${id})"><i class="fa-regular fa-pen-to-square me-3" style="color: #001b2b"></i></a>
-                <a onclick="eliminar_venta(${id})"><i class="fa-solid fa-trash me-3"></i></a>
-              </td>
-            </tr>`;
+          if (rolUsuario == 3) {
+            html += `
+              <tr>
+                <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
+                <td>${dni}</td>
+                <td>${creditoFormateado}</td>
+                <td>${lineaFormateada}</td>
+                <td scope="row">
+                  <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
+                  ${nombre_completo}
+                </td>
+                <td>${created_at}</td>
+                <td class="text-center">
+                  <span class="icon-producto-${bgproducto}">${iconproducto}</span>
+                </td>
+              </tr>`;
+          } else {
+            html += `
+              <tr>
+                <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
+                <td>${dni}</td>
+                <td>${creditoFormateado}</td>
+                <td>${lineaFormateada}</td>
+                <td scope="row">
+                  <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
+                  ${nombre_completo}
+                </td>
+                <td>${created_at}</td>
+                <td class="text-center">
+                  <span class="icon-producto-${bgproducto}">${iconproducto}</span>
+                </td>
+                <td class="text-center">
+                  <a href="pdf/documents/${documento}" target="_blank" id="verSolicitud">
+                    <img src="img/add-pv/img_pdf.jpg" class="logo-table-mini me-2">
+                  </a>
+                </td>
+                <td class="text-center">
+                  <a onclick="obtener_ventas(${id})"><i class="fa-regular fa-pen-to-square me-3" style="color: #001b2b"></i></a>
+                  <a onclick="eliminar_venta(${id})"><i class="fa-solid fa-trash me-3"></i></a>
+                </td>
+              </tr>`;
           }
-          
         });
-       } else {
-         html =
-           html +
-           `<tr><td class='text-center' colspan='12'>No se encontraron resultados.</td>`;
-       }
-       $("#listar_ventas").html(html);
+      } else {
+        html = `<tr><td class='text-center' colspan='12'>No se encontraron resultados.</td></tr>`;
+      }
 
-       construirPaginacion_Ventas_filtro(pagina, id, dni, id_usuario, tipo_producto, created_at);
-     }
-   });
-
-
+      $("#listar_ventas").html(html);
+      construirPaginacion_Ventas_filtro(
+        pagina,
+        id,
+        dni,
+        id_usuario,
+        tipo_producto,
+        created_at
+      );
+    },
+  });
 };
+
 
 function construirPaginacion_Ventas_filtro(pagina_actual_ventas, id, dni, id_usuario, tipo_producto, created_at) {
   $.ajax({
@@ -3659,7 +4201,7 @@ const select_usuarios = function () {
     option: "obtener_usuarios",
     success: function (response) {
       const usuarios = JSON.parse(response);      
-      var selectIds = ["#id_usuario_f", "#modal_id_usuario", "#id_usuario2"];
+      var selectIds = ["#id_usuario_f", "#gv_id_usuario", "#modal_id_usuario", "#id_usuario2"];
 
       // Limpiar los selects antes de agregar nuevas opciones
       selectIds.forEach(function (selectId) {

@@ -1,8 +1,8 @@
-<aside id="sidebar" class="js-sidebar" style="background-color: #010e17;">
+<aside id="sidebar" class="js-sidebar" style="background-color: #0d1017;">
     <!-- Content For Sidebar -->
     <div class="h-200">
         <div class="sidebar-logo mt-3">
-            <img src="img/logotipo/logotipo-mid.png" class="w-25">
+            <img src="img/logotipo/logotipo-mini.png" class="w-25">
         </div>
         <ul class="sidebar-nav">
 
@@ -45,6 +45,9 @@
                     <ul id="posts_ventas" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar-item-ventas">
                         <li <?php echo ($view === 'proceso_ventas') ? 'class="sidebar-active-link"' : ''; ?>>
                             <a href="dashboard.php?view=proceso_ventas" class="sidebar-link">En proceso</a>
+                        </li>
+                        <li <?php echo ($view === 'gestion_ventas') ? 'class="sidebar-active-link"' : ''; ?>>
+                            <a href="dashboard.php?view=gestion_ventas" class="sidebar-link">En gestión</a>
                         </li>
                         <li>
                             <a href="#" class="sidebar-link collapsed" data-bs-target="#submenu_desembolsado" data-bs-toggle="collapse" aria-expanded="false">

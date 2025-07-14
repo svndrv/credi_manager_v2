@@ -107,33 +107,47 @@ class Metas extends Conectar
     }
 
     public function agregar_meta($ld_cantidad, $ld_monto, $tc_cantidad, $id_usuario, $mes, $cumplido)
-    {
-        if (empty($ld_cantidad) || empty($ld_monto) || empty($tc_cantidad) || empty($id_usuario) || empty($id_usuario) || empty($cumplido)) {
-            return [
-                "status" => "error",
-                "message" => "Verificar los campos vacíos."
-            ];
-        }
-
-        $sql = "INSERT INTO metas (ld_cantidad, ld_monto, tc_cantidad, id_usuario, mes, cumplido, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?,now(), now())";
-        $sql = $this->db->prepare($sql);
-        $sql->bindValue(1, $ld_cantidad);
-        $sql->bindValue(2, $ld_monto);
-        $sql->bindValue(3, $tc_cantidad);
-        $sql->bindValue(4, $id_usuario);
-        $sql->bindValue(5, $mes);
-        $sql->bindValue(6, $cumplido);
-        $sql->execute();
-
-        $response = [
-            "status" => "success",
-            "message" => "Meta creada exitosamente."
+{
+    if (empty($ld_cantidad) || empty($ld_monto) || empty($tc_cantidad) || empty($id_usuario) || empty($mes) || empty($cumplido)) {
+        return [
+            "status" => "error",
+            "message" => "Verificar los campos vacíos."
         ];
-
-        return $response;
     }
+
+    // Validar formato YYYY-MM y completar con día
+    if (!preg_match('/^\d{4}-\d{2}$/', $mes)) {
+        return [
+            "status" => "error",
+            "message" => "Formato de mes inválido. Usa YYYY-MM."
+        ];
+    }
+
+    $mes = $mes . '-01'; 
+
+    $sql = "INSERT INTO metas (ld_cantidad, ld_monto, tc_cantidad, id_usuario, mes, cumplido, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, now(), now())";
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindValue(1, $ld_cantidad);
+    $stmt->bindValue(2, $ld_monto);
+    $stmt->bindValue(3, $tc_cantidad);
+    $stmt->bindValue(4, $id_usuario);
+    $stmt->bindValue(5, $mes); // 'YYYY-MM-01'
+    $stmt->bindValue(6, $cumplido);
+    $stmt->execute();
+
+    return [
+        "status" => "success",
+        "message" => "Meta creada exitosamente."
+    ];
+}
     public function metas_x_usuario_mes_cumplido($id_usuario, $mes, $cumplido)
     {
+
+        if (!empty($mes) && strlen($mes) === 7) {
+        $mes .= '-01';
+    }
+
         $sql = "SELECT 
         m.id,
         m.ld_cantidad,

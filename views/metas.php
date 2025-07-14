@@ -14,23 +14,10 @@
                             <select class="form-select mb-4" aria-label="Default select example" id="id_usuario_f" name="id_usuario_f">
                                 <option value=0>Seleccionar Usuario</option>
                             </select>
+                            
                         </div>
                         <div class="col-lg-3">
-                            <select class="form-select" aria-label="Default select example" name="mes_f" id="mes_f">
-                                <option value="0">Selecciona el mes</option>
-                                <option value="1">Enero</option>
-                                <option value="2">Febrero</option>
-                                <option value="3">Marzo</option>
-                                <option value="4">Abril</option>
-                                <option value="5">Mayo</option>
-                                <option value="6">Junio</option>
-                                <option value="7">Julio</option>
-                                <option value="8">Agosto</option>
-                                <option value="9">Septiembre</option>
-                                <option value="10">Octubre</option>
-                                <option value="11">Noviembre</option>
-                                <option value="12">Diciembre</option>
-                            </select>
+                            <input type="month" class="form-control" name="mes" id="mes_f">
                         </div>
                         <div class="col-lg-3">
                             <select class="form-select mb-4" aria-label="Default select example" id="cumplido_f" name="cumplido_f">
@@ -189,21 +176,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="mes" class="form-label">Mes:</label>
-                                        <select class="form-select" name="mes" id="mes">
-                                            <option value="0">Seleccionar mes</option>
-                                            <option value="1">Enero</option>
-                                            <option value="2">Febrero</option>
-                                            <option value="3">Marzo</option>
-                                            <option value="4">Abril</option>
-                                            <option value="5">Mayo</option>
-                                            <option value="6">Junio</option>
-                                            <option value="7">Julio</option>
-                                            <option value="8">Agosto</option>
-                                            <option value="9">Septiembre</option>
-                                            <option value="10">Octubre</option>
-                                            <option value="11">Noviembre</option>
-                                            <option value="12">Diciembre</option>
-                                        </select>
+                                        <input type="month" class="form-control" name="mes" id="mes">
                                     </div>
                                     <div class="mb-3">
                                         <label for="cumplido" class="form-label">Cumplido:</label>

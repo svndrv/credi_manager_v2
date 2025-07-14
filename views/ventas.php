@@ -144,7 +144,7 @@
 
 <!------------------------- MODALS ------------------------->
 
-<div class="modal fade" id="obtener-ventas" tabindex="-1" aria-labelledby="obtener-ventasModalLabel" aria-hidden="true">
+<div class="modal fade" id="obtener-gestion-ventas" tabindex="-1" aria-labelledby="obtener-ventasModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
