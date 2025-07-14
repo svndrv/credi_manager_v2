@@ -10,21 +10,7 @@
                 <form id="form_filtro_meta">
                     <div class="row">
                         <div class="col-lg-3">
-                            <select class="form-select" aria-label="Default select example" name="mes_f" id="mes_f">
-                                <option value="0">Selecciona el mes</option>
-                                <option value="1">Enero</option>
-                                <option value="2">Febrero</option>
-                                <option value="3">Marzo</option>
-                                <option value="4">Abril</option>
-                                <option value="5">Mayo</option>
-                                <option value="6">Junio</option>
-                                <option value="7">Julio</option>
-                                <option value="8">Agosto</option>
-                                <option value="9">Septiembre</option>
-                                <option value="10">Octubre</option>
-                                <option value="11">Noviembre</option>
-                                <option value="12">Diciembre</option>
-                            </select>
+                            <input type="month" class="form-control" name="mes" id="mes_f">
                         </div>
                         <div class="col-lg-3">
                             <select class="form-select mb-4" aria-label="Default select example" id="cumplido_f" name="cumplido_f">
@@ -45,8 +31,8 @@
                 </div>
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped">
+            <div class="table-responsive border-4">
+                <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -95,21 +81,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="mes" class="form-label">Mes:</label>
-                                <select class="form-select" name="mes" id="modal_mes">
-                                    <option value="0">Seleccionar mes</option>
-                                    <option value="1">Enero</option>
-                                    <option value="2">Febrero</option>
-                                    <option value="3">Marzo</option>
-                                    <option value="4">Abril</option>
-                                    <option value="5">Mayo</option>
-                                    <option value="6">Junio</option>
-                                    <option value="7">Julio</option>
-                                    <option value="8">Agosto</option>
-                                    <option value="9">Septiembre</option>
-                                    <option value="10">Octubre</option>
-                                    <option value="11">Noviembre</option>
-                                    <option value="12">Diciembre</option>
-                                </select>
+                                <input type="month" class="form-control" name="mes" id="modal_mes">
                             </div>
                         </div>
                         <div class="col-lg-6 mb-2">
@@ -166,22 +138,8 @@
                                         <input type="number" class="form-control" id="ld_monto" name="ld_monto">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="mes" class="form-label">Mes:</label>
-                                        <select class="form-select" name="mes" id="mes">
-                                            <option value="0">Seleccionar mes</option>
-                                            <option value="1">Enero</option>
-                                            <option value="2">Febrero</option>
-                                            <option value="3">Marzo</option>
-                                            <option value="4">Abril</option>
-                                            <option value="5">Mayo</option>
-                                            <option value="6">Junio</option>
-                                            <option value="7">Julio</option>
-                                            <option value="8">Agosto</option>
-                                            <option value="9">Septiembre</option>
-                                            <option value="10">Octubre</option>
-                                            <option value="11">Noviembre</option>
-                                            <option value="12">Diciembre</option>
-                                        </select>
+                                        <label for="ld_monto" class="form-label">Mes:</label>
+                                        <input type="month" class="form-control" name="mes" id="fv_mes">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 mb-4">

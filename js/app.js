@@ -2544,61 +2544,45 @@ const listar_metasfv = function () {
     success: function (response) {
       const data = JSON.parse(response);
       let html = ``;
+
+
+      const formatearSoles = (valor) => {
+        return `S/. ${parseFloat(valor).toLocaleString("es-PE", {
+          style: "decimal",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
+      };
+
       if (data.length > 0) {
         data.map((metas_por_usuario) => {
-          let mes = null;
-          switch (metas_por_usuario.mes) {
-            case "1":
-              mes = "Enero";
-              break;
-            case "2":
-              mes = "Febrero";
-              break;
-            case "3":
-              mes = "Marzo";
-              break;
-            case "4":
-              mes = "Abril";
-              break;
-            case "5":
-              mes = "Mayo";
-              break;
-            case "6":
-              mes = "Junio";
-              break;
-            case "7":
-              mes = "Julio";
-              break;
-            case "8":
-              mes = "Agosto";
-              break;
-            case "9":
-              mes = "Septiembre";
-              break;
-            case "10":
-              mes = "Octubre";
-              break;
-            case "11":
-              mes = "Noviembre";
-              break;
-            case "12":
-              mes = "Diciembre";
-              break;
-            default:
-              mes = "Mes desconocido";
+
+          const [anio, mesNumero] = metas_por_usuario.mes.split("-");
+          const nombreMes = new Date(anio, parseInt(mesNumero) - 1).toLocaleString("es-ES", {
+            month: "long",
+          });
+          const mesFormateado = `${nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)} ${anio}`;
+
+          const montoFormateado = formatearSoles(metas_por_usuario.ld_monto);
+
+          let cumplidometa = "pendiente";
+          if (metas_por_usuario.cumplido === "Si") {
+            cumplidometa = "aprobado";
+          } else if (metas_por_usuario.cumplido === "No") {
+            cumplidometa = "desaprobado";
           }
 
           html += `
             <tr>
-              <th scope="row">${metas_por_usuario.id}</th>
-              <td>${metas_por_usuario.ld_cantidad}</td>
-              <td>${metas_por_usuario.ld_monto}</td>
-              <td>${metas_por_usuario.tc_cantidad}</td>
-              <td>${metas_por_usuario.sede}</td>
-              <td>${mes}</td>
-              <td>${metas_por_usuario.cumplido}</td>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${metas_por_usuario.id}</td>
+              <td><i class="fa-solid fa-money-bills me-2"></i>${metas_por_usuario.ld_cantidad}</td>
+              <td>${montoFormateado}</td>
+              <td><i class="fa-solid fa-credit-card me-2"></i>${metas_por_usuario.tc_cantidad}</td>
+              <td><i class="fa-solid fa-location-dot me-2"></i>${metas_por_usuario.sede}</td>
+              <td><i class="fa-solid fa-calendar me-2"></i>${mesFormateado}</td>
+              <td class="text-center"><span class="icon-estado-${cumplidometa}">${metas_por_usuario.cumplido}</span></td>  
               <td class="text-center">
-               <a onclick="obtener_metasfv(${metas_por_usuario.id})">
+                <a onclick="obtener_metasfv(${metas_por_usuario.id})">
                   <i class="fa-regular fa-pen-to-square me-2"></i>
                 </a>
                 <a onclick="eliminar_metafv(${metas_por_usuario.id})">
@@ -2610,6 +2594,7 @@ const listar_metasfv = function () {
       } else {
         html = `<tr><td class='text-center' colspan='8'>No se encontraron resultados</td></tr>`;
       }
+
       $("#listar_metasfv").html(html);
     },
   });
@@ -2618,6 +2603,12 @@ const crear_metasfv = function () {
   $("#formAgregarMeta").submit(function (e) {
     e.preventDefault();
     const data = new FormData($("#formAgregarMeta")[0]);
+
+    // Transformar "YYYY-MM" a "YYYY-MM-01"
+    const mesInput = data.get("mes");
+    if (mesInput && /^\d{4}-\d{2}$/.test(mesInput)) {
+      data.set("mes", mesInput + "-01");
+    }
 
     $.ajax({
       url: "controller/metafv.php",
@@ -2768,11 +2759,14 @@ const eliminar_metafv = function (id) {
     }
   });
 };
+
 const filtro_metasfv = function () {
   $("#form_filtro_meta").submit(function (e) {
     e.preventDefault();
-    var mes = document.getElementById("mes_f").value.trim();
+
+    var mes = document.getElementById("mes_f").value.trim(); // Formato: "2025-08"
     var cumplido = document.getElementById("cumplido_f").value.trim();
+
     $.ajax({
       url: "controller/metafv.php",
       method: "POST",
@@ -2784,77 +2778,59 @@ const filtro_metasfv = function () {
       success: function (response) {
         const data = JSON.parse(response);
         let html = ``;
+
+        const formatearSoles = (valor) => {
+          return `S/. ${parseFloat(valor).toLocaleString("es-PE", {
+            style: "decimal",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`;
+        };
+
         if (data.length > 0) {
           data.map((metas_por_usuario) => {
-            let mes = null;
-            switch (metas_por_usuario.mes) {
-              case "1":
-                mes = "Enero";
-                break;
-              case "2":
-                mes = "Febrero";
-                break;
-              case "3":
-                mes = "Marzo";
-                break;
-              case "4":
-                mes = "Abril";
-                break;
-              case "5":
-                mes = "Mayo";
-                break;
-              case "6":
-                mes = "Junio";
-                break;
-              case "7":
-                mes = "Julio";
-                break;
-              case "8":
-                mes = "Agosto";
-                break;
-              case "9":
-                mes = "Septiembre";
-                break;
-              case "10":
-                mes = "Octubre";
-                break;
-              case "11":
-                mes = "Noviembre";
-                break;
-              case "12":
-                mes = "Diciembre";
-                break;
-              default:
-                mes = "Mes desconocido";
-            }
+
+            const [anio, mesNumero] = metas_por_usuario.mes.split("-");
+            const nombreMes = new Date(anio, parseInt(mesNumero) - 1).toLocaleString("es-ES", {
+              month: "long",
+            });
+            const mesFormateado = `${nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)} ${anio}`;
+
+            const montoFormateado = formatearSoles(metas_por_usuario.ld_monto);
+
+            let cumplidometa = "pendiente";
+            if (metas_por_usuario.cumplido === "Si") cumplidometa = "aprobado";
+            else if (metas_por_usuario.cumplido === "No") cumplidometa = "desaprobado";
 
             html += `
-            <tr>
-              <th scope="row">${metas_por_usuario.id}</th>
-              <td>${metas_por_usuario.ld_cantidad}</td>
-              <td>${metas_por_usuario.ld_monto}</td>
-              <td>${metas_por_usuario.tc_cantidad}</td>
-              <td>${metas_por_usuario.sede}</td>
-              <td>${mes}</td>
-              <td>${metas_por_usuario.cumplido}</td>
-              <td class="text-center">
-               <a onclick="obtener_metasfv(${metas_por_usuario.id})">
-                  <i class="fa-regular fa-pen-to-square me-2"></i>
-                </a>
-                <a onclick="eliminar_metafv(${metas_por_usuario.id})">
-                  <i class="fa-solid fa-trash"></i>
-                </a>
-              </td>
-            </tr>`;
+              <tr>
+                <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${metas_por_usuario.id}</td>
+              <td><i class="fa-solid fa-money-bills me-2"></i>${metas_por_usuario.ld_cantidad}</td>
+              <td>${montoFormateado}</td>
+              <td><i class="fa-solid fa-credit-card me-2"></i>${metas_por_usuario.tc_cantidad}</td>
+              <td><i class="fa-solid fa-location-dot me-2"></i>${metas_por_usuario.sede}</td>
+              <td><i class="fa-solid fa-calendar me-2"></i>${mesFormateado}</td>
+              <td class="text-center"><span class="icon-estado-${cumplidometa}">${metas_por_usuario.cumplido}</span></td> 
+                <td class="text-center">
+                  <a onclick="obtener_metasfv(${metas_por_usuario.id})">
+                    <i class="fa-regular fa-pen-to-square me-2"></i>
+                  </a>
+                  <a onclick="eliminar_metafv(${metas_por_usuario.id})">
+                    <i class="fa-solid fa-trash"></i>
+                  </a>
+                </td>
+              </tr>`;
           });
         } else {
           html = `<tr><td class='text-center' colspan='8'>No se encontraron resultados</td></tr>`;
         }
+
         $("#listar_metasfv").html(html);
       },
     });
   });
 };
+
 const rellenar_ultima_meta = function () {
   $.ajax({
     url: "controller/metafv.php",
