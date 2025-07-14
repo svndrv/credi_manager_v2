@@ -41,15 +41,15 @@
             </div>
 
 
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped">
+            <div class="table-responsive border-4">
+                <table class="table table-bordered table-hover">
                     <thead>
-                        <tr>
+                        <tr class="text-center">
                             <th scope="col">#</th>
+                            <th scope="col">Usuario</th>
                             <th scope="col">LD Cantidad</th>
                             <th scope="col">LD Monto</th>
                             <th scope="col">TC Cantidad</th>
-                            <th scope="col">Usuario</th>
                             <th scope="col">Mes</th>
                             <th scope="col">Cumplido</th>
                             <th scope="col">Acción</th>
@@ -71,6 +71,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
                 <h1 class="modal-title fs-5" id="editar-metaModalLabel">Actualizar Meta</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -102,21 +103,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="mes" class="form-label">Mes:</label>
-                                <select class="form-select" name="mes" id="modal_mes">
-                                    <option value="0">Seleccionar mes</option>
-                                    <option value="1">Enero</option>
-                                    <option value="2">Febrero</option>
-                                    <option value="3">Marzo</option>
-                                    <option value="4">Abril</option>
-                                    <option value="5">Mayo</option>
-                                    <option value="6">Junio</option>
-                                    <option value="7">Julio</option>
-                                    <option value="8">Agosto</option>
-                                    <option value="9">Septiembre</option>
-                                    <option value="10">Octubre</option>
-                                    <option value="11">Noviembre</option>
-                                    <option value="12">Diciembre</option>
-                                </select>
+                                <input type="month" class="form-control" name="mes" id="modal_mes">
                             </div>
                             <div class="mb-3">
                                 <label for="cumplido" class="form-label">Cumplido:</label>
@@ -142,6 +129,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
                 <h1 class="modal-title fs-5" id="agregar-metaLabel">Agregar Meta</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

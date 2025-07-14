@@ -2245,7 +2245,6 @@ const listar_metas = function () {
       const data = JSON.parse(response);
       let html = ``;
 
-      // ✅ Función para formatear a moneda peruana
       const formatearSoles = (valor) => {
         return `S/. ${parseFloat(valor).toLocaleString("es-PE", {
           style: "decimal",
@@ -2256,22 +2255,37 @@ const listar_metas = function () {
 
       if (data.length > 0) {
         data.map((metas_por_usuario) => {
-          const fecha = new Date(metas_por_usuario.mes);
-          const opciones = { month: 'long', year: 'numeric' };
-          let mes = fecha.toLocaleDateString('es-ES', opciones);
-          mes = mes.charAt(0).toUpperCase() + mes.slice(1);
+          const [anio, mesNumero] = metas_por_usuario.mes.split("-");
+          const nombreMes = new Date(anio, parseInt(mesNumero) - 1).toLocaleString("es-ES", {
+            month: "long",
+          });
+          const mes = `${nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)} ${anio}`;
 
           const montoFormateado = formatearSoles(metas_por_usuario.ld_monto);
 
+          if (metas_por_usuario.cumplido == "Si") {
+            cumplidometa =
+              "aprobado";
+          } else if (metas_por_usuario.cumplido == "No") {
+            cumplidometa =
+              "desaprobado";
+          } else if (metas_por_usuario.cumplido == "Pendiente") {
+            cumplidometa =
+              "pendiente";
+          }
+
           html += `
             <tr>
-              <th scope="row">${metas_por_usuario.id}</th>
-              <td>${metas_por_usuario.ld_cantidad}</td>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${metas_por_usuario.id}</td>
+              <td scope="row">
+                  <img src="img/fotos/${metas_por_usuario.foto}" alt="Foto de ${metas_por_usuario.nombre_completo}" class="img-usuario-mini shadow me-3">
+                  ${metas_por_usuario.nombre_completo}
+              </td>
+              <td><i class="fa-solid fa-money-bills me-2"></i>${metas_por_usuario.ld_cantidad}</td>
               <td>${montoFormateado}</td>
-              <td>${metas_por_usuario.tc_cantidad}</td>
-              <td>${metas_por_usuario.usuario_nombre}</td>
-              <td>${mes}</td>
-              <td>${metas_por_usuario.cumplido}</td>
+              <td><i class="fa-solid fa-credit-card me-2"></i>${metas_por_usuario.tc_cantidad}</td>
+              <td><i class="fa-solid fa-calendar me-2"></i>${mes}</td>
+              <td class="text-center"><span class="icon-estado-${cumplidometa}">${metas_por_usuario.cumplido}</span></td>  
               <td class="text-center">
                 <a onclick="obtener_metas(${metas_por_usuario.id})">
                   <i class="fa-regular fa-pen-to-square me-2"></i>
@@ -2465,29 +2479,43 @@ const filtro_metas = function () {
         const data = JSON.parse(response);
         let html = ``;
 
-        const meses_es = [
-          "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-          "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-        ];
+        const formatearSoles = (valor) => {
+          return `S/. ${parseFloat(valor).toLocaleString("es-PE", {
+            style: "decimal",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`;
+        };
 
         if (data.length > 0) {
           data.map((metas_por_usuario) => {
-            // metas_por_usuario.mes debe venir como 'YYYY-MM-DD'
-            const partesFecha = metas_por_usuario.mes.split('-'); // ['2025', '07', '01']
-            const anio = partesFecha[0];
-            const numeroMes = parseInt(partesFecha[1], 10); // 7
-            const nombreMes = meses_es[numeroMes - 1]; // "Julio"
-            const mesFormateado = `${nombreMes} de ${anio}`;
+            const [anio, mesNumero] = metas_por_usuario.mes.split("-");
+            const nombreMes = new Date(anio, parseInt(mesNumero) - 1).toLocaleString("es-ES", {
+              month: "long",
+            });
+            const mesFormateado = `${nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)} ${anio}`;
+
+            const montoFormateado = formatearSoles(metas_por_usuario.ld_monto);
+
+            let cumplidometa = "pendiente";
+            if (metas_por_usuario.cumplido == "Si") {
+              cumplidometa = "aprobado";
+            } else if (metas_por_usuario.cumplido == "No") {
+              cumplidometa = "desaprobado";
+            }
 
             html += `
               <tr>
-                <th scope="row">${metas_por_usuario.id}</th>
-                <td>${metas_por_usuario.ld_cantidad}</td>
-                <td>${metas_por_usuario.ld_monto}</td>
-                <td>${metas_por_usuario.tc_cantidad}</td>
-                <td>${metas_por_usuario.nombre_completo}</td>
-                <td>${mesFormateado}</td>
-                <td>${metas_por_usuario.cumplido}</td>
+                <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${metas_por_usuario.id}</td>
+                <td scope="row">
+                  <img src="img/fotos/${metas_por_usuario.foto}" alt="Foto de ${metas_por_usuario.nombre_completo}" class="img-usuario-mini shadow me-3">
+                  ${metas_por_usuario.nombre_completo}
+              </td>
+                <td><i class="fa-solid fa-money-bills me-2"></i>${metas_por_usuario.ld_cantidad}</td>
+                <td>${montoFormateado}</td>
+                <td><i class="fa-solid fa-credit-card me-2"></i>${metas_por_usuario.tc_cantidad}</td>
+                <td><i class="fa-solid fa-calendar me-2"></i>${mesFormateado}</td>
+                <td class="text-center"><span class="icon-estado-${cumplidometa}">${metas_por_usuario.cumplido}</span></td>
                 <td class="text-center">
                   <a onclick="obtener_metas(${metas_por_usuario.id})">
                     <i class="fa-regular fa-pen-to-square me-2"></i>

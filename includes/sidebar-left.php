@@ -106,7 +106,7 @@
                                 <a href="dashboard.php?view=metas" class="sidebar-link">Individual</a>
                             </li>
                         <?php }  ?>
-                        <?php if ($_SESSION['rol'] === '2') { ?>
+                        <?php if ($_SESSION['rol'] === '1') { ?>
                             <li <?php echo ($view === 'metasfv') ? 'class="sidebar-active-link"' : ''; ?>>
                                 <a href="dashboard.php?view=metasfv" class="sidebar-link">Fuerza de Ventas</a>
                             </li>
