@@ -16,15 +16,15 @@ if (isset($_SESSION['id'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/bootstrapcss/bootstrap.css">
   <link rel="stylesheet" href="css/style.css">
-  <title>CrediManager | Login</title>
-  <link rel="icon" href="img/icolo-burogroup-b-white.ico">
+  <title>ServiManager | Login</title>
+  <link rel="icon" href="img/logotipo-mini.ico">
 </head>
 
 <body id="body-login">
 
   <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="row border rounded-5 p-3 bg-white shadow box-area">
-      <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: rgb(0,60,94);">
+      <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: rgb(58,0,30)">
         <div class="featured-image mb-3">
           <img src="img/logi-login2.png" class="img-fluid" style="width: 250px;">
         </div>

@@ -1,4 +1,4 @@
-<main class="content-pages content px-5 pt-4" style="background-color: #F0F1F2;">
+<main class="content-pages content px-5 pt-4" style="background-color: #fcfaf3;">
     <section class="container-fluid mt-3">
         <?php if ($_SESSION['rol'] !== '2') { ?>
             <article class="row">

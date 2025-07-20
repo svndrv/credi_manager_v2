@@ -3,7 +3,7 @@
         <article class="card shadow bg-body-tertiary">
             <div class="card-header card-style-custom">
                 <h5 class="card-title fw-bold p-1">
-                    Tabla de Ventas Archivadas
+                    Gestión de Ventas Archivadas
                 </h5>
             </div>
             <div class="card-body p-4">

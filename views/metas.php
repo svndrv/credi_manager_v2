@@ -3,7 +3,7 @@
         <div class="card shadow bg-body-tertiar">
             <div class="card-header card-style-custom">
                 <h5 class="card-title fw-bold p-1">
-                    Metas
+                    Getión de Metas
                 </h5>
             </div>
             <div class="card-body p-4">

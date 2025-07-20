@@ -64,7 +64,7 @@
         <article class="card shadow bg-body-tertiary">
             <div class="card-header card-style-custom">
                 <h5 class="card-title fw-bold p-1">
-                    Ventas Desembolsadas
+                    Gestión de Ventas Desembolsadas
                 </h5>
             </div>
             <div class="card-body p-4">
@@ -144,7 +144,7 @@
 
 <!------------------------- MODALS ------------------------->
 
-<div class="modal fade" id="obtener-gestion-ventas" tabindex="-1" aria-labelledby="obtener-ventasModalLabel" aria-hidden="true">
+<div class="modal fade" id="obtener-ventas" tabindex="-1" aria-labelledby="obtener-ventasModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">

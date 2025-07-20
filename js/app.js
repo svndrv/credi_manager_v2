@@ -1620,10 +1620,11 @@ const listar_cartera = function () {
           html =
             html +
             `<tr>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
               <td>${nombres}</td>
-              <td>${dni}</td>
-              <td>${celular}</td>
-              <td>${created_at}</td>
+              <td><i class="fa-solid fa-address-card me-2"></i>${dni}</td>
+              <td><i class="fa-solid fa-phone me-2"></i>${celular}</td>
+              <td><i class="fa-solid fa-calendar me-2"></i>${created_at}</td>
               <td class="text-center">
                 <a onclick="obtener_cartera(${id})"><i class="fa-regular fa-pen-to-square me-2" style="color: #001b2b"></i></a>
                 <a onclick="trasladar_venta(${id})"><i class="fa-solid fa-circle-plus me-2" style="color: #001b2b"></i>
@@ -1861,10 +1862,11 @@ const listar_carteras_paginadas = function (pagina) {
           html =
             html +
             `<tr>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
               <td>${nombres}</td>
-              <td>${dni}</td>
-              <td>${celular}</td>
-              <td>${created_at}</td>
+              <td><i class="fa-solid fa-address-card me-2"></i>${dni}</td>
+              <td><i class="fa-solid fa-phone me-2"></i>${celular}</td>
+              <td><i class="fa-solid fa-calendar me-2"></i>${created_at}</td>
               <td class="text-center">
                 <a onclick="obtener_cartera(${id})"><i class="fa-regular fa-pen-to-square me-2" style="color: #001b2b"></i></a>
                 <a onclick="trasladar_venta(${id})"><i class="fa-solid fa-circle-plus me-2" style="color: #001b2b"></i>
@@ -1943,10 +1945,11 @@ const filtro_cartera = function (pagina = 1) {
           html =
             html +
             `<tr>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
               <td>${nombres}</td>
-              <td>${dni}</td>
-              <td>${celular}</td>
-              <td>${created_at}</td>
+              <td><i class="fa-solid fa-address-card me-2"></i>${dni}</td>
+              <td><i class="fa-solid fa-phone me-2"></i>${celular}</td>
+              <td><i class="fa-solid fa-calendar me-2"></i>${created_at}</td>
               <td class="text-center">
                 <a onclick="obtener_cartera(${id})"><i class="fa-regular fa-pen-to-square me-2" style="color: #001b2b"></i></a>
                 <a onclick="trasladar_venta(${id})"><i class="fa-solid fa-circle-plus me-2" style="color: #001b2b"></i>
@@ -3277,7 +3280,7 @@ const listar_archivadoventas = function (pagina) {
     },
   });
 };
-function construirPaginacion_ArhivadoVentas(pagina_actual_pventas) {
+function construirPaginacion_ArhivadoVentas(pagina_actual_aventas) {
   $.ajax({
     url: "controller/archivado_ventas.php",
     type: "POST",
@@ -3285,30 +3288,30 @@ function construirPaginacion_ArhivadoVentas(pagina_actual_pventas) {
     dataType: "json",
     success: function (response) {
       let total_aventas = response.total;
-      let por_pagina = 2; // Cantidad de registros por página
+      let por_pagina = 7; // Cantidad de registros por página
       let total_paginas = Math.ceil(total_aventas / por_pagina);
       let html = "";
 
       if (total_paginas > 1) {
         // Botón anterior
-        html += `<li class="page-item ${pagina_actual_pventas == 1 ? "disabled" : ""
+        html += `<li class="page-item ${pagina_actual_aventas == 1 ? "disabled" : ""
           }">
-                          <a class="page-link" href="javascript:void(0);" onclick="listar_archivadoventas(${pagina_actual_pventas - 1
+                          <a class="page-link" href="javascript:void(0);" onclick="listar_archivadoventas(${pagina_actual_aventas - 1
           });">Anterior</a>
                       </li>`;
 
         // Botones de páginas
         for (let i = 1; i <= total_paginas; i++) {
-          html += `<li class="page-item ${pagina_actual_pventas == i ? "active" : ""
+          html += `<li class="page-item ${pagina_actual_aventas == i ? "active" : ""
             }">
                               <a class="page-link" href="javascript:void(0);" onclick="listar_archivadoventas(${i});">${i}</a>
                           </li>`;
         }
 
         // Botón siguiente
-        html += `<li class="page-item ${pagina_actual_pventas == total_paginas ? "disabled" : ""
+        html += `<li class="page-item ${pagina_actual_aventas == total_paginas ? "disabled" : ""
           }">
-                          <a class="page-link" href="javascript:void(0);" onclick="listar_archivadoventas(${pagina_actual_pventas + 1
+                          <a class="page-link" href="javascript:void(0);" onclick="listar_archivadoventas(${pagina_actual_aventas + 1
           });">Siguiente</a>
                       </li>`;
       }
@@ -3947,7 +3950,6 @@ const filtro_ventas = function (pagina = 1) {
       const data = JSON.parse(response);
       let html = "";
 
-      // ✅ Función para formatear montos como S/. 8,000.00
       const formatearSoles = (valor) => {
         return parseFloat(valor).toLocaleString("es-PE", {
           style: "decimal",
@@ -4819,8 +4821,9 @@ const filtro_consultas = function (pagina = 1) {
 
           html += `
             <tr>
-              <td>${dni}</td>
-              <td>${celular}</td>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
+              <td><i class="fa-solid fa-address-card me-2"></i>${dni}</td>
+              <td><i class="fa-solid fa-phone me-2"></i>${celular}</td>
               <td>${descripcion}</td>
               <td class="text-center"><span class="icon-estado-${estadocampana}">${campana}</span></td>        
               <td class="text-center">
@@ -4944,8 +4947,9 @@ const listar_consultas_paginadas = function (pagina) {
           html =
             html +
             `<tr>
-              <td>${dni}</td>
-              <td>${celular}</td>
+              <td class="fw-bold"><i class="fa-solid fa-key me-2" style="color:#ffe046;"></i>${id}</td>
+              <td><i class="fa-solid fa-address-card me-2"></i>${dni}</td>
+              <td><i class="fa-solid fa-phone me-2"></i>${celular}</td>
               <td>${descripcion}</td>
               <td class="text-center"><span class="icon-estado-${estadocampana}">${campana}</span></td>        
               <td class="text-center">

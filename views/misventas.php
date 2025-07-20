@@ -4,7 +4,7 @@
         <article class="card shadow bg-body-tertiary">
             <div class="card-header card-style-custom">
                 <h5 class="card-title fw-bold p-1">
-                    Mis Ventas Desembolsadas
+                    Gestión de Mis Ventas Desembolsadas
                 </h5>
             </div>
             <div class="card-body p-4">

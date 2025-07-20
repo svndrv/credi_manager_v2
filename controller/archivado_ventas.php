@@ -64,6 +64,7 @@ switch ($option) {
         echo json_encode(['total' => $total]);
     break;
     default:
-        echo json_encode(['error' => 'Opción no válida']); 
+        echo json_encode(['error' => 'Opción no válida']);
+         
     break;
 }

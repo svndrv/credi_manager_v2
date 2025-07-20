@@ -3,7 +3,7 @@
         <div class="card shadow bg-body-tertiary">
             <div class="card-header card-style-custom">
                 <h5 class="card-title fw-bold p-1">
-                    Usuarios
+                    Gestión de Usuarios
                 </h5>
             </div>
             <div class="card-body p-4">

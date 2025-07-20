@@ -3,7 +3,7 @@
         <article class="card shadow bg-body-tertiary">
             <div class="card-header card-style-custom">
                 <h5 class="card-title fw-bold p-1">
-                    Lista de consultas
+                    Gestión de Consultas
                 </h5>
             </div>
             <div class="card-body p-4">
@@ -28,8 +28,9 @@
                         <div class="table-responsive  border-4">
                             <table class="table table-bordered table-hover">
                                 <thead>
-                                    <tr>
-                                        <th scope="col">Dni</th>
+                                    <tr class="text-center">
+                                        <th scope="col">ID</th>
+                                        <th scope="col">DNI</th>
                                         <th scope="col">Celular</th>
                                         <th scope="col">Descripción</th>
                                         <th scope="col">Campaña</th>

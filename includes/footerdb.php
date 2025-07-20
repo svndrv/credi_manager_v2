@@ -1,4 +1,4 @@
-<footer class="footer" style="background-color: #F0F1F2;">
+<footer class="footer" style="background-color: #fcfaf3;">
     <div class="container-fluid">
         <div class="row text-muted">
             <div class="col-6 text-start">

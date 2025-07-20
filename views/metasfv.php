@@ -3,7 +3,7 @@
         <div class="card shadow bg-body-tertiar">
             <div class="card-header card-style-custom">
                 <h5 class="card-title fw-bold p-1">
-                    Fuerza de Ventas
+                    Gestión de las Metas de Fuerza de Ventas
                 </h5>
             </div>
             <div class="card-body p-4">
@@ -62,6 +62,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
                 <h1 class="modal-title fs-5" id="editar-metaModalLabel">Actualizar Meta</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -118,6 +119,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
+                <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
                 <h1 class="modal-title fs-5" id="agregar-metaLabel">Agregar Meta</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

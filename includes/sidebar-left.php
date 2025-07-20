@@ -1,4 +1,4 @@
-<aside id="sidebar" class="js-sidebar" style="background-color: #0d1017;">
+<aside id="sidebar" class="js-sidebar" style="background-color: #3a001e;">
     <!-- Content For Sidebar -->
     <div class="h-200">
         <div class="sidebar-logo mt-3">
@@ -16,6 +16,7 @@
                                 }
                                 ?>
             </div>
+            
 
             <li <?php echo ($view === 'inicio') ? 'class="sidebar-active-link"' : ''; ?>>
                 <a href="dashboard.php?view=inicio" class="sidebar-link">
@@ -46,9 +47,12 @@
                         <li <?php echo ($view === 'proceso_ventas') ? 'class="sidebar-active-link"' : ''; ?>>
                             <a href="dashboard.php?view=proceso_ventas" class="sidebar-link">En proceso</a>
                         </li>
-                        <li <?php echo ($view === 'gestion_ventas') ? 'class="sidebar-active-link"' : ''; ?>>
+                        <?php if ($_SESSION['rol'] !== '3') { ?>
+                            <li <?php echo ($view === 'gestion_ventas') ? 'class="sidebar-active-link"' : ''; ?>>
                             <a href="dashboard.php?view=gestion_ventas" class="sidebar-link">En gestión</a>
                         </li>
+                        <?php }  ?>
+                        
                         <li>
                             <a href="#" class="sidebar-link collapsed" data-bs-target="#submenu_desembolsado" data-bs-toggle="collapse" aria-expanded="false">
                                 Desembolsado
@@ -106,7 +110,7 @@
                                 <a href="dashboard.php?view=metas" class="sidebar-link">Individual</a>
                             </li>
                         <?php }  ?>
-                        <?php if ($_SESSION['rol'] === '1') { ?>
+                        <?php if ($_SESSION['rol'] === '2') { ?>
                             <li <?php echo ($view === 'metasfv') ? 'class="sidebar-active-link"' : ''; ?>>
                                 <a href="dashboard.php?view=metasfv" class="sidebar-link">Fuerza de Ventas</a>
                             </li>

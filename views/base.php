@@ -3,7 +3,7 @@
         <article class="card shadow bg-body-tertiar">
             <div class="card-header card-style-custom">
                 <h5 class="card-title fw-bold p-1">
-                    <?php if ($_SESSION['rol'] != '2') { ?>Gestionar <?php } else { ?>Lista Base <?php } ?>
+                    <?php if ($_SESSION['rol'] != '2') { ?>Gestión de Prospectos <?php } else { ?>Lista de Prospectos <?php } ?>
                 </h5>
             </div>
             <div class="card-body p-4">

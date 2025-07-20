@@ -9,14 +9,14 @@ session_start();
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Buró Group | Prestamos y Tarjetas de Crédito</title>
+    <title>ServiCore Group | Prestamos y Tarjetas de Crédito</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="./assets/css/style.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="img/icolo-burogroup-b-white.ico">
+    <link rel="icon" href="img/logotipo-mini.ico">
 
 
 </head>
