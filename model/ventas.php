@@ -184,12 +184,113 @@ ON
     }
     public function actualizar_venta($id, $nombres, $dni, $celular, $credito, $linea, $plazo, $tem, $tipo_producto, $estado)
     {
-        if (empty($nombres) || empty($dni) || empty($celular) || empty($credito) || empty($linea) || empty($tem) || empty($tipo_producto) || empty($estado)) {
+        if (empty($nombres) || empty($dni) || empty($celular) || empty($tipo_producto) || empty($estado)) {
             return [
                 "status" => "error",
                 "message" => "Verfifique los campos vacios."
             ];
-        } else {
+        } 
+
+        if (!preg_match('/^\d{8}$/', $dni)) {
+            return [
+                "status" => "error",
+                "message" => "DNI inválido."
+            ];
+        }
+    
+        if (!preg_match('/^9\d{8}$/', $celular)) {
+            return [
+                "status" => "error",
+                "message" => "Celular inválido."
+            ];
+        }
+
+           // Convertir "0.00" a vacío para que cuente como no rellenado
+    foreach (['credito', 'linea', 'tem'] as $campo) {
+        if ($$campo === "0.00" || $$campo === "0" || $$campo === 0) {
+            $$campo = "";
+        }
+    }
+
+    // Reglas por tipo de producto
+    $reglas = [
+        "LD/TC" => [
+            "requeridos" => ["linea", "credito", "tem"],
+            "prohibidos" => [],
+            "plazo" => "mayor_cero" // debe ser distinto a 0
+        ],
+        "LD" => [
+            "requeridos" => ["credito", "tem"],
+            "prohibidos" => ["linea"],
+            "plazo" => "mayor_cero" // debe ser distinto a 0
+        ],
+        "TC" => [
+            "requeridos" => ["linea"],
+            "prohibidos" => ["credito", "tem"],
+            "plazo" => "igual_cero" // debe ser igual a 0
+        ]
+    ];
+
+    if (isset($reglas[$tipo_producto])) {
+        $faltantes = [];
+        $prohibidosLlenos = [];
+
+        // Validar campos requeridos
+        foreach ($reglas[$tipo_producto]["requeridos"] as $campo) {
+            if (empty($$campo)) {
+                $faltantes[] = $campo;
+            }
+        }
+
+        // Validar campos prohibidos
+        foreach ($reglas[$tipo_producto]["prohibidos"] as $campo) {
+            if (!empty($$campo)) {
+                $prohibidosLlenos[] = $campo;
+            } else {
+                // Si está vacío, lo dejamos en 0 por defecto
+                $$campo = 0;
+            }
+        }
+
+        // Validación de plazo según tipo
+        if ($reglas[$tipo_producto]["plazo"] === "mayor_cero" && intval($plazo) <= 0) {
+            return [
+                "status" => "error",
+                "message" => "El plazo debe ser mayor a 0 para el tipo de producto ($tipo_producto)."
+            ];
+        }
+        if ($reglas[$tipo_producto]["plazo"] === "igual_cero" && intval($plazo) !== 0) {
+            return [
+                "status" => "error",
+                "message" => "El plazo debe ser 0 para el tipo de producto ($tipo_producto)."
+            ];
+        }
+
+        // Si todos los requeridos están vacíos
+        if (count($faltantes) === count($reglas[$tipo_producto]["requeridos"])) {
+            return [
+                "status" => "error",
+                "message" => "Ingresa los datos según el tipo de producto."
+            ];
+        }
+
+        // Si hay requeridos faltantes
+        if (!empty($faltantes)) {
+            return [
+                "status" => "error",
+                "message" => "Ingresa " . implode(", ", $faltantes) . " según el tipo de producto."
+            ];
+        }
+
+        // Si hay prohibidos con datos
+        if (!empty($prohibidosLlenos)) {
+            return [
+                "status" => "error",
+                "message" => "Ingresa solo los datos solicitados según el tipo de producto ($tipo_producto)."
+            ];
+        }
+    }
+
             $sql = "UPDATE ventas SET nombres = ?, dni = ?, celular = ?, credito = ?, linea = ?, plazo = ?, tem = ?, tipo_producto = ?, estado = ?, updated_at = now() WHERE id = ?";
             $sql = $this->db->prepare($sql);
             $sql->bindValue(1, $nombres);
@@ -208,7 +309,7 @@ ON
                 "status" => "success",
                 "message" => "Venta editada correctamente."
             ];
-        }
+        
     }
     public function contar_ld_por_id($id_usuario)
     {

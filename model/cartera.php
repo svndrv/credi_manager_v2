@@ -33,6 +33,20 @@ class Cartera extends Conectar {
                 "message" => "Verifica los campos vacíos."
             ];
         }
+
+        if (!preg_match('/^\d{8}$/', $dni)) {
+            return [
+                "status" => "error",
+                "message" => "DNI invalido."
+            ];
+        }
+    
+        if (!preg_match('/^9\d{8}$/', $celular)) {
+            return [
+                "status" => "error",
+                "message" => "Celular inválido."
+            ];
+        }
         
         $sql = "INSERT INTO cartera (nombres, dni, celular, id_usuario, created_at , updated_at) VALUES(?, ?, ?, ?, now(), now())";
         $sql = $this->db->prepare($sql);
@@ -70,6 +84,20 @@ class Cartera extends Conectar {
             "message" => "Verifique los campos vacíos."
         ];
        }
+
+       if (!preg_match('/^\d{8}$/', $dni)) {
+            return [
+                "status" => "error",
+                "message" => "DNI inválido."
+            ];
+        }
+    
+        if (!preg_match('/^9\d{8}$/', $celular)) {
+            return [
+                "status" => "error",
+                "message" => "Celular inválido."
+            ];
+        }
        
        $sql = "UPDATE cartera SET nombres = ?, dni = ?, celular = ?, updated_at = now() WHERE id = ?";
        $sql = $this->db->prepare($sql);
@@ -91,7 +119,6 @@ class Cartera extends Conectar {
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
-    // Paginado x ID_USUARIO
     public function obtener_cartera_paginados($limit, $offset, $id) {
         $sql = "SELECT * FROM cartera WHERE id_usuario = :id ORDER BY id DESC LIMIT :limit OFFSET :offset";
         $stmt = $this->db->prepare($sql);
@@ -108,7 +135,6 @@ class Cartera extends Conectar {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
-    
     public function obtener_carteras_paginadas_x_dni($id, $dni, $limit, $offset) {
         $sql = "SELECT * FROM cartera WHERE id_usuario = :id";
         $params = [];

@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col-lg-3 mb-4">
                         <form id="form_filtro_cartera">
-                            <input type="text" class="form-control" id="ca-dni" name="dni" placeholder="Ingrese un DNI">
+                            <input type="text" class="form-control solo-numeros-dni" id="ca-dni" name="dni" placeholder="Ingrese un DNI">
                     </div>
                     <div class="col-lg-2 mb-3">
                         <button type="submit" class="btn btn-dark w-25"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -35,7 +35,7 @@
                                 </thead>
                                 <tbody id="listar_cartera">
                                     <tr>
-                                        <td colspan="5" class="text-center">No hay datos...</td>
+                                        <td colspan="6" class="text-center">No hay datos...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -60,8 +60,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
-                <h1 class="modal-title fs-5" id="editar-carteraModalLabel">Editar Cliente</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h1 class="modal-title fs-5" id="editar-carteraModalLabel">Actualizar Cartera</h1>
             </div>
             <div class="modal-body">
                 <form id="formActualizarCartera">
@@ -73,15 +72,15 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label for="nombres" class="form-label">Nombres:</label>
-                                <input type="text" class="form-control" id="nombres_car" name="nombres" aria-describedby="emailHelp">
+                                <input type="text" class="form-control solo-letras" id="nombres_car" name="nombres" aria-describedby="emailHelp">
                             </div>
                             <div class="mb-3">
                                 <label for="dni" class="form-label">DNI:</label>
-                                <input type="text" class="form-control" id="dni_car" name="dni" aria-describedby="emailHelp">
+                                <input type="text" class="form-control solo-numeros-dni" id="dni_car" name="dni" aria-describedby="emailHelp">
                             </div>
                             <div class="mb-3">
                                 <label for="celular" class="form-label">Celular:</label>
-                                <input type="text" class="form-control" id="celular_car" name="celular" aria-describedby="emailHelp">
+                                <input type="text" class="form-control solo-numeros-cel" id="celular_car" name="celular" aria-describedby="emailHelp">
                             </div>
                         </div>
                     </div>
@@ -101,7 +100,6 @@
             <div class="modal-header">
                 <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
                 <h1 class="modal-title fs-5" id="agregar-carteraModalLabel">Agregar Cartera</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="formAgregarCartera">
@@ -111,15 +109,15 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label for="nombres" class="form-label">Nombres:</label>
-                                <input type="text" class="form-control" id="nombres_car" name="nombres" aria-describedby="emailHelp">
+                                <input type="text" class="form-control solo-letras" id="nombres_car" name="nombres" aria-describedby="emailHelp">
                             </div>
                             <div class="mb-3">
                                 <label for="dni" class="form-label">DNI:</label>
-                                <input type="text" class="form-control" id="dni_car" name="dni" aria-describedby="emailHelp">
+                                <input type="text" class="form-control solo-numeros-dni" id="dni_car" name="dni" aria-describedby="emailHelp">
                             </div>
                             <div class="mb-3">
                                 <label for="celular" class="form-label">Celular:</label>
-                                <input type="text" class="form-control" id="celular_car" name="celular" aria-describedby="emailHelp">
+                                <input type="text" class="form-control solo-numeros-cel" id="celular_car" name="celular" aria-describedby="emailHelp">
                             </div>                          
                         </div>
                     </div>
@@ -209,56 +207,60 @@
     </div>
 </div>
 
-
 <div class="modal fade" id="to_cartera_procesoventas" tabindex="-1" aria-labelledby="obtener-ProcesoVentasModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <img src="img/logotipo/logotipo-mini.png" class="logo-table-mini me-2">
                 <h1 class="modal-title fs-5" id="to_procesoventasLabel">Transladar a Ventas en Proceso</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="formObtenerProcesoVentas" enctype="multipart/form-data">
 
-                    <input type="text" name="opcion" value="base_x_id">
-                    <input type="text" name="option" value="agregar_procesoventas">
-                    <input type="text" name="id" id="id">
-                    <input type="text" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['id'] ?>">
-                    <input type="text" id="estado" name="estado" value="Pendiente">
+                    <input type="hidden" name="opcion" value="base_x_id">
+                    <input type="hidden" name="option" value="agregar_procesoventas">
+                    <input type="hidden" name="id" id="id">
+                    <input type="hidden" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['id'] ?>">
+                    <input type="hidden" id="estado" name="estado" value="Pendiente">
 
                     <div class="row p-2">
                         <div class="col-lg-6">
                             <div class="mb-3">
                                 <label for="nombres_to_procesoventas" class="form-label">Nombre completo</label>
-                                <input type="text" class="form-control" id="nombres_to_procesoventas" name="nombres">
+                                <input type="text" class="form-control solo-letras" id="nombres_to_procesoventas" name="nombres">
                             </div>
                             <div class="mb-3">
                                 <label for="dni_to_procesoventas" class="form-label">Dni</label>
-                                <input type="text" class="form-control" id="dni_to_procesoventas" name="dni">
+                                <input type="text" class="form-control solo-numeros-dni" id="dni_to_procesoventas" name="dni">
                             </div>
                             <div class="mb-3">
                                 <label for="celular_to_procesoventas" class="form-label">Celular</label>
-                                <input type="text" class="form-control" id="celular_to_procesoventas" name="celular">
+                                <input type="text" class="form-control solo-numeros-cel" id="celular_to_procesoventas" name="celular">
                             </div>
-
                             <div class="mb-3">
                                 <label for="tem_to_procesoventas" class="form-label">TEM</label>
-                                <input type="text" class="form-control" id="tem_to_procesoventas" name="tem">
+                                <div class="input-group">
+                                    <span class="input-group-text">%</span>
+                                    <input type="text" class="form-control solo-numeros-interes" id="tem_to_procesoventas" name="tem">
+                                </div>
                             </div>
-                            <!-- <div class="mb-3">
-                                <label for="fecha_procesoventas" class="form-label">Fecha</label>
-                                <input type="date" class="form-control" id="fecha_procesoventas" name="fecha_procesoventas" value="<?= date('Y-m-d') ?>">
-                            </div> -->
+
+                            
                         </div>
                         <div class="col-lg-6">
                             <div class="mb-3">
                                 <label for="credito_to_procesoventas" class="form-label">Crédito</label>
-                                <input type="text" class="form-control" id="credito_to_procesoventas" name="credito">
+                                <div class="input-group">
+                                     <span class="input-group-text">S/.</span>
+                                     <input type="text" class="form-control solo-numeros-deci" id="credito_to_procesoventas" name="credito">
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="linea_to_procesoventas" class="form-label">Linea</label>
-                                <input type="text" class="form-control" id="linea_to_procesoventas" name="linea">
+                                <div class="input-group">
+                                    <span class="input-group-text">S/.</span>
+                                    <input type="text" class="form-control solo-numeros-deci" id="linea_to_procesoventas" name="linea">
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="plazo_to_procesoventas" class="form-label">Plazo</label>

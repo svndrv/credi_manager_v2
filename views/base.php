@@ -222,20 +222,23 @@
                         <div class="col-lg-6">
                             <div class="mb-3">
                                 <label for="nombres_to_procesoventas" class="form-label">Nombre completo</label>
-                                <input type="text" class="form-control" id="nombres_to_procesoventas" name="nombres">
+                                <input type="text" class="form-control solo-letras" id="nombres_to_procesoventas" name="nombres">
                             </div>
                             <div class="mb-3">
                                 <label for="dni_to_procesoventas" class="form-label">Dni</label>
-                                <input type="text" class="form-control" id="dni_to_procesoventas" name="dni">
+                                <input type="text" class="form-control solo-numeros-dni" id="dni_to_procesoventas" name="dni">
                             </div>
                             <div class="mb-3">
                                 <label for="celular_to_procesoventas" class="form-label">Celular</label>
-                                <input type="text" class="form-control" id="celular_to_procesoventas" name="celular">
+                                <input type="text" class="form-control solo-numeros-cel" id="celular_to_procesoventas" name="celular">
                             </div>
 
                             <div class="mb-3">
                                 <label for="tem_to_procesoventas" class="form-label">TEM</label>
-                                <input type="text" class="form-control" id="tem_to_procesoventas" name="tem">
+                                <div class="input-group">
+                                    <span class="input-group-text">%</span>
+                                    <input type="text" class="form-control solo-numeros-interes" id="tem_to_procesoventas" name="tem">
+                                </div>
                             </div>
                             <!-- <div class="mb-3">
                                 <label for="fecha_procesoventas" class="form-label">Fecha</label>
@@ -245,16 +248,21 @@
                         <div class="col-lg-6">
                             <div class="mb-3">
                                 <label for="credito_to_procesoventas" class="form-label">Crédito</label>
-                                <input type="text" class="form-control" id="credito_to_procesoventas" name="credito">
+                                <div class="input-group">
+                                    <span class="input-group-text">S/.</span>
+                                    <input type="text" class="form-control solo-numeros-deci" id="credito_to_procesoventas" name="credito">
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="linea_to_procesoventas" class="form-label">Linea</label>
-                                <input type="text" class="form-control" id="linea_to_procesoventas" name="linea">
+                                <div class="input-group">
+                                    <span class="input-group-text">S/.</span>
+                                    <input type="text" class="form-control solo-numeros-deci" id="linea_to_procesoventas" name="linea">
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="plazo_to_procesoventas" class="form-label">Plazo</label>
                                 <select class="form-select" id="plazo_to_procesoventas" name="plazo">
-                                    <option selected>Plazo</option>
                                     <option value="0">0</option>
                                     <option value="12">12</option>
                                     <option value="24">24</option>

@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col-lg-2 mb-4">
                         <form id="form_filtro_archivadoventas">
-                            <input type="text" class="form-control" id="ar_dni" name="dni" placeholder="Ingrese un DNI">
+                            <input type="text" class="form-control solo-numeros-dni" id="ar_dni" name="dni" placeholder="Ingrese un DNI">
                     </div>
                     <div class="col-lg-2 mb-4">
                         <input type="date" class="form-control" id="ar_createdat" name="created_at" value="">
@@ -66,9 +66,9 @@
             </div>
             <div class="modal-body">
                 <form id="formObtenerVentaArchivada" enctype="multipart/form-data">
-                    <input type="text" name="option" value="desarchivar_venta">
-                    <input type="text" name="id_archivado" id="id_archivado_ventas">
-                    <input type="text" name="id_proceso" id="id_procesoventas_archivado_ventas">
+                    <input type="hidden" name="option" value="desarchivar_venta">
+                    <input type="hidden" name="id_archivado" id="id_archivado_ventas">
+                    <input type="hidden" name="id_proceso" id="id_procesoventas_archivado_ventas">
                     <div class="row p-2">
                         <p class="h5 fw-bold pb-3">Resumen de venta archivada</p>
                         <div class="col-lg-6">

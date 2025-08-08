@@ -3,7 +3,13 @@ const params = new URLSearchParams(url.search);
 
 $(function () {
   cargar_perfil();
-
+  soloNumerosCel();
+  soloNumerosDni();
+  soloNumerosDeci();
+  soloNumerosInteres();
+  soloLetras();
+  soloNumero();
+  
 
   if (params.get("view") === "gestionar") {
     base_x_dni();
@@ -46,6 +52,7 @@ $(function () {
 
   if (params.get("view") === "consultas") {
     actualizar_consulta();
+    
     //crear_ventas();
     agregar_consulta_cartera();
     listar_consultas_paginadas(1);
@@ -141,6 +148,88 @@ $(function () {
     });
   }
 });
+
+/* -------------------       EXTRAS      ---------------------- */
+
+const soloNumerosDni = function () {
+    const inputs = document.querySelectorAll('.solo-numeros-dni');
+    inputs.forEach(input => {
+        input.addEventListener('input', function () {
+            this.value = this.value
+                .replace(/\D/g, '')
+                .slice(0, 8);
+        });
+    });
+};
+const soloNumerosCel = function () {
+    const inputs = document.querySelectorAll('.solo-numeros-cel');
+    inputs.forEach(input => {
+        input.addEventListener('input', function () {
+            this.value = this.value
+                .replace(/\D/g, '')
+                .slice(0, 9);
+        });
+    });
+};
+const soloNumerosDeci = function () {
+    const inputs = document.querySelectorAll('.solo-numeros-deci');
+
+    inputs.forEach(input => {
+        input.addEventListener('input', function () {
+            let valor = this.value;
+            valor = valor.replace(/[^0-9.]/g, '');
+            if (valor.startsWith('.')) {
+                valor = valor.substring(1);
+            }
+            const partes = valor.split('.');
+            if (partes.length > 2) {
+                valor = partes[0] + '.' + partes.slice(1).join('');
+            }
+            this.value = valor;
+        });
+    });
+};
+const soloNumerosInteres = function () {
+    const inputs = document.querySelectorAll('.solo-numeros-interes');
+
+    inputs.forEach(input => {
+        input.addEventListener('input', function () {
+            let valor = this.value;
+            valor = valor.replace(/[^0-9.]/g, '');
+            if (valor.startsWith('.')) {
+                valor = valor.substring(1);
+            }
+            const partes = valor.split('.');
+            if (partes.length > 2) {
+                valor = partes[0] + '.' + partes.slice(1).join('');
+            }
+            valor = valor.slice(0, 4);
+            this.value = valor;
+        });
+    });
+};
+const soloLetras = function () {
+    const inputs = document.querySelectorAll('.solo-letras');
+    inputs.forEach(input => {
+        input.addEventListener('input', function () {
+            this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+        });
+    });
+};
+const soloNumero = function () {
+    const inputs = document.querySelectorAll('.solo-numeros');
+    inputs.forEach(input => {
+        input.addEventListener('input', function () {
+            this.value = this.value
+                .replace(/\D/g, '')
+        });
+    });
+};
+
+
+
+
+/* ---------------------------------------------------------------- */
 
 const ventas_x_usuario = function () {
   $("#form_venta_usuario").submit(function (e) {
@@ -263,7 +352,6 @@ const listar_misventas_paginados = function (pagina) {
     success: function (response) {
       let html = "";
 
-      // ✅ Función para formatear soles
       const formatearSoles = (valor) => {
         return parseFloat(valor).toLocaleString("es-PE", {
           style: "decimal",
@@ -1063,8 +1151,7 @@ const trasladar_base_procesoventas = function () {
 
     const form = $("#formObtenerProcesoVentas")[0];
     const data = new FormData(form);
-
-    // 👇 Se establece el valor que activa el case correcto en el controller
+   
     data.append("option", "agregar_procesoventas");
 
     $.ajax({
@@ -1798,7 +1885,11 @@ const actualizar_cartera = function () {
           $("#editar-cartera").modal("hide");
           $("#formActualizarCartera").trigger("reset");
         } else {
-          alert("Algo salió mal.");
+          Swal.fire({
+            icon: "error",
+            title: "Lo sentimos",
+            text: response.message,
+          });
         }
       },
     });
@@ -1847,7 +1938,6 @@ const cartera_x_dni = function () {
     });
   });
 };
-
 const listar_carteras_paginadas = function (pagina) {
   $.ajax({
     url: "controller/cartera.php",
@@ -1960,7 +2050,7 @@ const filtro_cartera = function (pagina = 1) {
       } else {
         html =
           html +
-          `<tr><td class='text-center' colspan='5'>No se encontraron resultados.</td>`;
+          `<tr><td class='text-center' colspan='6'>No se encontraron resultados.</td>`;
       }
       $("#listar_cartera").html(html);
 
@@ -3559,11 +3649,11 @@ const listar_ventas_paginados = function (pagina) {
                 <td>${dni}</td>
                 <td>${creditoFormateado}</td>
                 <td>${lineaFormateada}</td>
-                <td class="text-center" scope="row">
+                <td scope="row">
                   <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
                   ${nombre_completo}
                 </td>
-                <td>${created_at}</td>
+                <td><i class="fa-solid fa-calendar me-2"></i>${created_at}</td>
                 <td class="text-center">
                   <span class="icon-producto-${bgproducto}">${iconproducto}</span>
                 </td>
@@ -3575,11 +3665,11 @@ const listar_ventas_paginados = function (pagina) {
                 <td>${dni}</td>
                 <td>${creditoFormateado}</td>
                 <td>${lineaFormateada}</td>
-                <td class="text-center" scope="row">
+                <td scope="row">
                   <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
                   ${nombre_completo}
                 </td>
-                <td>${created_at}</td>
+                <td><i class="fa-solid fa-calendar me-2"></i>${created_at}</td>
                 <td class="text-center">
                   <span class="icon-producto-${bgproducto}">${iconproducto}</span>
                 </td>
@@ -4004,7 +4094,7 @@ const filtro_ventas = function (pagina = 1) {
                   <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
                   ${nombre_completo}
                 </td>
-                <td>${created_at}</td>
+                <td><i class="fa-solid fa-calendar me-2"></i>${created_at}</td>
                 <td class="text-center">
                   <span class="icon-producto-${bgproducto}">${iconproducto}</span>
                 </td>
@@ -4020,7 +4110,7 @@ const filtro_ventas = function (pagina = 1) {
                   <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-mini shadow me-3">
                   ${nombre_completo}
                 </td>
-                <td>${created_at}</td>
+                <td><i class="fa-solid fa-calendar me-2"></i>${created_at}</td>
                 <td class="text-center">
                   <span class="icon-producto-${bgproducto}">${iconproducto}</span>
                 </td>

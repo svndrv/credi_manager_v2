@@ -1,5 +1,6 @@
 <?php
 session_start();
+date_default_timezone_set('America/Lima');
 $rol = $_SESSION['rol'];
 if (!isset($_SESSION['id'])) {
     header("Location:index.php");
