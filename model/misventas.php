@@ -15,8 +15,7 @@ class MisVentas extends Conectar
         $this->db = $dbh;
     }
 
-    public function obtener_misventas_paginados($id, $limit, $offset)
-    {
+    public function obtener_misventas_paginados($id, $limit, $offset) {
         $sql = "SELECT id, nombres, dni, celular, credito, linea, plazo, tem,
                     documento, tipo_producto, estado, DATE(created_at) AS created_at 
                 FROM ventas 
@@ -30,8 +29,7 @@ class MisVentas extends Conectar
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function contar_misventas($id)
-    {
+    public function contar_misventas($id){
         $sql = "SELECT COUNT(*) as total FROM ventas WHERE id_usuario = ? AND estado = 'Desembolsado'";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(1, $id);

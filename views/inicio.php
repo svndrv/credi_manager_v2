@@ -1,72 +1,67 @@
 <main class="content-pages content px-5 pt-4" style="background-color: #fcfaf3;">
-    <section class="container-fluid mt-3">
-        <?php if ($_SESSION['rol'] !== '2') { ?>
-            <article class="row">
-            <div class="col-lg-12 mt-3">
-                <div class="row">
-                    <div class="col-lg-4 col-sm-12">
-                        <div id="bg-card-ld" class="card shadow w-100" style="width: 20rem;">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-4 d-flex justify-content-center">
-                                        <img src="img/money.png" style="width: 4rem;" />
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <h5 id="ldc-card-tittle" class="card-title">LD</h5>
-                                        <h6 class="card-subtitle mb-2 text-body-secondary">Prestamo Personal</h6>
-                                        <div id="ld_cantidad_text_id">
-                                            <p class="card-text">Cant. 0</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-12">
-                        <div id="bg-card-tc" class="card shadow w-100" style="width: 20rem;">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-4 d-flex justify-content-center">
-                                        <img src="img/card.png" style="width: 4rem;" />
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <h5 id="tcc-card-tittle" class="card-title">TC</h5>
-                                        <h6 class="card-subtitle mb-2 text-body-secondary">Tarjeta de crédito</h6>
-                                        <div id="tc_cantidad_text_id">
-                                            <p class="card-text">Cant. 0 </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-12">
-                        <div id="bg-card-ldm" class="card shadow w-100" style="width: 20rem;">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-4 d-flex justify-content-center">
-                                        <img src="img/bag-coin.png" style="width: 4rem;" />
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <h5 id="ldm-card-tittle" class="card-title">Monto de LD</h5>
-                                        <h6 class="card-subtitle mb-2 text-body-secondary">Total de Crédito</h6>
-                                        <div id="ld_monto_text_id">
-                                            <p class="card-text">S/. 0.0</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </article>
-        <?php }  ?>
-        
+    <section class="container-fluid mt-3">    
         <article class="row">
             <div class="col-lg-12">
                 <div class="row">
                     <div class="col-lg-9">
+                        <?php if ($_SESSION['rol'] !== '2') { ?>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div id="bg-card-ld" class="card shadow w-100" style="width: 20rem;">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-4 d-flex justify-content-center">
+                                                <img src="img/money.png" style="width: 4rem;" />
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <h5 id="ldc-card-tittle" class="card-title">LD</h5>
+                                                <h6 class="card-subtitle mb-2 text-body-secondary">Prestamo Personal</h6>
+                                                <div id="ld_cantidad_text_id">
+                                                    <p class="card-text">Cant. 0</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div id="bg-card-tc" class="card shadow w-100" style="width: 20rem;">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-4 d-flex justify-content-center">
+                                                <img src="img/card.png" style="width: 4rem;" />
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <h5 id="tcc-card-tittle" class="card-title">TC</h5>
+                                                <h6 class="card-subtitle mb-2 text-body-secondary">Tarjeta de crédito</h6>
+                                                <div id="tc_cantidad_text_id">
+                                                    <p class="card-text">Cant. 0 </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <div id="bg-card-ldm" class="card shadow w-100" style="width: 20rem;">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-4 d-flex justify-content-center">
+                                                <img src="img/bag-coin.png" style="width: 4rem;" />
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <h5 id="ldm-card-tittle" class="card-title">Monto de LD</h5>
+                                                <h6 class="card-subtitle mb-2 text-body-secondary">Total de Crédito</h6>
+                                                <div id="ld_monto_text_id">
+                                                    <p class="card-text">S/. 0.0</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php }  ?>
                         <div class="card shadow bg-body-tertiar">
                             <div class="card-header card-style-custom">
                                 <h5 class="card-title fw-bold p-1">
@@ -75,14 +70,17 @@
                             </div>
                             <div class="card-body p-4">
 
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover table-striped">
+                                <div class="table-responsive border-4">
+                                    <table class="table table-bordered table-hover">
                                         <thead class="text-center">
                                             <tr>
                                                 <th scope="col">Usuario</th>
-                                                <th scope="col">LD Cantidad</th>
-                                                <th scope="col">LD Monto</th>
-                                                <th scope="col">TC Cantidad</th>
+                                                <th scope="col">LD C. Actual</th>
+                                                <th scope="col">LD C. Meta</th>
+                                                <th scope="col">LD M. Actual</th>
+                                                <th scope="col">LD M.</th>
+                                                <th scope="col">TC C. Actual</th>
+                                                <th scope="col">TC C. Meta</th>
                                                 <th scope="col">Cumplido</th>
                                             </tr>
                                         </thead>
@@ -103,7 +101,7 @@
                                 <div class="align-items-start">
                                     <div class="flex-grow-1">
                                         <h4 class="mb-2 fw-bold">
-                                        Bono diario
+                                            Bono diario
                                         </h4>
                                         <p class="mb-3" name="descripcion" id="bono-descripcion">
                                             <span>se han encontrado bonos diarios el dia de hoy.</span>
@@ -113,9 +111,9 @@
                                             No found
                                         </span>
                                         <div class="getbono">
-                                            
+
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +129,8 @@
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-lg-12">
-                                                        <h6 id="ldc-card-tittle" class="card-title d-inline me-3 bg-white rounded-circle p-1">LD</h6><div class="d-inline" id="ld_meta"><span>50 préstamos</span></div>
+                                                        <h6 id="ldc-card-tittle" class="card-title d-inline me-3 bg-white rounded-circle p-1">LD</h6>
+                                                        <div class="d-inline" id="ld_meta"><span>50 préstamos</span></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -140,7 +139,8 @@
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-lg-12">
-                                                        <h6 id="tcc-card-tittle" class="card-title d-inline me-3 bg-white rounded-circle p-1">TC</h6><div class="d-inline" id="tc_meta"><span>50 préstamos</span></div>
+                                                        <h6 id="tcc-card-tittle" class="card-title d-inline me-3 bg-white rounded-circle p-1">TC</h6>
+                                                        <div class="d-inline" id="tc_meta"><span>50 préstamos</span></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -149,9 +149,13 @@
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-lg-12">
-                                                        <h6 id="ldm-card-tittle" class="card-title d-inline me-3 bg-white rounded-circle p-1">MT</h6><div class="d-inline" id="monto_meta"><span>50 préstamos</span></div>
+                                                        <h6 id="ldm-card-tittle" class="card-title d-inline me-3 bg-white rounded-circle p-1">MT</h6>
+                                                        <div class="d-inline" id="monto_meta"><span>50 préstamos</span></div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="progress" role="progressbar" aria-label="Danger example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="50">
+                                                <div class="progress-bar text-bg-danger" style="width: 50%">50%</div>
                                             </div>
                                         </div>
                                     </div>

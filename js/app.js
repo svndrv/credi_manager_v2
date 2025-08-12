@@ -2121,21 +2121,32 @@ const listar_metas_ventas = function () {
 
       if (data.length > 0) {
         data.map((x) => {
-          const ldc = `${x.ld_real_cantidad || 0} | ${x.ld_cantidad || 0}`;
-          const ldm = `${formatearSoles(x.ld_real_monto)} | ${formatearSoles(x.ld_monto)}`;
-          const tcc = `${x.tc_real_cantidad || 0} | ${x.tc_cantidad || 0}`;
+
+          if (x.cumplido == "Si") {
+            cumplidometa =
+              "aprobado";
+          } else if (x.cumplido == "No") {
+            cumplidometa =
+              "desaprobado";
+          } else if (x.cumplido == "Pendiente") {
+            cumplidometa =
+              "pendiente";
+          }
 
           html += `
             <tr>
               <td class="text-center">${x.Usuario}</td>
-              <td class="text-center">${ldc}</td>
-              <td class="text-center">${ldm}</td>
-              <td class="text-center">${tcc}</td>
-              <td class="text-center">${x.cumplido}</td>
+              <td class="text-center">${x.ld_real_cantidad || 0}</td>
+              <td class="text-center">${x.ld_cantidad || 0}</td>
+              <td class="text-center">${formatearSoles(x.ld_real_monto)}</td>
+              <td class="text-center">${formatearSoles(x.ld_monto)}</td>
+              <td class="text-center">${x.tc_real_cantidad || 0}</td>
+              <td class="text-center">${x.tc_cantidad || 0}</td>
+              <td class="text-center"><span class="icon-estado-${cumplidometa}">${x.cumplido}</span></td>
             </tr>`;
         });
       } else {
-        html = `<tr><td class='text-center' colspan='6'>No se encontraron resultados</td></tr>`;
+        html = `<tr><td class='text-center' colspan='8'>No se encontraron resultados</td></tr>`;
       }
       $("#listar_metas_venta").html(html);
     },
@@ -2510,7 +2521,11 @@ const actualizar_meta = function () {
           $("#editar-metas").modal("hide");
           $("#formActualizarMeta").trigger("reset");
         } else {
-          alert("Algo salió mal.");
+          Swal.fire({
+            icon: "error",
+            title: "Lo sentimos",
+            text: response.message,
+          });
         }
       },
     });
