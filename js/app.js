@@ -137,6 +137,7 @@ $(function () {
     contar_tc_por_id();
     contar_ld_monto_por_id();
     rellenar_ultima_meta();
+    listar_ultimas_ventas();
   } else {
   }
   if (params.get("view") === "archivado_ventas") {
@@ -3709,8 +3710,6 @@ const listar_ventas_paginados = function (pagina) {
     },
   });
 };
-
-
 function construirPaginacion_Ventas(pagina_actual_ventas) {
   $.ajax({
     url: "controller/ventas.php",
@@ -3751,7 +3750,6 @@ function construirPaginacion_Ventas(pagina_actual_ventas) {
     },
   });
 }
-
 const listar_ventas = function () {
   $.ajax({
     url: "controller/ventas.php",
@@ -4031,7 +4029,6 @@ const obtener_ventas = function (id) {
     },
   });
 };
-
 const filtro_ventas = function (pagina = 1) {
   var id = document.getElementById("v_id").value.trim();
   var dni = document.getElementById("v_dni").value.trim();
@@ -4157,8 +4154,6 @@ const filtro_ventas = function (pagina = 1) {
     },
   });
 };
-
-
 function construirPaginacion_Ventas_filtro(pagina_actual_ventas, id, dni, id_usuario, tipo_producto, created_at) {
   $.ajax({
     url: "controller/ventas.php",
@@ -4205,8 +4200,6 @@ function construirPaginacion_Ventas_filtro(pagina_actual_ventas, id, dni, id_usu
     },
   });
 }
-
-
 const actualizar_ventas = function (id) {
   $("#formObtenerVentas").submit(function (e) {
     e.preventDefault();
@@ -4298,6 +4291,65 @@ const eliminar_venta = function (id) {
         },
       });
     }
+  });
+};
+
+const listar_ultimas_ventas = function () {
+  $.ajax({
+    url: "controller/ventas.php",
+    type: "POST",
+    data: {
+      option: "listar_ultimas_ventas"
+    },
+    dataType: "json",
+    success: function (response) {
+      let html = "";
+      if (response.length > 0) {
+        response.map((x) => {
+          const {
+            id,
+            tipo_producto,
+            credito,
+            linea,
+            created_at,
+            foto,
+            nombre_completo
+          } = x;
+
+          if (tipo_producto == "LD") {
+            rellenar_datos = `<div class="d-inline"><span class="me-2"><i class="fa-solid fa-coins"></i></span><span>S/. ${credito}</span></div>`;
+          } else if (tipo_producto == "LD/TC") {
+            rellenar_datos = `<div class="d-block"><span class="me-2"><i class="fa-solid fa-coins"></i> </span><span>S/. ${credito}</span></div>
+                              <div class="d-block"><span class="me-3"><i class="fa-solid fa-credit-card"></i></span><span>S/. ${linea}</span></div>`;
+          } else if (tipo_producto == "TC") {
+            rellenar_datos = `<div class="d-inline"><span class="me-2"><i class="fa-solid fa-credit-card"></i></span><span>S/. ${linea}</span></div>`;
+          }
+
+          html += `<div class="">
+                    <div class="card-ultima-venta card shadow w-100">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-3 col-sm-12 d-flex justify-content-center align-items-center">
+                                    <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-inicio shadow">                                    
+                                </div>
+                                <div class="col-lg-8 col-sm-12">
+                                  <div class="d-block"><span class="fw-bold">${nombre_completo}</span></div>
+                                  ${rellenar_datos}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>`
+
+        });
+      } else {
+        html = `<span>se han encontrado bonos diarios el dia de hoy.</span>`;
+      }
+
+      $("#ultima-venta-descripcion").html(html);
+      
+    },
   });
 };
 

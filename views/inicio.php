@@ -111,9 +111,23 @@
                                             No found
                                         </span>
                                         <div class="getbono">
-
+    
                                         </div>
-
+    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow bg-body-tertiar w-100">
+                            <div class="card-body py-4">
+                                <div class="align-items-start">
+                                    <div class="flex-grow-1">
+                                        <h4 class="mb-3 fw-bold">
+                                            Ultimas Ventas
+                                        </h4>
+                                        <p class="mb-3" name="descripcion" id="ultima-venta-descripcion">
+                                            <span>No hay ultimas ventas.</span>
+                                        </p>
                                     </div>
                                 </div>
                             </div>

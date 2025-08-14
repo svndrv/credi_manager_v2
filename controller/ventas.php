@@ -69,6 +69,9 @@ switch ($option) {
     case 'agregar_ventas':
         echo json_encode($ventas->agregar_ventas($nombres, $dni, $celular,$credito, $linea, $plazo,$tem,$id_usuario,$tipo_producto,$estado));
     break;
+    case 'listar_ultimas_ventas':
+        echo json_encode($ventas->obtener_ultimas_ventas());
+    break;
     case 'contar_filas_ld':
         echo json_encode($ventas->contar_ld());
     break;
@@ -112,9 +115,9 @@ switch ($option) {
         }
         break;
     default:
-        echo json_encode(['error' => 'Opción no válida']); 
-        $total = $ventas->contar_ventas_filtro($id, $id_usuario, $dni, $tipo_producto, $created_at);
-        echo json_encode(['total' => $total]);
+        //echo json_encode(['error' => 'Opción no válida']); 
+        echo json_encode($ventas->obtener_ultimas_ventas());
+
     break;
     
 }
