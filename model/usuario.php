@@ -75,7 +75,6 @@ class Usuario extends Conectar
     {
         $sql = "SELECT * FROM usuario WHERE 1=1";
 
-        // Agregar condiciones según los parámetros recibidos
         if ($rol) {
             $sql .= " AND rol = :rol";
         }
@@ -83,10 +82,8 @@ class Usuario extends Conectar
             $sql .= " AND estado = :estado";
         }
 
-        // Preparar la consulta
         $stmt = $this->db->prepare($sql);
 
-        // Asignar valores a los parámetros según estén definidos
         if ($rol) {
             $stmt->bindParam(':rol', $rol, PDO::PARAM_STR);
         }
@@ -94,10 +91,8 @@ class Usuario extends Conectar
             $stmt->bindParam(':estado', $estado, PDO::PARAM_STR);
         }
 
-        // Ejecutar la consulta
         $stmt->execute();
 
-        // Devolver todos los resultados como un array asociativo
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -121,6 +116,11 @@ class Usuario extends Conectar
             "message" => "Eliminación exitosa."
         ];
         return $response;
+    }
+
+    private function esContrasenaSegura($password) {
+        // Al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial
+        return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password);
     }
 
     public function actualizar_usuario($id, $usuario, $contrasena, $nombres, $apellidos, $rol, $estado, $foto, $archivoFoto)
@@ -158,6 +158,14 @@ class Usuario extends Conectar
                 "message" => "Usuario editado correctamente."
             ];
         } else {
+
+            if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $contrasena)) {
+            return [
+                "status" => "error",
+                "message" => "La contraseña es muy débil. Debe tener mínimo 8 caracteres, incluir mayúsculas, minúsculas, números y un carácter especial."
+            ];
+            }
+
             $sql = "UPDATE usuario SET usuario = ?, contrasena = ?, nombres = ?, apellidos = ?, rol = ?, estado = ?, foto = ?, updated_at = now() WHERE id = ?";
             $sql = $this->db->prepare($sql);
             $contrasenaEncriptada = password_hash($contrasena, PASSWORD_DEFAULT);
@@ -188,52 +196,69 @@ class Usuario extends Conectar
     }
 
     public function agregar_usuario($usuario, $contrasena, $nombres, $apellidos, $rol, $estado, $foto)
-    {
-        if (empty($usuario) || empty($contrasena) || empty($nombres) || 
-        empty($apellidos) || empty($rol) || empty($estado))
-            return [
-                "status" => "error",
-                "message" => "Verificar los campos vacios."
-            ];
-        $validar = "SELECT * FROM usuario WHERE usuario = ?";
-        $validar = $this->db->prepare($validar);
-        $validar->bindValue(1, $usuario);
-        $validar->execute();
-        if ($validar->rowCount() > 0)
-            return ["status" => "error", "message" => "El usuario ya existe."];
-        
-        $sql = "INSERT INTO usuario (usuario, contrasena, nombres, apellidos, rol, 
-        estado, foto,created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, now(), now())";
-        $sql = $this->db->prepare($sql);
-        $contrasenaEncriptada = password_hash($contrasena, PASSWORD_DEFAULT);
-
-
-        if (empty($foto)){
-            $nombreFoto = 'user.png';
-            $ruta = "../img/fotos/" . $nombreFoto;
-            move_uploaded_file($_FILES["foto"]['tmp_name'], $ruta);
-        }else{
-            $nombreFoto = uniqid() . "-" . $_FILES["foto"]['name'];
-            $ruta = "../img/fotos/" . $nombreFoto;
-            move_uploaded_file($_FILES["foto"]['tmp_name'], $ruta);
-        }
-
-
-        
-        $sql->bindValue(1, $usuario);
-        $sql->bindValue(2, $contrasenaEncriptada);
-        $sql->bindValue(3, $nombres);
-        $sql->bindValue(4, $apellidos);
-        $sql->bindValue(5, $rol);
-        $sql->bindValue(6, $estado);
-        $sql->bindValue(7, $nombreFoto);
-        $sql->execute();
-        $response = [
-            "status" => "success",
-            "message" => "Se ha creado con exito."
+{
+    // 1. Validar campos vacíos
+    if (empty($usuario) || empty($contrasena) || empty($nombres) || 
+        empty($apellidos) || empty($rol) || empty($estado)) {
+        return [
+            "status" => "error",
+            "message" => "Verificar los campos vacíos."
         ];
-        return $response;
     }
+
+    // 2. Validar que la contraseña sea semi-segura
+    // - Mínimo 8 caracteres
+    // - Al menos 1 mayúscula
+    // - Al menos 1 minúscula
+    // - Al menos 1 número
+    if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/', $contrasena)) {
+        return [
+            "status" => "error",
+            "message" => "La contraseña es demasiado débil. Debe tener mínimo 8 caracteres, con mayúsculas, minúsculas y números."
+        ];
+    }
+
+    // 3. Verificar si el usuario ya existe
+    $validar = $this->db->prepare("SELECT * FROM usuario WHERE usuario = ?");
+    $validar->bindValue(1, $usuario);
+    $validar->execute();
+    if ($validar->rowCount() > 0) {
+        return ["status" => "error", "message" => "El usuario ya existe."];
+    }
+
+    // 4. Preparar inserción
+    $sql = "INSERT INTO usuario (usuario, contrasena, nombres, apellidos, rol, estado, foto, created_at, updated_at) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, now(), now())";
+    $sql = $this->db->prepare($sql);
+    $contrasenaEncriptada = password_hash($contrasena, PASSWORD_DEFAULT);
+
+    // 5. Manejo de foto
+    if (empty($foto)) {
+        $nombreFoto = 'user.png';
+        $ruta = "../img/fotos/" . $nombreFoto;
+        move_uploaded_file($_FILES["foto"]['tmp_name'], $ruta);
+    } else {
+        $nombreFoto = uniqid() . "-" . $_FILES["foto"]['name'];
+        $ruta = "../img/fotos/" . $nombreFoto;
+        move_uploaded_file($_FILES["foto"]['tmp_name'], $ruta);
+    }
+
+    // 6. Ejecutar inserción
+    $sql->bindValue(1, $usuario);
+    $sql->bindValue(2, $contrasenaEncriptada);
+    $sql->bindValue(3, $nombres);
+    $sql->bindValue(4, $apellidos);
+    $sql->bindValue(5, $rol);
+    $sql->bindValue(6, $estado);
+    $sql->bindValue(7, $nombreFoto);
+    $sql->execute();
+
+    // 7. Respuesta final
+    return [
+        "status" => "success",
+        "message" => "Se ha creado con éxito."
+    ];
+}
 
     public function obtener_ventas_por_emp()
     {

@@ -2111,7 +2111,7 @@ const listar_metas_ventas = function () {
       const data = JSON.parse(response);
       let html = ``;
 
-      // ✅ Formateador moneda
+   
       const formatearSoles = (valor) => {
         return `S/. ${parseFloat(valor || 0).toLocaleString("es-PE", {
           style: "decimal",
@@ -2952,18 +2952,33 @@ const rellenar_ultima_meta = function () {
       let html_ld = ``;
       let html_monto = ``;
       let html_tc = ``;
+
+      const formatearSoles = (valor) => {
+        return `S/. ${parseFloat(valor || 0).toLocaleString("es-PE", {
+          style: "decimal",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
+      };
+
+      const formatearNumero = (valor) => {
+        return parseInt(valor || 0).toLocaleString("es-PE");
+      };
+
       if (data.length > 0) {
         data.map((x) => {
           const { ld_cantidad, tc_cantidad, ld_monto } = x;
-          html_ld = html_ld + `<span>${ld_cantidad} préstamos</span>`;
-          html_tc = html_tc + `<span>${tc_cantidad} tarjetas</span>`;
-          html_monto = html_monto + `<span>S/. ${ld_monto}</span>`;
+
+          html_ld += `<span>${formatearNumero(ld_cantidad)} préstamos</span>`;
+          html_tc += `<span>${formatearNumero(tc_cantidad)} tarjetas</span>`;
+          html_monto += `<span>${formatearSoles(ld_monto)}</span>`;
         });
       } else {
-        html_ld = html_ld + `<span>No hay meta.</span>`;
-        html_tc = html_tc + `<span>No hay meta.</span>`;
-        html_monto = html_monto + `<span>No hay meta.</span>`;
+        html_ld += `<span>No hay meta.</span>`;
+        html_tc += `<span>No hay meta.</span>`;
+        html_monto += `<span>No hay meta.</span>`;
       }
+
       $("#ld_meta").html(html_ld);
       $("#tc_meta").html(html_tc);
       $("#monto_meta").html(html_monto);
@@ -4305,6 +4320,32 @@ const listar_ultimas_ventas = function () {
     success: function (response) {
       let html = "";
       if (response.length > 0) {
+
+        // Función para convertir la fecha en "Hace X tiempo"
+        function tiempoTranscurrido(fecha) {
+          const ahora = new Date();
+          const fechaVenta = new Date(fecha);
+          const segundos = Math.floor((ahora - fechaVenta) / 1000);
+
+          const intervalos = {
+            a: 31536000, // años
+            m: 2592000,  // meses
+            d: 86400,    // días
+            h: 3600,     // horas
+            min: 60,     // minutos
+            s: 1         // segundos
+          };
+
+          for (let unidad in intervalos) {
+            const cantidad = Math.floor(segundos / intervalos[unidad]);
+            if (cantidad >= 1) {
+              // Si es minutos, usa "m" en vez de "min" para formato corto
+              return `${cantidad}${unidad === 'min' ? 'm' : unidad}`;
+            }
+          }
+          return "Justo ahora";
+        }
+
         response.map((x) => {
           const {
             id,
@@ -4316,6 +4357,7 @@ const listar_ultimas_ventas = function () {
             nombre_completo
           } = x;
 
+          let rellenar_datos = "";
           if (tipo_producto == "LD") {
             rellenar_datos = `<div class="d-inline"><span class="me-2"><i class="fa-solid fa-coins"></i></span><span>S/. ${credito}</span></div>`;
           } else if (tipo_producto == "LD/TC") {
@@ -4332,23 +4374,30 @@ const listar_ultimas_ventas = function () {
                                 <div class="col-lg-3 col-sm-12 d-flex justify-content-center align-items-center">
                                     <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-inicio shadow">                                    
                                 </div>
-                                <div class="col-lg-8 col-sm-12">
-                                  <div class="d-block"><span class="fw-bold">${nombre_completo}</span></div>
-                                  ${rellenar_datos}
+                                <div class="col-lg-9 col-sm-12">
+                                  <div class="row">
+                                    <div class="col-lg-9">
+                                      <div class="d-block">
+                                        <span class="fw-bold">${nombre_completo}</span>                                        
+                                      </div>
+                                      ${rellenar_datos}
+                                    </div>
+                                    <div class="col-lg-3 text-end">
+                                      <span class="text-muted " style="font-size: 0.9em;">${tiempoTranscurrido(created_at)}</span>
+                                    </div>
+                                  </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                </div>`
-
+                </div>`;
         });
+
       } else {
-        html = `<span>se han encontrado bonos diarios el dia de hoy.</span>`;
+        html = `<span>No se encontraron últimas ventas.</span>`;
       }
 
       $("#ultima-venta-descripcion").html(html);
-      
     },
   });
 };

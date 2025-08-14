@@ -62,7 +62,9 @@ class Metasfv extends Conectar {
             "message" => "Meta creada exitosamente."
         ];
     }
-    public function actualizar_metafv($id, $ld_cantidad, $tc_cantidad, $ld_monto, $sede, $mes, $cumplido){
+    public function actualizar_metafv($id, $ld_cantidad, $tc_cantidad, $ld_monto, $sede, $mes, $cumplido)
+    { 
+        // Validar campos vacíos
         if (empty($ld_cantidad) || empty($tc_cantidad) || empty($ld_monto) || empty($sede) || empty($mes) || empty($cumplido)) {
             return [
                 "status" => "error",
@@ -70,17 +72,35 @@ class Metasfv extends Conectar {
             ];
         }
 
+        // Validar formato de mes (YYYY-MM)
         if (!preg_match('/^\d{4}-\d{2}$/', $mes)) {
             return [
                 "status" => "error",
-                "message" => "Formato de mes inválido. Usa |YYYY-MM."
+                "message" => "Formato de mes inválido. Usa YYYY-MM."
             ];
         }
 
         $mes = $mes . '-01';
 
+        // 🔍 Verificar si ya existe una meta para ese mes en otra fila
+        $sql_check = "SELECT COUNT(*) AS total 
+                    FROM metasfv 
+                    WHERE mes = ? 
+                    AND id != ?";
+        $stmt_check = $this->db->prepare($sql_check);
+        $stmt_check->bindValue(1, $mes);
+        $stmt_check->bindValue(2, $id);
+        $stmt_check->execute();
+        $existe = $stmt_check->fetch(PDO::FETCH_ASSOC);
+
+        if ($existe['total'] > 0) {
+            return [
+                "status" => "error",
+                "message" => "Ya existe una meta registrada para este mes."
+            ];
+        }
         $sql = "UPDATE metasfv 
-                SET ld_cantidad = ?, tc_cantidad = ?, ld_monto = ?, sede = ?, mes = ?, cumplido = ?, updated_at = now() 
+                SET ld_cantidad = ?, tc_cantidad = ?, ld_monto = ?, sede = ?, mes = ?, cumplido = ?, updated_at = NOW() 
                 WHERE id = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(1, $ld_cantidad);
