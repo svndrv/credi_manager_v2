@@ -886,6 +886,7 @@ const obtener_gestionventas_x_id = function (id) {
       data = JSON.parse(response);
       $.each(data, function (i, e) {
         $("#id_ob_gventas").val(data[i]["id"]);
+        $("#id_usuario_ob_gventas").val(data[i]["id_usuario"]);
         $("#nombres_ob_gventas").val(data[i]["nombres"]);
         $("#dni_ob_gventas").val(data[i]["dni"]);
         $("#celular_ob_gventas").val(data[i]["celular"]);
@@ -899,7 +900,7 @@ const obtener_gestionventas_x_id = function (id) {
         $("#documento-preview").text(data[i]["documento"] ? data[i]["documento"] : "No se ha seleccionado ningún archivo.");
 
         if (data[i]["documento"]) {
-          const rutaDocumento = "pdf/documents/" + data[i]["documento"]; // ⚠️ Ajusta esto
+          const rutaDocumento = "pdf/documents/" + data[i]["documento"]; 
           $("#btnVerDocumento").off("click").on("click", function () {
             window.open(rutaDocumento, "_blank");
           }).show();
@@ -1351,7 +1352,7 @@ const listarRegistros_ProcesoVentas = function (pagina) {
             </tr>`;
         });
       } else {
-        html = `<tr><td class='text-center' colspan='6'>No se encontraron resultados.</td></tr>`;
+        html = `<tr><td class='text-center' colspan='7'>No se encontraron resultados.</td></tr>`;
       }
 
       $("#listar_procesoventas").html(html);
@@ -3040,7 +3041,6 @@ const rellenar_porcentaje_meta_venta = function () {
       option: "porcentaje_meta_venta",
     },
     success: function (response) {
-      alert(response)
       const data = JSON.parse(response);
       let html_ld_porcentaje = ``;
       let html_monto_porcentaje = ``;

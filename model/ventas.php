@@ -312,27 +312,57 @@ class Ventas extends Conectar
     }
     public function contar_ld_por_id($id_usuario)
     {
-        $sql = "SELECT COUNT(*) AS cantidad_ld FROM ventas WHERE tipo_producto IN ('LD', 'LD/TC') AND estado = 'Desembolsado' AND id_usuario = ? LIMIT 1";
-        $sql = $this->db->prepare($sql);
-        $sql->bindValue(1, $id_usuario);
-        $sql->execute();
-        return $sql->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "
+        SELECT COUNT(*) AS cantidad_ld
+        FROM ventas
+        WHERE tipo_producto IN ('LD', 'LD/TC')
+          AND estado = 'Desembolsado'
+          AND id_usuario = ?
+          AND YEAR(created_at) = YEAR(CURDATE())
+          AND MONTH(created_at) = MONTH(CURDATE())
+        LIMIT 1
+        ";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(1, $id_usuario, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function contar_tc_por_id($id_usuario)
     {
-        $sql = "SELECT COUNT(*) AS cantidad_tc FROM ventas WHERE tipo_producto IN ('TC', 'LD/TC') AND estado = 'Desembolsado' AND id_usuario = ? LIMIT 1";
-        $sql = $this->db->prepare($sql);
-        $sql->bindValue(1, $id_usuario);
-        $sql->execute();
-        return $sql->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "
+        SELECT COUNT(*) AS cantidad_tc
+        FROM ventas
+        WHERE tipo_producto IN ('TC', 'LD/TC')
+          AND estado = 'Desembolsado'
+          AND id_usuario = ?
+          AND YEAR(created_at) = YEAR(CURDATE())
+          AND MONTH(created_at) = MONTH(CURDATE())
+        LIMIT 1
+        ";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(1, $id_usuario, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function contar_ld_monto_por_id($id_usuario)
     {
-        $sql = "SELECT SUM(credito) AS ld_monto FROM ventas WHERE estado = 'Desembolsado' AND id_usuario = ? LIMIT 1 ";
-        $sql = $this->db->prepare($sql);
-        $sql->bindValue(1, $id_usuario, PDO::PARAM_INT);
-        $sql->execute();
-        return $sql->fetchAll(PDO::FETCH_ASSOC);
+         $sql = "
+        SELECT IFNULL(SUM(credito), 0) AS ld_monto
+        FROM ventas
+        WHERE estado = 'Desembolsado'
+          AND tipo_producto IN ('LD', 'LD/TC')
+          AND id_usuario = ?
+          AND YEAR(created_at) = YEAR(CURDATE())
+          AND MONTH(created_at) = MONTH(CURDATE())
+        LIMIT 1
+    ";
+    
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindValue(1, $id_usuario, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function obtener_ventas_paginados($limit, $offset)
     {
@@ -437,8 +467,7 @@ class Ventas extends Conectar
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function contar_ventas_filtro($id, $id_usuario, $dni, $tipo_producto, $created_at)
-    {
+    public function contar_ventas_filtro($id, $id_usuario, $dni, $tipo_producto, $created_at){
         $sql = "SELECT COUNT(*) AS total
             FROM ventas WHERE estado = 'Desembolsado'";
 
@@ -480,8 +509,7 @@ class Ventas extends Conectar
         $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
         return (int)$resultado['total'];
     }
-    public function obtener_ultimas_ventas()
-    {
+    public function obtener_ultimas_ventas(){
         $sql = "SELECT v.id,
                 v.tipo_producto,
                 v.credito,
@@ -497,21 +525,38 @@ class Ventas extends Conectar
     }
     public function obtener_cantidad_servicios(){
         $sql = "SELECT
-    SUM(CASE 
-            WHEN tipo_producto = 'TC' THEN 1
-            WHEN tipo_producto = 'LD/TC' THEN 1
-            ELSE 0
-        END) AS total_tc,
-    SUM(CASE 
-            WHEN tipo_producto = 'LD' THEN 1
-            WHEN tipo_producto = 'LD/TC' THEN 1
-            ELSE 0
-        END) AS total_ld,
-    SUM(credito) AS total_credito
-FROM ventas
-WHERE estado = 'Desembolsado';";
+                SUM(CASE 
+                    WHEN tipo_producto = 'TC' THEN 1
+                    WHEN tipo_producto = 'LD/TC' THEN 1
+                    ELSE 0
+                END) AS total_tc,
+                SUM(CASE 
+                    WHEN tipo_producto = 'LD' THEN 1
+                    WHEN tipo_producto = 'LD/TC' THEN 1
+                    ELSE 0
+                END) AS total_ld,
+                SUM(credito) AS total_credito
+            FROM ventas
+            WHERE estado = 'Desembolsado'
+              AND YEAR(created_at) = YEAR(CURDATE())
+              AND MONTH(created_at) = MONTH(CURDATE());";
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (
+            empty($resultado['total_tc']) &&
+            empty($resultado['total_ld']) &&
+            empty($resultado['total_credito'])
+        ) {
+            return [[
+                'total_tc' => 'No hay datos',
+                'total_ld' => 'No hay datos',
+                'total_credito' => 'No hay datos'
+            ]];
+        }
+
+        return [$resultado];
     }
 }

@@ -178,53 +178,81 @@ class Metasfv extends Conectar {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function obtener_ultimo_registro(){
-        $sql = "SELECT * FROM metasfv ORDER BY mes DESC LIMIT 1";
-        $sql = $this->db->prepare($sql);
-        $sql->execute();
-        return $sql->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "SELECT ld_cantidad, tc_cantidad, ld_monto
+            FROM metasfv
+            WHERE YEAR(mes) = YEAR(CURRENT_DATE())
+              AND MONTH(mes) = MONTH(CURRENT_DATE())
+            ORDER BY mes DESC
+            LIMIT 1";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute();
+    $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($resultado) {
+        return [$resultado]; 
+    } else {
+        return [[
+            'ld_cantidad' => 'No hay datos este mes',
+            'tc_cantidad' => 'No hay datos este mes',
+            'ld_monto'    => 'No hay datos este mes'
+        ]];
+    }
     }
 
-    public function obtener_porcentajes_servicios()
-{
-    // 1. Obtener totales actuales
-    $sqlVentas = "SELECT
-        SUM(CASE 
-                WHEN tipo_producto = 'TC' THEN 1
-                WHEN tipo_producto = 'LD/TC' THEN 1
-                ELSE 0
-            END) AS total_tc,
-        SUM(CASE 
-                WHEN tipo_producto = 'LD' THEN 1
-                WHEN tipo_producto = 'LD/TC' THEN 1
-                ELSE 0
-            END) AS total_ld,
-        SUM(credito) AS total_credito
-    FROM ventas
-    WHERE estado = 'Desembolsado'";
+    public function obtener_porcentajes_servicios(){
     
+        // 📌 Totales solo del mes y año actual
+    $sqlVentas = "SELECT
+            SUM(CASE 
+                    WHEN tipo_producto = 'TC' THEN 1
+                    WHEN tipo_producto = 'LD/TC' THEN 1
+                    ELSE 0
+                END) AS total_tc,
+            SUM(CASE 
+                    WHEN tipo_producto = 'LD' THEN 1
+                    WHEN tipo_producto = 'LD/TC' THEN 1
+                    ELSE 0
+                END) AS total_ld,
+            SUM(credito) AS total_credito
+        FROM ventas
+        WHERE estado = 'Desembolsado'
+          AND YEAR(created_at) = YEAR(CURDATE())
+          AND MONTH(created_at) = MONTH(CURDATE())";
+
     $stmtVentas = $this->db->prepare($sqlVentas);
     $stmtVentas->execute();
     $totales = $stmtVentas->fetch(PDO::FETCH_ASSOC);
 
-    // 2. Obtener última meta
     $sqlMeta = "SELECT ld_cantidad, tc_cantidad, ld_monto 
-                FROM metasfv ORDER BY mes DESC LIMIT 1";
+                FROM metasfv
+                WHERE YEAR(mes) = YEAR(CURDATE())
+                  AND MONTH(mes) = MONTH(CURDATE())
+                ORDER BY mes DESC
+                LIMIT 1";
     $stmtMeta = $this->db->prepare($sqlMeta);
     $stmtMeta->execute();
     $meta = $stmtMeta->fetch(PDO::FETCH_ASSOC);
 
-    // 3. Calcular y retornar solo porcentajes
+    if (!$meta) {
+        return [[
+            'tc' => "No hay datos este mes",
+            'ld' => "No hay datos este mes",
+            'credito' => "No hay datos este mes"
+        ]];
+    }
+
     return [[
-    'tc' => ($meta['tc_cantidad'] > 0) 
-        ? round(($totales['total_tc'] / $meta['tc_cantidad']) * 100, 2) 
-        : 0,
-    'ld' => ($meta['ld_cantidad'] > 0) 
-        ? round(($totales['total_ld'] / $meta['ld_cantidad']) * 100, 2) 
-        : 0,
-    'credito' => ($meta['ld_monto'] > 0) 
-        ? round(($totales['total_credito'] / $meta['ld_monto']) * 100, 2) 
-        : 0
-]];
+        'tc' => ($meta['tc_cantidad'] > 0) 
+            ? round(($totales['total_tc'] / $meta['tc_cantidad']) * 100, 2) 
+            : 0,
+        'ld' => ($meta['ld_cantidad'] > 0) 
+            ? round(($totales['total_ld'] / $meta['ld_cantidad']) * 100, 2) 
+            : 0,
+        'credito' => ($meta['ld_monto'] > 0) 
+            ? round(($totales['total_credito'] / $meta['ld_monto']) * 100, 2) 
+            : 0
+    ]];
 }
     
 

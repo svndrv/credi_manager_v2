@@ -46,7 +46,8 @@ switch($option){
         echo json_encode($metasfv->obtener_porcentajes_servicios());
     break;
     default:
-        echo json_encode($metasfv->obtener_metasfv());        
+        echo json_encode($metasfv->obtener_metasfv());       
+
     break;
     
    

@@ -139,6 +139,13 @@ class Usuario extends Conectar
                 move_uploaded_file($_FILES["foto"]['tmp_name'], $ruta);
             }
 
+            $validar = $this->db->prepare("SELECT * FROM usuario WHERE usuario = ?");
+            $validar->bindValue(1, $usuario);
+            $validar->execute();
+            if ($validar->rowCount() > 0) {
+                return ["status" => "error", "message" => "El usuario ya existe."];
+            }
+
             $sql->bindValue(1, $usuario);
             $sql->bindValue(2, $nombres);
             $sql->bindValue(3, $apellidos);
@@ -192,7 +199,7 @@ class Usuario extends Conectar
 
     public function agregar_usuario($usuario, $contrasena, $nombres, $apellidos, $rol, $estado, $foto)
 {
-    // 1. Validar campos vacíos
+ 
     if (empty($usuario) || empty($contrasena) || empty($nombres) || 
         empty($apellidos) || empty($rol) || empty($estado)) {
         return [
@@ -201,11 +208,6 @@ class Usuario extends Conectar
         ];
     }
 
-    // 2. Validar que la contraseña sea semi-segura
-    // - Mínimo 8 caracteres
-    // - Al menos 1 mayúscula
-    // - Al menos 1 minúscula
-    // - Al menos 1 número
     if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/', $contrasena)) {
         return [
             "status" => "error",
@@ -213,7 +215,6 @@ class Usuario extends Conectar
         ];
     }
 
-    // 3. Verificar si el usuario ya existe
     $validar = $this->db->prepare("SELECT * FROM usuario WHERE usuario = ?");
     $validar->bindValue(1, $usuario);
     $validar->execute();

@@ -96,7 +96,7 @@
 
                     <input type="hidden" name="option" value="actualizar_procesoventas">
                     <input type="hidden" name="id" id="id_ob_gventas">
-                    <input type="hidden" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['id'] ?>">
+                    <input type="hidden" id="id_usuario_ob_gventas" name="id_usuario">
 
                     <div class="row p-2">
                         <p class="h5 fw-bold pb-3">Detalles de venta</p>

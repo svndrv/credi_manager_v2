@@ -120,7 +120,7 @@
                                                 <th scope="col">LD C. Actual</th>
                                                 <th scope="col">LD C. Meta</th>
                                                 <th scope="col">LD M. Actual</th>
-                                                <th scope="col">LD M.</th>
+                                                <th scope="col">LD M. Meta</th>
                                                 <th scope="col">TC C. Actual</th>
                                                 <th scope="col">TC C. Meta</th>
                                                 <th scope="col">Cumplido</th>

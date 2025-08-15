@@ -230,7 +230,7 @@
                             <div class="mb-3">
                                 <label for="plazo_to_procesoventas" class="form-label">Plazo</label>
                                 <select class="form-select" id="plazo_to_procesoventas" name="plazo">
-                                    <option value="0">Plazo</option>
+                                    <option value="0">0</option>
                                     <option value="12">12</option>
                                     <option value="24">24</option>
                                     <option value="36">36</option>
