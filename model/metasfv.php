@@ -183,6 +183,49 @@ class Metasfv extends Conectar {
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function obtener_porcentajes_servicios()
+{
+    // 1. Obtener totales actuales
+    $sqlVentas = "SELECT
+        SUM(CASE 
+                WHEN tipo_producto = 'TC' THEN 1
+                WHEN tipo_producto = 'LD/TC' THEN 1
+                ELSE 0
+            END) AS total_tc,
+        SUM(CASE 
+                WHEN tipo_producto = 'LD' THEN 1
+                WHEN tipo_producto = 'LD/TC' THEN 1
+                ELSE 0
+            END) AS total_ld,
+        SUM(credito) AS total_credito
+    FROM ventas
+    WHERE estado = 'Desembolsado'";
+    
+    $stmtVentas = $this->db->prepare($sqlVentas);
+    $stmtVentas->execute();
+    $totales = $stmtVentas->fetch(PDO::FETCH_ASSOC);
+
+    // 2. Obtener última meta
+    $sqlMeta = "SELECT ld_cantidad, tc_cantidad, ld_monto 
+                FROM metasfv ORDER BY mes DESC LIMIT 1";
+    $stmtMeta = $this->db->prepare($sqlMeta);
+    $stmtMeta->execute();
+    $meta = $stmtMeta->fetch(PDO::FETCH_ASSOC);
+
+    // 3. Calcular y retornar solo porcentajes
+    return [[
+    'tc' => ($meta['tc_cantidad'] > 0) 
+        ? round(($totales['total_tc'] / $meta['tc_cantidad']) * 100, 2) 
+        : 0,
+    'ld' => ($meta['ld_cantidad'] > 0) 
+        ? round(($totales['total_ld'] / $meta['ld_cantidad']) * 100, 2) 
+        : 0,
+    'credito' => ($meta['ld_monto'] > 0) 
+        ? round(($totales['total_credito'] / $meta['ld_monto']) * 100, 2) 
+        : 0
+]];
+}
     
 
 

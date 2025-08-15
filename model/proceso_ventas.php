@@ -329,7 +329,19 @@ class ProcesoVentas extends Conectar {
     }
     public function proceso_to_desembolsado($id, $nombres, $dni, $celular, $credito, $linea, $plazo, $tem, $id_usuario, $tipo_producto, $estado, $documento)
     {
-        if (empty($nombres) || empty($dni) || empty($celular) || empty($credito) || empty($linea) || empty($plazo) || empty($tem) || empty($id_usuario) || empty($tipo_producto) || empty($estado) || empty($documento)) {
+        if (
+            trim($nombres) === '' || 
+            trim($dni) === '' || 
+            trim($celular) === '' || 
+            trim($credito) === '' || 
+            trim($linea) === '' || 
+            trim($plazo) === '' || 
+            trim($tem) === '' || 
+            trim($id_usuario) === '' || 
+            trim($tipo_producto) === '' || 
+            trim($estado) === '' || 
+            trim($documento) === ''
+        ) {
             return [
                 "status" => "error",
                 "message" => "Verifica los campos vacíos."

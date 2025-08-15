@@ -42,8 +42,11 @@ switch($option){
     case 'ultima_meta':
         echo json_encode($metasfv->obtener_ultimo_registro());
     break;
+    case 'porcentaje_meta_venta':
+        echo json_encode($metasfv->obtener_porcentajes_servicios());
+    break;
     default:
-        echo json_encode($metasfv->obtener_metasfv());
+        echo json_encode($metasfv->obtener_metasfv());        
     break;
     
    

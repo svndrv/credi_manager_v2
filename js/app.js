@@ -138,6 +138,8 @@ $(function () {
     contar_ld_monto_por_id();
     rellenar_ultima_meta();
     listar_ultimas_ventas();
+    rellenar_ultima_venta();
+    rellenar_porcentaje_meta_venta();
   } else {
   }
   if (params.get("view") === "archivado_ventas") {
@@ -2985,6 +2987,94 @@ const rellenar_ultima_meta = function () {
     },
   });
 };
+const rellenar_ultima_venta = function () {
+  $.ajax({
+    url: "controller/ventas.php",
+    type: "POST",
+    data: {
+      option: "obtener_servicios",
+    },
+    success: function (response) {
+      const data = JSON.parse(response);
+      let html_ld_venta = ``;
+      let html_monto_venta = ``;
+      let html_tc_venta = ``;
+
+      const formatearSoles = (valor) => {
+        return `S/. ${parseFloat(valor || 0).toLocaleString("es-PE", {
+          style: "decimal",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
+      };
+
+      const formatearNumero = (valor) => {
+        return parseInt(valor || 0).toLocaleString("es-PE");
+      };
+
+      if (data.length > 0) {
+        data.map((x) => {
+          const { total_tc, total_ld, total_credito } = x;
+
+          html_ld_venta += `<span>${formatearNumero(total_ld)} préstamos</span>`;
+          html_tc_venta += `<span>${formatearNumero(total_tc)} tarjetas</span>`;
+          html_monto_venta += `<span>${formatearSoles(total_credito)}</span>`;
+        });
+      } else {
+        html_ld_venta += `<span>No hay venta.</span>`;
+        html_tc_venta += `<span>No hay venta.</span>`;
+        html_monto_venta += `<span>No hay venta.</span>`;
+      }
+
+      $("#ld_venta").html(html_ld_venta);
+      $("#tc_venta").html(html_tc_venta);
+      $("#monto_venta").html(html_monto_venta);
+    },
+  });
+};
+const rellenar_porcentaje_meta_venta = function () {
+  $.ajax({
+    url: "controller/metafv.php",
+    type: "POST",
+    data: {
+      option: "porcentaje_meta_venta",
+    },
+    success: function (response) {
+      alert(response)
+      const data = JSON.parse(response);
+      let html_ld_porcentaje = ``;
+      let html_monto_porcentaje = ``;
+      let html_tc_porcentaje = ``;
+
+      if (data.length > 0) {
+        data.map((x) => {
+          const { tc, ld, credito } = x;
+
+          html_ld_porcentaje += `<div class="progress" role="progressbar" aria-label="Danger example"
+                                                             aria-valuenow="${ld}" aria-valuemin="0" aria-valuemax="${ld}">
+                                                             <div class="progress-bar text-bg-danger" style="width: ${ld}%">${ld}%</div>
+                                                         </div>`;
+          html_tc_porcentaje += `<div class="progress" role="progressbar" aria-label="Danger example"
+                                                             aria-valuenow="${tc}" aria-valuemin="0" aria-valuemax="${tc}">
+                                                             <div class="progress-bar text-bg-danger" style="width: ${tc}%">${tc}%</div>
+                                                         </div>`;
+          html_monto_porcentaje += `<div class="progress" role="progressbar" aria-label="Danger example"
+                                                             aria-valuenow="${credito}" aria-valuemin="0" aria-valuemax="${credito}">
+                                                             <div class="progress-bar text-bg-danger" style="width: ${credito}%">${credito}%</div>
+                                                         </div>`;
+        });
+      } else {
+        html_ld_porcentaje += `<span>No hay porcentaje.</span>`;
+        html_tc_porcentaje += `<span>No hay porcentaje.</span>`;
+        html_monto_porcentaje += `<span>No hay porcentaje.</span>`;
+      }
+
+      $("#ld_porcentaje").html(html_ld_porcentaje);
+      $("#tc_porcentaje").html(html_tc_porcentaje);
+      $("#monto_porcentaje").html(html_monto_porcentaje);
+    },
+  });
+};
 
 /* ----------------------------------------------------- */
 
@@ -4360,11 +4450,14 @@ const listar_ultimas_ventas = function () {
           let rellenar_datos = "";
           if (tipo_producto == "LD") {
             rellenar_datos = `<div class="d-inline"><span class="me-2"><i class="fa-solid fa-coins"></i></span><span>S/. ${credito}</span></div>`;
+            tipo = "ld";
           } else if (tipo_producto == "LD/TC") {
             rellenar_datos = `<div class="d-block"><span class="me-2"><i class="fa-solid fa-coins"></i> </span><span>S/. ${credito}</span></div>
                               <div class="d-block"><span class="me-3"><i class="fa-solid fa-credit-card"></i></span><span>S/. ${linea}</span></div>`;
+            tipo = "combo";
           } else if (tipo_producto == "TC") {
             rellenar_datos = `<div class="d-inline"><span class="me-2"><i class="fa-solid fa-credit-card"></i></span><span>S/. ${linea}</span></div>`;
+            tipo = "tc";
           }
 
           html += `<div class="">
@@ -4372,7 +4465,7 @@ const listar_ultimas_ventas = function () {
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-3 col-sm-12 d-flex justify-content-center align-items-center">
-                                    <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-inicio shadow">                                    
+                                    <img src="img/fotos/${foto}" alt="Foto de ${nombre_completo}" class="img-usuario-inicio-${tipo} shadow">                                    
                                 </div>
                                 <div class="col-lg-9 col-sm-12">
                                   <div class="row">

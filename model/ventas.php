@@ -15,7 +15,8 @@ class Ventas extends Conectar
     {
         $this->db = $dbh;
     }
-    public function obtener_ventas_x_usuario($id_usuario, $mes){
+    public function obtener_ventas_x_usuario($id_usuario, $mes)
+    {
         $sql = "SELECT ld_cantidad, tc_cantidad, ld_monto FROM ventas_por_usuario WHERE id_usuario = ? AND mes = ?;";
         $sql = $this->db->prepare($sql);
         $sql->bindValue(1, $id_usuario);
@@ -23,13 +24,15 @@ class Ventas extends Conectar
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function obtener_ventas(){
+    public function obtener_ventas()
+    {
         $sql = "SELECT * FROM ventas";
         $sql = $this->db->prepare($sql);
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function obtener_ventas_inner(){
+    public function obtener_ventas_inner()
+    {
         $sql = "SELECT 
         v.id,
         v.nombres, 
@@ -48,11 +51,12 @@ class Ventas extends Conectar
             usuario u 
         ON 
         v.id_usuario = u.id WHERE v.estado != 'Cancelado'";
-            $sql = $this->db->prepare($sql);
-            $sql->execute();
-            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        $sql = $this->db->prepare($sql);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function agregar_ventas($nombres, $dni, $celular, $credito, $linea, $plazo, $tem, $id_usuario, $tipo_producto, $estado){
+    public function agregar_ventas($nombres, $dni, $celular, $credito, $linea, $plazo, $tem, $id_usuario, $tipo_producto, $estado)
+    {
 
         if (empty($nombres) || empty($dni) || empty($celular) || empty($credito) || empty($tem) || empty($id_usuario) || empty($tipo_producto) || empty($estado))
             return [
@@ -81,25 +85,29 @@ class Ventas extends Conectar
 
         return $response;
     }
-    public function contar_ld(){
+    public function contar_ld()
+    {
         $sql = "SELECT COUNT(*) AS cantidad_ld FROM ventas WHERE tipo_producto IN ('LD', 'LD/TC') AND estado = 'Desembolsado'";
         $sql = $this->db->prepare($sql);
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function contar_tc(){
+    public function contar_tc()
+    {
         $sql = "SELECT COUNT(*) AS cantidad_tc FROM ventas WHERE tipo_producto IN ('TC', 'LD/TC') AND estado = 'Desembolsado'";
         $sql = $this->db->prepare($sql);
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function contar_ld_monto(){
+    public function contar_ld_monto()
+    {
         $sql = "SELECT SUM(credito) AS ld_monto FROM ventas WHERE estado = 'Desembolsado'";
         $sql = $this->db->prepare($sql);
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function obtener_venta_x_id($id){
+    public function obtener_venta_x_id($id)
+    {
         $sql = "SELECT v.id,v.nombres,v.dni, v.celular, v.credito, v.linea, v.plazo, v.tem, CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo, v.tipo_producto, v.estado FROM 
         ventas v INNER JOIN usuario u ON v.id_usuario = u.id WHERE v.id = ?;";
         $sql = $this->db->prepare($sql);
@@ -107,7 +115,8 @@ class Ventas extends Conectar
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function eliminar_venta($id){
+    public function eliminar_venta($id)
+    {
         $sql = "UPDATE ventas SET estado = ? WHERE id = ?";
         $sql = $this->db->prepare($sql);
         $sql->bindValue(1, "Cancelado");
@@ -119,7 +128,8 @@ class Ventas extends Conectar
             "message" => "Se ha eliminado con exito."
         ];
     }
-    public function venta_x_dni_estado_producto($dni, $estado, $tipo_producto){
+    public function venta_x_dni_estado_producto($dni, $estado, $tipo_producto)
+    {
 
         $sql = "SELECT 
         v.id,
@@ -140,45 +150,46 @@ class Ventas extends Conectar
         ON 
             v.id_usuario = u.id WHERE v.estado != 'Cancelado'";
 
-            if ($dni) {
-                $sql .= " AND v.dni = :dni";
-            }
+        if ($dni) {
+            $sql .= " AND v.dni = :dni";
+        }
 
-            if ($estado) {
-                $sql .= " AND v.estado = :estado";
-            }
-            if ($tipo_producto) {
-                $sql .= " AND v.tipo_producto = :tipo_producto";
-            }
-
-
-
-            $stmt = $this->db->prepare($sql);
-
-            if ($dni) {
-                $stmt->bindParam(':dni', $dni, PDO::PARAM_STR);
-            }
-
-            if ($estado) {
-                $stmt->bindParam(':estado', $estado, PDO::PARAM_STR);
-            }
-            if ($tipo_producto) {
-                $stmt->bindParam(':tipo_producto', $tipo_producto, PDO::PARAM_STR);
-            }
+        if ($estado) {
+            $sql .= " AND v.estado = :estado";
+        }
+        if ($tipo_producto) {
+            $sql .= " AND v.tipo_producto = :tipo_producto";
+        }
 
 
 
-            $stmt->execute();
+        $stmt = $this->db->prepare($sql);
 
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }     
-    public function actualizar_venta($id, $nombres, $dni, $celular, $credito, $linea, $plazo, $tem, $tipo_producto, $estado){
+        if ($dni) {
+            $stmt->bindParam(':dni', $dni, PDO::PARAM_STR);
+        }
+
+        if ($estado) {
+            $stmt->bindParam(':estado', $estado, PDO::PARAM_STR);
+        }
+        if ($tipo_producto) {
+            $stmt->bindParam(':tipo_producto', $tipo_producto, PDO::PARAM_STR);
+        }
+
+
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function actualizar_venta($id, $nombres, $dni, $celular, $credito, $linea, $plazo, $tem, $tipo_producto, $estado)
+    {
         if (empty($nombres) || empty($dni) || empty($celular) || empty($tipo_producto) || empty($estado)) {
             return [
                 "status" => "error",
                 "message" => "Verfifique los campos vacios."
             ];
-        } 
+        }
 
         if (!preg_match('/^\d{8}$/', $dni)) {
             return [
@@ -186,7 +197,7 @@ class Ventas extends Conectar
                 "message" => "DNI inválido."
             ];
         }
-    
+
         if (!preg_match('/^9\d{8}$/', $celular)) {
             return [
                 "status" => "error",
@@ -194,7 +205,7 @@ class Ventas extends Conectar
             ];
         }
 
-           // Convertir "0.00" a vacío para que cuente como no rellenado
+        // Convertir "0.00" a vacío para que cuente como no rellenado
         foreach (['credito', 'linea', 'tem'] as $campo) {
             if ($$campo === "0.00" || $$campo === "0" || $$campo === 0) {
                 $$campo = "";
@@ -280,48 +291,51 @@ class Ventas extends Conectar
             }
         }
 
-                $sql = "UPDATE ventas SET nombres = ?, dni = ?, celular = ?, credito = ?, linea = ?, plazo = ?, tem = ?, tipo_producto = ?, estado = ?, updated_at = now() WHERE id = ?";
-                $sql = $this->db->prepare($sql);
-                $sql->bindValue(1, $nombres);
-                $sql->bindValue(2, $dni);
-                $sql->bindValue(3, $celular);
-                $sql->bindValue(4, $credito);
-                $sql->bindValue(5, $linea);
-                $sql->bindValue(6, $plazo);
-                $sql->bindValue(7, $tem);
-                $sql->bindValue(8, $tipo_producto);
-                $sql->bindValue(9, $estado);
-                $sql->bindValue(10, $id);
-                $sql->execute();
+        $sql = "UPDATE ventas SET nombres = ?, dni = ?, celular = ?, credito = ?, linea = ?, plazo = ?, tem = ?, tipo_producto = ?, estado = ?, updated_at = now() WHERE id = ?";
+        $sql = $this->db->prepare($sql);
+        $sql->bindValue(1, $nombres);
+        $sql->bindValue(2, $dni);
+        $sql->bindValue(3, $celular);
+        $sql->bindValue(4, $credito);
+        $sql->bindValue(5, $linea);
+        $sql->bindValue(6, $plazo);
+        $sql->bindValue(7, $tem);
+        $sql->bindValue(8, $tipo_producto);
+        $sql->bindValue(9, $estado);
+        $sql->bindValue(10, $id);
+        $sql->execute();
 
-                return [
-                    "status" => "success",
-                    "message" => "Venta editada correctamente."
-                ];
-            
+        return [
+            "status" => "success",
+            "message" => "Venta editada correctamente."
+        ];
     }
-    public function contar_ld_por_id($id_usuario){
+    public function contar_ld_por_id($id_usuario)
+    {
         $sql = "SELECT COUNT(*) AS cantidad_ld FROM ventas WHERE tipo_producto IN ('LD', 'LD/TC') AND estado = 'Desembolsado' AND id_usuario = ? LIMIT 1";
         $sql = $this->db->prepare($sql);
         $sql->bindValue(1, $id_usuario);
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function contar_tc_por_id($id_usuario){
+    public function contar_tc_por_id($id_usuario)
+    {
         $sql = "SELECT COUNT(*) AS cantidad_tc FROM ventas WHERE tipo_producto IN ('TC', 'LD/TC') AND estado = 'Desembolsado' AND id_usuario = ? LIMIT 1";
         $sql = $this->db->prepare($sql);
         $sql->bindValue(1, $id_usuario);
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function contar_ld_monto_por_id($id_usuario){
+    public function contar_ld_monto_por_id($id_usuario)
+    {
         $sql = "SELECT SUM(credito) AS ld_monto FROM ventas WHERE estado = 'Desembolsado' AND id_usuario = ? LIMIT 1 ";
         $sql = $this->db->prepare($sql);
         $sql->bindValue(1, $id_usuario, PDO::PARAM_INT);
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function obtener_ventas_paginados($limit, $offset){
+    public function obtener_ventas_paginados($limit, $offset)
+    {
         $sql = "SELECT 
             v.id,
             v.nombres, 
@@ -351,14 +365,16 @@ class Ventas extends Conectar
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function contar_ventas(){
+    public function contar_ventas()
+    {
         $sql = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'Desembolsado'";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
-    public function obtener_ventas_filtro($id, $id_usuario, $dni, $tipo_producto, $created_at, $limit, $offset) {
-       $sql = "SELECT 
+    public function obtener_ventas_filtro($id, $id_usuario, $dni, $tipo_producto, $created_at, $limit, $offset)
+    {
+        $sql = "SELECT 
             v.id,
             v.nombres, 
             v.dni, 
@@ -421,7 +437,8 @@ class Ventas extends Conectar
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function contar_ventas_filtro($id, $id_usuario, $dni, $tipo_producto, $created_at) {
+    public function contar_ventas_filtro($id, $id_usuario, $dni, $tipo_producto, $created_at)
+    {
         $sql = "SELECT COUNT(*) AS total
             FROM ventas WHERE estado = 'Desembolsado'";
 
@@ -458,25 +475,43 @@ class Ventas extends Conectar
         if ($created_at) {
             $stmt->bindParam(':created_at', $created_at, PDO::PARAM_STR);
         }
-        
+
         $stmt->execute();
-        $resultado = $stmt->fetch(PDO::FETCH_ASSOC); 
-        return (int)$resultado['total']; 
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (int)$resultado['total'];
     }
-    public function obtener_ultimas_ventas(){
-    $sql = "SELECT v.id,
-            v.tipo_producto,
-            v.credito,
-            v.linea,
-            v.created_at,
-            u.foto,
-            CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo
-            FROM ventas v INNER JOIN usuario u ON v.id_usuario = u.id  ORDER BY v.created_at DESC
-            LIMIT 3"; 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-
+    public function obtener_ultimas_ventas()
+    {
+        $sql = "SELECT v.id,
+                v.tipo_producto,
+                v.credito,
+                v.linea,
+                v.created_at,
+                u.foto,
+                CONCAT(u.nombres, ' ', u.apellidos) AS nombre_completo
+                FROM ventas v INNER JOIN usuario u ON v.id_usuario = u.id  ORDER BY v.created_at DESC
+                LIMIT 4";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function obtener_cantidad_servicios(){
+        $sql = "SELECT
+    SUM(CASE 
+            WHEN tipo_producto = 'TC' THEN 1
+            WHEN tipo_producto = 'LD/TC' THEN 1
+            ELSE 0
+        END) AS total_tc,
+    SUM(CASE 
+            WHEN tipo_producto = 'LD' THEN 1
+            WHEN tipo_producto = 'LD/TC' THEN 1
+            ELSE 0
+        END) AS total_ld,
+    SUM(credito) AS total_credito
+FROM ventas
+WHERE estado = 'Desembolsado';";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

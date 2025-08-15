@@ -114,10 +114,12 @@ switch ($option) {
             echo json_encode(['error' => 'ID de sesión no disponible']);
         }
         break;
+    case 'obtener_servicios':
+        echo json_encode($ventas->obtener_cantidad_servicios());
+    break;
     default:
-        //echo json_encode(['error' => 'Opción no válida']); 
-        echo json_encode($ventas->obtener_ultimas_ventas());
-
+        echo json_encode(['error' => 'Opción no válida']); 
+    
     break;
     
 }

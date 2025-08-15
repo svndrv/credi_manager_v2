@@ -45,11 +45,26 @@
     object-fit: cover;
 }
 
-.img-usuario-inicio{
-    width: 50px; 
-    height: 50px; 
+
+.img-usuario-inicio-tc,
+.img-usuario-inicio-ld,
+.img-usuario-inicio-combo{
+    width: 55px; 
+    height: 55px; 
     border-radius: 50%; 
     object-fit: cover;
+
+    
+}
+
+.img-usuario-inicio-ld{
+    border: 0.3rem solid var(--producto-bg-ld);
+}
+.img-usuario-inicio-tc{
+    border: 0.3rem solid var(--producto-bg-tc);;
+}
+.img-usuario-inicio-combo{
+    border: 0.3rem solid var(--producto-bg-combo);;
 }
 
 .card-ultima-venta{
@@ -61,6 +76,7 @@
     width: 18px; 
     height: 18px; 
     object-fit: cover;
+    
 }
 
 .icon-estado-activo{

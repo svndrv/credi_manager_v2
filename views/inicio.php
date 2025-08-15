@@ -1,67 +1,109 @@
 <main class="content-pages content px-5 pt-4" style="background-color: #fcfaf3;">
-    <section class="container-fluid mt-3">    
+    <section class="container-fluid mt-3">
         <article class="row">
             <div class="col-lg-12">
                 <div class="row">
                     <div class="col-lg-9">
                         <?php if ($_SESSION['rol'] !== '2') { ?>
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div id="bg-card-ld" class="card shadow w-100" style="width: 20rem;">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-4 d-flex justify-content-center">
-                                                <img src="img/money.png" style="width: 4rem;" />
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <h5 id="ldc-card-tittle" class="card-title">LD</h5>
-                                                <h6 class="card-subtitle mb-2 text-body-secondary">Prestamo Personal</h6>
-                                                <div id="ld_cantidad_text_id">
-                                                    <p class="card-text">Cant. 0</p>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-6 col-sm-12">
+                                    <div class="row">
+
+                                        <!-- Card LD -->
+                                        <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-stretch">
+                                            <div id="bg-card-ld" class="card shadow w-100">
+                                                <div class="card-body text-center">
+
+                                                    <!-- Título -->
+                                                    <h6 id="ldc-card-tittle" class="card-title bg-white rounded-circle p-2 d-inline-block mb-3">
+                                                        LD
+                                                    </h6>
+
+                                                    <!-- Ventas y Meta -->
+                                                    <div class="mb-2">
+                                                        <span id="ld_venta" class="fw-bold fs-5">0</span>
+                                                    </div>
+                                                    <div class="mb-3 text-muted" id="ld_meta">
+                                                        0
+                                                    </div>
+
+                                                    <!-- Barra de progreso -->
+                                                    <div id="ld_porcentaje">
+                                                         <div class="progress" role="progressbar" aria-label="Danger example"
+                                                             aria-valuenow="50" aria-valuemin="0" aria-valuemax="50">
+                                                             <div class="progress-bar text-bg-danger" style="width: 50%">50%</div>
+                                                         </div>
+                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div id="bg-card-tc" class="card shadow w-100" style="width: 20rem;">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-4 d-flex justify-content-center">
-                                                <img src="img/card.png" style="width: 4rem;" />
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <h5 id="tcc-card-tittle" class="card-title">TC</h5>
-                                                <h6 class="card-subtitle mb-2 text-body-secondary">Tarjeta de crédito</h6>
-                                                <div id="tc_cantidad_text_id">
-                                                    <p class="card-text">Cant. 0 </p>
+
+                                        <!-- Card TC -->
+                                        <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-stretch">
+                                            <div id="bg-card-tc" class="card shadow w-100">
+                                                <div class="card-body text-center">
+
+                                                    <!-- Título -->
+                                                    <h6 id="tcc-card-tittle" class="card-title bg-white rounded-circle p-2 d-inline-block mb-3">
+                                                        TC
+                                                    </h6>
+
+                                                    <!-- Ventas y Meta -->
+                                                    <div class="mb-2">
+                                                        <span id="tc_venta" class="fw-bold fs-5">0</span>
+                                                    </div>
+                                                    <div class="mb-3 text-muted" id="tc_meta">
+                                                        0
+                                                    </div>
+
+                                                    <!-- Barra de progreso -->
+                                                    <div id="tc_porcentaje">
+                                                         <div class="progress" role="progressbar" aria-label="Danger example"
+                                                             aria-valuenow="50" aria-valuemin="0" aria-valuemax="50">
+                                                             <div class="progress-bar text-bg-danger" style="width: 50%">50%</div>
+                                                         </div>
+                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div id="bg-card-ldm" class="card shadow w-100" style="width: 20rem;">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-4 d-flex justify-content-center">
-                                                <img src="img/bag-coin.png" style="width: 4rem;" />
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <h5 id="ldm-card-tittle" class="card-title">Monto de LD</h5>
-                                                <h6 class="card-subtitle mb-2 text-body-secondary">Total de Crédito</h6>
-                                                <div id="ld_monto_text_id">
-                                                    <p class="card-text">S/. 0.0</p>
+
+                                        <!-- Card MT -->
+                                        <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-stretch">
+                                            <div id="bg-card-ldm" class="card shadow w-100">
+                                                <div class="card-body text-center">
+
+                                                    <!-- Título -->
+                                                    <h6 id="ldm-card-tittle" class="card-title bg-white rounded-circle p-2 d-inline-block mb-3">
+                                                        MT
+                                                    </h6>
+
+                                                    <!-- Ventas y Meta -->
+                                                    <div class="mb-2">
+                                                        <span id="monto_venta" class="fw-bold fs-5">0</span>
+                                                    </div>
+                                                    <div class="mb-3 text-muted" id="monto_meta">
+                                                        50 préstamos
+                                                    </div>
+
+                                                    <!-- Barra de progreso -->
+                                                     <div id="monto_porcentaje">
+                                                         <div class="progress" role="progressbar" aria-label="Danger example"
+                                                             aria-valuenow="50" aria-valuemin="0" aria-valuemax="50">
+                                                             <div class="progress-bar text-bg-danger" style="width: 50%">50%</div>
+                                                         </div>
+                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div><!-- Fin row -->
                                 </div>
+
+
                             </div>
-                        </div>
                         <?php }  ?>
+
                         <div class="card shadow bg-body-tertiar">
                             <div class="card-header card-style-custom">
                                 <h5 class="card-title fw-bold p-1">
@@ -93,7 +135,63 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="row">
+<div class="col-lg-4 col-md-6 col-sm-12">
+                            <div id="bg-card-ld" class="card shadow w-100" style="width: 20rem;">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-4 d-flex justify-content-center">
+                                            <img src="img/money.png" style="width: 4rem;" />
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <h5 id="ldc-card-tittle" class="card-title">LD</h5>
+                                            <h6 class="card-subtitle mb-2 text-body-secondary">Prestamo Personal</h6>
+                                            <div id="ld_cantidad_text_id">
+                                                <p class="card-text">Cant. 0</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <div id="bg-card-tc" class="card shadow w-100" style="width: 20rem;">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-4 d-flex justify-content-center">
+                                            <img src="img/card.png" style="width: 4rem;" />
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <h5 id="tcc-card-tittle" class="card-title">TC</h5>
+                                            <h6 class="card-subtitle mb-2 text-body-secondary">Tarjeta de crédito</h6>
+                                            <div id="tc_cantidad_text_id">
+                                                <p class="card-text">Cant. 0 </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <div id="bg-card-ldm" class="card shadow w-100" style="width: 20rem;">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-4 d-flex justify-content-center">
+                                            <img src="img/bag-coin.png" style="width: 4rem;" />
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <h5 id="ldm-card-tittle" class="card-title">Monto de LD</h5>
+                                            <h6 class="card-subtitle mb-2 text-body-secondary">Total de Crédito</h6>
+                                            <div id="ld_monto_text_id">
+                                                <p class="card-text">S/. 0.0</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    
                     </div>
                     <div class="col-lg-3">
                         <div class="card shadow bg-body-tertiar w-100">
@@ -111,9 +209,9 @@
                                             No found
                                         </span>
                                         <div class="getbono">
-    
+
                                         </div>
-    
+
                                     </div>
                                 </div>
                             </div>
@@ -132,50 +230,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card shadow bg-body-tertiar w-100">
-                            <div class="card-body py-4">
-                                <div class="align-items-start">
-                                    <div class="flex-grow-1">
-                                        <h4 class="mb-2 fw-bold mb-3">
-                                            Meta mensual
-                                        </h4>
-                                        <div id="bg-card-ld" class="card shadow w-100" style="width: 20rem;">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <h6 id="ldc-card-tittle" class="card-title d-inline me-3 bg-white rounded-circle p-1">LD</h6>
-                                                        <div class="d-inline" id="ld_meta"><span>50 préstamos</span></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="bg-card-tc" class="card shadow w-100" style="width: 20rem;">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <h6 id="tcc-card-tittle" class="card-title d-inline me-3 bg-white rounded-circle p-1">TC</h6>
-                                                        <div class="d-inline" id="tc_meta"><span>50 préstamos</span></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="bg-card-ldm" class="card shadow w-100" style="width: 20rem;">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <h6 id="ldm-card-tittle" class="card-title d-inline me-3 bg-white rounded-circle p-1">MT</h6>
-                                                        <div class="d-inline" id="monto_meta"><span>50 préstamos</span></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="progress" role="progressbar" aria-label="Danger example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="50">
-                                                <div class="progress-bar text-bg-danger" style="width: 50%">50%</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>

@@ -118,11 +118,6 @@ class Usuario extends Conectar
         return $response;
     }
 
-    private function esContrasenaSegura($password) {
-        // Al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial
-        return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password);
-    }
-
     public function actualizar_usuario($id, $usuario, $contrasena, $nombres, $apellidos, $rol, $estado, $foto, $archivoFoto)
     {
 
